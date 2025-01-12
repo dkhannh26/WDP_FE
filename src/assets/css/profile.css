@@ -1,0 +1,52 @@
+.profile-title {
+  font-size: 38px;
+  font-weight: 700;
+  width: fit-content;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.profile-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  margin: 50px auto 0;
+  background: #252a2b;
+}
+
+.profile-content {
+  margin-top: 50px;
+}
+
+.profile-item {
+  padding: 0 15px;
+}
+
+.account-title {
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.username {
+  font-weight: 500;
+  font-size: 16px;
+  margin: 10px 0 5px;
+}
+
+.user-detail {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.customer_order_list .ant-list-item-meta-avatar{
+  width: 9%;
+}
+
+.customer_order_list .ant-list-item del{
+  margin-right: 4px;
+  color: #666666;
+}

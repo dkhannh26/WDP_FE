@@ -1,0 +1,61 @@
+.register-input {
+  padding: 20px;
+  width: 100%;
+}
+
+.register-title {
+  font-size: 54px;
+  font-weight: 700;
+  /* position: absolute;
+    top: 50%;
+    transform: translateY(-50%); */
+}
+
+.register-title::after {
+  content: "";
+  background: #000;
+  display: block;
+  width: 60px;
+  height: 4px;
+  margin-top: 70px;
+}
+
+.register-item {
+  padding: 30px 15px;
+}
+
+.register-item:nth-child(2) {
+  border-left: 1px solid rgba(5, 5, 5, 0.06);
+  /* height: 100vh;   */
+}
+
+.ant-radio-wrapper .ant-radio-inner {
+  background-color: #efefef;
+}
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+  border-color: #efefef;
+  background-color: #efefef;
+}
+
+.ant-radio-wrapper .ant-radio-inner::after {
+  background-color: black;
+}
+
+.ant-radio-wrapper .ant-radio-checked .ant-radio-inner::after {
+  transform: scale(0.6);
+}
+
+.ant-input-filled:focus,
+.ant-picker-filled:focus,
+.ant-picker-filled:focus-within {
+  border-color: #efefef;
+}
+
+.ant-select {
+  height: auto;
+}
+
+:where(.css-dev-only-do-not-override-vryruh).ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  padding: 16px 20px;
+}

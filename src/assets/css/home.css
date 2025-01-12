@@ -1,0 +1,81 @@
+.service-item {
+    text-align: center;
+    border: 1px solid #f4f4f7;
+    padding: 40px 15px;
+    transition: .3s ease-in-out;
+}
+
+.service-icon {
+    font-size: 40px;
+}
+
+.service-title {
+    margin: 10px 0;
+    font-weight: 400;
+    transition: .3s;
+}
+
+.service-item:hover {
+    background-color: #f4f4f7;
+}
+
+.service-item:hover .service-title {
+    letter-spacing: 1px;
+}
+
+.home-item-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 400;
+    margin-top: 25px;
+    padding-bottom: 15px;
+    position: relative;
+}
+
+.home-item-title:before {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 55px;
+    height: 1px;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: #323232;
+}
+
+.item1 { grid-area: item1; }
+.item2 { grid-area: item2; }
+.item3 { grid-area: item3; }
+.item4 { grid-area: item4; }
+.item5 { grid-area: item5; }
+
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        'item1 item1 item2 item2 item2 item2'
+        'item1 item1 item2 item2 item2 item2'
+        'item1 item1 item2 item2 item2 item2'
+        'item3 item3 item2 item2 item2 item2'
+        'item3 item3 item4 item4 item5 item5'
+        'item3 item3 item4 item4 item5 item5';
+    gap: 30px;
+    padding: 15px;
+    margin: auto;
+    width: 90%;
+}
+
+.grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    font-size: 30px;
+}
+
+.grid-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    cursor: pointer;
+}
