@@ -120,3 +120,19 @@ export const success = (message, messageApi) => {
         content: message,
     });
 };
+
+export const getTop10 = (setTop10) => {
+    axios.get(API_PATH.hotProduct)
+        .then((res) => {
+            setTop10(res.data.data)
+        })
+        .catch(error => console.error(error))
+}
+
+export const getHotBrand = (setHotBrands) => {
+    axios.get(API_PATH.hotBrand)
+        .then((res) => {
+            setHotBrands(res.data.data)
+        })
+        .catch(error => console.error(error))
+}
