@@ -55,6 +55,10 @@ export const menu = [
     title: "Product",
     children: [
       {
+        key: "racket",
+        label: "Racket",
+      },
+      {
         key: "tshirt",
         label: "T-shirt",
       },

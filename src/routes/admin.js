@@ -34,11 +34,15 @@ import Profile from "../pages/Profile";
 import ProfileTable from "../components/profile/ProfileModel";
 import OrderTable from '../components/order/OrderTable';
 import Statistic from "../pages/Statistic";
+import RacketAdmin from "../pages/product-admin/RacketAdmin";
+import RacketTable from "../components/racket/RacketTable";
+import ProductDetail from "../components/product/productDetail";
 
 export const AdminRoutes = (
     <>
         <Route path="admin/login" element={<LoginAdmin />} />
         <Route path="admin" element={<Dashboard />}>
+            <Route path="product/:id" element={<ProductDetail />}></Route>
             <Route path="discount" element={<Discount />}>
                 <Route index element={<DiscountTable />} />
                 <Route path="create" element={<DiscountModel type="create" />} />
@@ -48,6 +52,11 @@ export const AdminRoutes = (
                 <Route index element={<VoucherTable />} />
                 <Route path="create" element={<VoucherModel type="create" />} />
                 <Route path="edit/:id" element={<VoucherModel type="edit" />} />
+            </Route>
+            <Route path="racket" element={<RacketAdmin />}>
+                <Route index element={<RacketTable />} />
+                {/* <Route path="create" element={<TshirtModel type="create" />} />
+                <Route path="edit/:id" element={<TshirtModel type="edit" />} /> */}
             </Route>
             <Route path="tshirt" element={<TshirtAdmin />}>
                 <Route index element={<TshirtTable />} />

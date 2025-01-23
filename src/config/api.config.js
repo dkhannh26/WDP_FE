@@ -6,6 +6,7 @@ export const API_PATH = {
   voucher: baseURL + "voucher",
   search: baseURL + "product/search",
   tshirt: baseURL + "product/tshirt",
+  product: baseURL + "product",
   shoes: baseURL + "product/shoes",
   accessory: baseURL + "product/accessory",
   pant: baseURL + "product/pant",

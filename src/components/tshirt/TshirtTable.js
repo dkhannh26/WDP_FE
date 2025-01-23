@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Flex, Image, message, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { MESSAGE } from "../../config/message.config";
 import { TSHIRT_URL } from "../../config/url.config";
 import { getListTshirt } from "../../services/product/tshirt.service";
 import { showDeleteConfirm, success } from "../../utils/helper";
+import { getProductList } from "../../services/product/product.service";
 
 const TshirtTable = () => {
   const [tshirts, setTshirts] = useState([]);
@@ -17,6 +18,7 @@ const TshirtTable = () => {
   const { state } = location;
   const role = localStorage.getItem("role");
 
+
   const columns = [
     {
       title: "No.",
@@ -25,7 +27,7 @@ const TshirtTable = () => {
     },
     {
       title: "Image",
-      dataIndex: "tshirtImg",
+      dataIndex: "productImg",
       render: (imgUrl) => {
         console.log(imgUrl);
         return (
@@ -36,31 +38,36 @@ const TshirtTable = () => {
     },
     {
       title: "Name",
-      dataIndex: "tshirtName",
+      dataIndex: "productName",
       filterSearch: true,
       width: "15%",
     },
     {
       title: "Price(VND)",
-      dataIndex: "tshirtPrice",
+      dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
     },
     {
       title: "Discount percent",
-      dataIndex: "tshirtDiscountPercent",
+      dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
-        return "null";
+        return "-";
       },
       width: "20%",
     },
     {
       title: "Action",
-      dataIndex: "tshirtId",
+      dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
           <Space>
+            <Button
+              shape="round"
+              icon={<SearchOutlined />}
+              onClick={() => navigate(`/admin/product/${_id}`)}
+            ></Button>
             <Button
               shape="round"
               icon={<EditOutlined />}
@@ -100,7 +107,7 @@ const TshirtTable = () => {
       navigate(location.pathname, { replace: true });
     }
 
-    getListTshirt(setTshirts);
+    getProductList(setTshirts, "tshirt");
   }, [state, navigate, messageApi, location.pathname]);
 
   return (

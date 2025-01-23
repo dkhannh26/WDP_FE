@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Flex, Image, message, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { MESSAGE } from "../../config/message.config";
 import { ACCESSORY_URL } from "../../config/url.config";
 import { showDeleteConfirm, success } from "../../utils/helper";
 import { getListAccessory } from "../../services/product/accessory.service";
+import { getProductList } from "../../services/product/product.service";
 
 const AccessoryTable = () => {
   const [accessories, setAccessories] = useState([]);
@@ -25,7 +26,7 @@ const AccessoryTable = () => {
     },
     {
       title: "Image",
-      dataIndex: "accessoryImg",
+      dataIndex: "productImg",
       render: (imgUrl) => {
         return (
           <Image width={150} src={"http://localhost:3000" + imgUrl}></Image>
@@ -35,19 +36,19 @@ const AccessoryTable = () => {
     },
     {
       title: "Name",
-      dataIndex: "accessoryName",
+      dataIndex: "productName",
       filterSearch: true,
       width: "15%",
     },
     {
       title: "Price(VND)",
-      dataIndex: "accessoryPrice",
+      dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
     },
     {
       title: "Discount percent",
-      dataIndex: "accessoryDiscountPercent",
+      dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
         return "null";
@@ -56,10 +57,15 @@ const AccessoryTable = () => {
     },
     {
       title: "Action",
-      dataIndex: "accessoryId",
+      dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
           <Space>
+            <Button
+              shape="round"
+              icon={<SearchOutlined />}
+              onClick={() => navigate(`/admin/product/${_id}`)}
+            ></Button>
             <Button
               shape="round"
               icon={<EditOutlined />}
@@ -99,7 +105,7 @@ const AccessoryTable = () => {
       navigate(location.pathname, { replace: true });
     }
 
-    getListAccessory(setAccessories);
+    getProductList(setAccessories, 'accessory');
   }, [state, navigate, messageApi, location.pathname]);
 
   return (

@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Flex, Image, message, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { MESSAGE } from "../../config/message.config";
 import { SHOES_URL } from "../../config/url.config";
 import { getListShoes } from "../../services/product/shoes.service";
 import { showDeleteConfirm, success } from "../../utils/helper";
+import { getProductList } from "../../services/product/product.service";
 
 const ShoesTable = () => {
   const [shoesList, setShoesList] = useState([]);
@@ -25,7 +26,7 @@ const ShoesTable = () => {
     },
     {
       title: "Image",
-      dataIndex: "shoesImg",
+      dataIndex: "productImg",
       render: (imgUrl) => {
         return (
           <Image width={150} src={"http://localhost:3000" + imgUrl}></Image>
@@ -35,19 +36,19 @@ const ShoesTable = () => {
     },
     {
       title: "Name",
-      dataIndex: "shoesName",
+      dataIndex: "productName",
       filterSearch: true,
       width: "15%",
     },
     {
       title: "Price(VND)",
-      dataIndex: "shoesPrice",
+      dataIndex: "productPrice",
       render: (price) => price?.toLocaleString("vi-VN"),
       width: "20%",
     },
     {
       title: "Discount percent",
-      dataIndex: "shoesDiscountPercent",
+      dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (!percent) return "null";
         return `${percent}%`;
@@ -56,10 +57,15 @@ const ShoesTable = () => {
     },
     {
       title: "Action",
-      dataIndex: "shoesId",
+      dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
           <Space>
+            <Button
+              shape="round"
+              icon={<SearchOutlined />}
+              onClick={() => navigate(`/admin/product/${_id}`)}
+            ></Button>
             <Button
               shape="round"
               icon={<EditOutlined />}
@@ -98,8 +104,7 @@ const ShoesTable = () => {
       success(state.message, messageApi);
       navigate(location.pathname, { replace: true });
     }
-
-    getListShoes(setShoesList);
+    getProductList(setShoesList, "shoes");
   }, [state, navigate, messageApi, location.pathname]);
 
   return (

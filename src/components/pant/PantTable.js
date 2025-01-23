@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Flex, Image, message, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { MESSAGE } from "../../config/message.config";
 import { PANT_URL } from "../../config/url.config";
 import { showDeleteConfirm, success } from "../../utils/helper";
 import { getListPant } from "../../services/product/pant.service";
+import { getProductList } from "../../services/product/product.service";
 
 const PantTable = () => {
   const [pants, setPants] = useState([]);
@@ -24,7 +25,7 @@ const PantTable = () => {
     },
     {
       title: "Image",
-      dataIndex: "pantImg",
+      dataIndex: "productImg",
       render: (imgUrl) => {
         console.log("http://localhost:3000" + imgUrl);
         return (
@@ -35,19 +36,19 @@ const PantTable = () => {
     },
     {
       title: "Name",
-      dataIndex: "pantName",
+      dataIndex: "productName",
       filterSearch: true,
       width: "15%",
     },
     {
       title: "Price(VND)",
-      dataIndex: "pantPrice",
+      dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
     },
     {
       title: "Discount percent",
-      dataIndex: "pantDiscountPercent",
+      dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
         return "null";
@@ -56,10 +57,15 @@ const PantTable = () => {
     },
     {
       title: "Action",
-      dataIndex: "pantId",
+      dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
           <Space>
+            <Button
+              shape="round"
+              icon={<SearchOutlined />}
+              onClick={() => navigate(`/admin/product/${_id}`)}
+            ></Button>
             <Button
               shape="round"
               icon={<EditOutlined />}
@@ -99,7 +105,7 @@ const PantTable = () => {
       navigate(location.pathname, { replace: true });
     }
 
-    getListPant(setPants);
+    getProductList(setPants, "pant")
   }, [state, navigate, messageApi, location.pathname]);
 
   return (
