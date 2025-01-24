@@ -1,31 +1,25 @@
-import { CommentOutlined, CreditCardOutlined, DropboxOutlined, TruckOutlined } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, Typography } from "antd";
+import { CommentOutlined, CreditCardOutlined, DropboxOutlined, LeftOutlined, RightOutlined, TruckOutlined } from '@ant-design/icons';
+import { Card, Carousel, Col, Row } from "antd";
 import Meta from "antd/es/card/Meta";
 import Title from 'antd/es/typography/Title';
 import { default as React, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import {
-    getListTshirt
-} from "../services/product/tshirt.service";
 import '../assets/css/home.css';
 import Carousel1 from '../assets/images/carousel1.webp';
 import Carousel2 from '../assets/images/carousel2.webp';
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { getHotBrand, getTop10 } from '../services/order.service';
-const { Text } = Typography;
 const Home = () => {
     const carouselRef = React.useRef(null);
 
     const nextSlide = () => {
         if (carouselRef.current) {
-            carouselRef.current.next();  // Điều khiển carousel tiến đến slide tiếp theo
+            carouselRef.current.next();
         }
     };
 
-    // Hàm chuyển đến slide trước đó
     const prevSlide = () => {
         if (carouselRef.current) {
-            carouselRef.current.prev();  // Điều khiển carousel quay lại slide trước đó
+            carouselRef.current.prev();
         }
     };
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -33,22 +27,23 @@ const Home = () => {
     const [top10, setTop10] = useState([]);
     const [hotBrand, setHotBrands] = useState([]);
     const navigate = useNavigate();
+    const filteredProducts = selectedCategory === "all"
+        ? (top10?.flatMap(category => category.topProducts) || [])
+        : (top10
+            ?.filter(category => category._id === selectedCategory)
+            .flatMap(category => category.topProducts) || []);
+
+    const filteredBrands = selectedBrand === "all"
+        ? (hotBrand?.flatMap(brand => brand.hotBrands) || [])
+        : (hotBrand
+            ?.filter(brand => brand._id === selectedBrand)
+            .flatMap(brand => brand.hotBrands) || []);
+    console.log(filteredProducts);
+    console.log(filteredBrands);
     useEffect(() => {
         getTop10(setTop10);
         getHotBrand(setHotBrands);
     }, []);
-    console.log(hotBrand);
-    const filteredProducts = selectedCategory === "all"
-        ? top10.flatMap(category => category.topProducts)
-        : top10
-            .filter(category => category._id === selectedCategory)
-            .flatMap(category => category.topProducts);
-
-    const filteredBrands = selectedBrand === "all"
-        ? hotBrand.flatMap(brand => brand.hotBrands)
-        : hotBrand
-            .filter(brand => brand._id === selectedBrand)
-            .flatMap(brand => brand.hotBrands);
     return (
         <div>
             <Carousel arrows effect="fade">
@@ -99,19 +94,19 @@ const Home = () => {
                         borderBottom: "none"
                     }}>
                         <Row>
-                            <Col span={5} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "all" ? "lightblue" : "transparent" }}>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "all" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedCategory("all")}>Tất cả</Title>
                             </Col>
-                            <Col span={5} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Vợt cầu lông" ? "lightblue" : "transparent" }}>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Vợt cầu lông" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedCategory("Vợt cầu lông")}>Vợt cầu lông</Title>
                             </Col>
-                            <Col span={5} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Giày cầu lông" ? "lightblue" : "transparent" }}>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Giày cầu lông" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedCategory("Giày cầu lông")}>Giày cầu lông</Title>
                             </Col>
-                            <Col span={4} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Áo cầu lông" ? "lightblue" : "transparent" }}>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Áo cầu lông" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedCategory("Áo cầu lông")}>Áo cầu lông</Title>
                             </Col>
-                            <Col span={4} style={{ paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedCategory === "Quần cầu lông" ? "lightblue" : "transparent" }}>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedCategory === "Quần cầu lông" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedCategory("Quần cầu lông")}>Quần cầu lông</Title>
                             </Col>
                         </Row>
@@ -176,24 +171,24 @@ const Home = () => {
                         borderBottom: "none"
                     }}>
                         <Row>
-                            <Col span={5} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Lining" ? "lightblue" : "transparent" }}>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Lining" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedBrand("Lining")}>Lining</Title>
                             </Col>
-                            <Col span={5} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Mizuno" ? "lightblue" : "transparent" }}>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Mizuno" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedBrand("Mizuno")}>Mizuno</Title>
                             </Col>
-                            <Col span={5} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Victor" ? "lightblue" : "transparent" }}>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Victor" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedBrand("Victor")}>Victor</Title>
                             </Col>
-                            <Col span={4} style={{ paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "SNB" ? "lightblue" : "transparent" }}>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "SNB" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedBrand("SNB")}>SNB</Title>
                             </Col>
-                            <Col span={4} style={{ paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedBrand === "Yonex" ? "lightblue" : "transparent" }}>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedBrand === "Yonex" ? "lightblue" : "transparent" }}>
                                 <Title level={4} onClick={() => setSelectedBrand("Yonex")}>Yonex</Title>
                             </Col>
                         </Row>
                     </div>
-                    <Carousel ref={carouselRef} dots={false} slidesToShow={5} slidesToScroll={1} infinite>
+                    <Row>
                         {filteredBrands.map((product) => (
                             <div key={product.product_id} style={{ padding: "0 8px" }}>
                                 <Card
@@ -219,7 +214,7 @@ const Home = () => {
                                 </Card>
                             </div>
                         ))}
-                    </Carousel>
+                    </Row>
                 </div>
             </div>
 
