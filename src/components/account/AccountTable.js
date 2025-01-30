@@ -1,33 +1,42 @@
-import {
-  DeleteFilled,
-  DeleteOutlined,
-  EditOutlined,
-  UndoOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, UndoOutlined } from "@ant-design/icons";
 import { Button, Col, Flex, message, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ACCOUNT_URL, VOUCHER_URL } from "../../config/url.config";
+import { MESSAGE } from "../../config/message.config";
+import { ACCOUNT_URL } from "../../config/url.config";
+import { getListAccount } from "../../services/account.service";
 import {
   showDeleteAccountConfirm,
-  showDeletePermanently,
-  showDeleteVoucherConfirm,
   showRecoveryAccount,
   success,
 } from "../../utils/helper";
-import { MESSAGE } from "../../config/message.config";
-import {
-  getListAccount,
-  recoveryAccount,
-} from "../../services/account.service";
+
+import { AudioOutlined } from "@ant-design/icons";
+import { Input } from "antd";
+const { Search } = Input;
 
 const AccountTable = () => {
   const [account, setAccounts] = useState([]);
+  const [filteredAccounts, setFilteredAccounts] = useState(account);
+
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
   const { state } = location;
+  const onChange = (e) => {
+    const value = e.target.value.toLowerCase();
+
+    const filtered = account.filter(
+      (account) =>
+        account.username.toLowerCase().includes(value) ||
+        account.email.toLowerCase().includes(value) ||
+        account.phone.toLowerCase().includes(value) ||
+        account.address.toLowerCase().includes(value)
+    );
+    setFilteredAccounts(filtered);
+  };
+
   const columns = [
     {
       title: "No.",
@@ -107,19 +116,6 @@ const AccountTable = () => {
                 }
               ></Button>
             )}
-            <Button
-              danger
-              shape="round"
-              icon={<DeleteFilled />}
-              onClick={() =>
-                showDeletePermanently(
-                  _id,
-                  messageApi,
-                  getListAccount,
-                  setAccounts
-                )
-              }
-            ></Button>
           </Space>
         );
       },
@@ -138,6 +134,12 @@ const AccountTable = () => {
     }
     getListAccount(setAccounts);
   }, [state, navigate, messageApi, location.pathname]);
+
+  useEffect(() => {
+    if (account.length > 0) {
+      setFilteredAccounts(account);
+    }
+  }, [account]);
   return (
     <>
       <Flex gap="middle" align="center" justify="space-between">
@@ -159,7 +161,20 @@ const AccountTable = () => {
           </Button>
         </Col>
       </Flex>
-      <Table columns={columns} dataSource={account} />
+      <Search
+        placeholder="Enter something to search"
+        allowClear
+        enterButton
+        size="large"
+        onChange={onChange}
+        style={{
+          width: 350,
+          display: "flex",
+          justifyContent: "flex-start",
+          marginBottom: "10px",
+        }}
+      />
+      <Table columns={columns} dataSource={filteredAccounts} />
     </>
   );
 };
