@@ -19,7 +19,7 @@ import { PATH } from "../../config/api.config";
 import { options } from "./../ProvinceData";
 
 import "../../assets/css/profile.css";
-const ProfileTable = () => {
+const ChangePasswordTable = () => {
   const navigate = useNavigate();
 
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
@@ -183,4 +183,4 @@ const ProfileTable = () => {
   );
 };
 
-export default ProfileTable;
+export default ChangePasswordTable;
