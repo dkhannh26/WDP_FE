@@ -1,5 +1,10 @@
-import { DeleteOutlined, EditOutlined, UndoOutlined } from "@ant-design/icons";
-import { Button, Col, Flex, message, Space, Table } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FilterOutlined,
+  UndoOutlined,
+} from "@ant-design/icons";
+import { Button, Col, Flex, message, Row, Select, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -11,9 +16,8 @@ import {
   showRecoveryAccount,
   success,
 } from "../../utils/helper";
-
-import { AudioOutlined } from "@ant-design/icons";
 import { Input } from "antd";
+
 const { Search } = Input;
 
 const AccountTable = () => {
@@ -34,6 +38,25 @@ const AccountTable = () => {
         account.phone.toLowerCase().includes(value) ||
         account.address.toLowerCase().includes(value)
     );
+    setFilteredAccounts(filtered);
+  };
+
+  const handleFilterChange = (value) => {
+    let filtered = [];
+    switch (value) {
+      case "user":
+      case "staff":
+        filtered = account.filter((item) => item.role === value);
+
+        break;
+
+      case "active":
+        filtered = account.filter((item) => item.deleted === "false");
+        break;
+      case "locked":
+        filtered = account.filter((item) => item.deleted === "true");
+        break;
+    }
     setFilteredAccounts(filtered);
   };
 
@@ -161,19 +184,46 @@ const AccountTable = () => {
           </Button>
         </Col>
       </Flex>
-      <Search
-        placeholder="Enter something to search"
-        allowClear
-        enterButton
-        size="large"
-        onChange={onChange}
-        style={{
-          width: 350,
-          display: "flex",
-          justifyContent: "flex-start",
-          marginBottom: "10px",
-        }}
-      />
+
+      <Row style={{ marginLeft: 0 }}>
+        <Col span={6}>
+          <Search
+            placeholder="Enter something to search"
+            allowClear
+            enterButton
+            size="large"
+            onChange={onChange}
+            style={{
+              width: 350,
+              display: "flex",
+              justifyContent: "flex-start",
+              marginBottom: "10px",
+            }}
+          />
+        </Col>
+        <Col span={6}>
+          <div style={{ fontWeight: 600, fontSize: 20 }}>
+            <FilterOutlined /> Filter
+            <Select
+              defaultValue="Role"
+              style={{
+                marginLeft: 20,
+              }}
+              onChange={handleFilterChange}
+            >
+              <Select.OptGroup label="Role">
+                <Select.Option value="user">User</Select.Option>
+                <Select.Option value="staff">Staff</Select.Option>
+              </Select.OptGroup>
+              <Select.OptGroup label="Status">
+                <Select.Option value="active">Active</Select.Option>
+                <Select.Option value="deleted">Locked</Select.Option>
+              </Select.OptGroup>
+            </Select>
+          </div>
+        </Col>
+      </Row>
+
       <Table columns={columns} dataSource={filteredAccounts} />
     </>
   );
