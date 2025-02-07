@@ -34,6 +34,8 @@ const DiscountTable = () => {
             render: (date) => {
                 return formatDate(date)
             },
+            sorter: (a, b) => new Date(a.expired_at) - new Date(b.expired_at),
+
             width: '20%',
         },
         {

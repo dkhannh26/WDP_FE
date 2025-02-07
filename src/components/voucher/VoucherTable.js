@@ -31,6 +31,7 @@ const VoucherTable = () => {
     {
       title: "Condition",
       dataIndex: "condition",
+      sorter: (a, b) => a.condition - b.condition,
       width: "20%",
     },
     {
