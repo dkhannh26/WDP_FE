@@ -214,16 +214,8 @@ const Header = () => {
       key: "HOME",
     },
     {
-      label: <Link to="/customer/tshirt">T-SHIRT</Link>,
-      key: "T-SHIRT",
-    },
-    {
-      label: <Link to="/customer/pant">PANTS</Link>,
-      key: "PANTS",
-    },
-    {
-      label: <Link to="/customer/shoes">SHOES</Link>,
-      key: "SHOES",
+      label: <Link to="/customer/product">PRODUCT</Link>,
+      key: "PRODUCT",
     },
     {
       label: <Link to="/customer/accessory">ACCESSORIES</Link>,
