@@ -29,6 +29,8 @@ export const API_PATH = {
   feedback: baseURL + 'feedback',
   statistic: baseURL + 'statistic',
   admin: baseURL + "admin",
+  hotProduct: baseURL + "order/hotProduct",
+  hotBrand: baseURL + "order/hotBrand",
 }
 export const PATH = {
   user: baseURL + "users",

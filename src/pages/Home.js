@@ -1,13 +1,49 @@
-import React from 'react';
+import { CommentOutlined, CreditCardOutlined, DropboxOutlined, LeftOutlined, RightOutlined, TruckOutlined } from '@ant-design/icons';
+import { Card, Carousel, Col, Row } from "antd";
+import Meta from "antd/es/card/Meta";
+import Title from 'antd/es/typography/Title';
+import { default as React, useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import '../assets/css/home.css';
-import { Card, Carousel, Col, Rate, Row } from "antd";
-import { TruckOutlined, CommentOutlined, DropboxOutlined, CreditCardOutlined } from '@ant-design/icons';
 import Carousel1 from '../assets/images/carousel1.webp';
 import Carousel2 from '../assets/images/carousel2.webp';
-import ProductItem from '../components/product-item';
-
+import { getHotBrand, getTop10 } from '../services/order.service';
 const Home = () => {
+    const carouselRef = React.useRef(null);
 
+    const nextSlide = () => {
+        if (carouselRef.current) {
+            carouselRef.current.next();
+        }
+    };
+
+    const prevSlide = () => {
+        if (carouselRef.current) {
+            carouselRef.current.prev();
+        }
+    };
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [selectedBrand, setSelectedBrand] = useState("Lining");
+    const [top10, setTop10] = useState([]);
+    const [hotBrand, setHotBrands] = useState([]);
+    const navigate = useNavigate();
+    const filteredProducts = selectedCategory === "all"
+        ? (top10?.flatMap(category => category.topProducts) || [])
+        : (top10
+            ?.filter(category => category._id === selectedCategory)
+            .flatMap(category => category.topProducts) || []);
+
+    const filteredBrands = selectedBrand === "all"
+        ? (hotBrand?.flatMap(brand => brand.hotBrands) || [])
+        : (hotBrand
+            ?.filter(brand => brand._id === selectedBrand)
+            .flatMap(brand => brand.hotBrands) || []);
+    console.log(filteredProducts);
+    console.log(filteredBrands);
+    useEffect(() => {
+        getTop10(setTop10);
+        getHotBrand(setHotBrands);
+    }, []);
     return (
         <div>
             <Carousel arrows effect="fade">
@@ -50,25 +86,138 @@ const Home = () => {
                 </Row>
             </div> */}
             <div className='container'>
-                <h2 className='home-item-title'>FEEDBACK</h2>
-                <Row className='grid-container'>
-                    <div class="item1">
-                        <img src='https://theme.hstatic.net/1000344185/1001270599/14/imgaView1.jpg?v=257' alt='' />
+                <h2 className='home-item-title'>Hot Product</h2>
+                <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }}>
+                    <div style={{
+                        padding: "2%",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
+                        borderBottom: "none"
+                    }}>
+                        <Row>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "all" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedCategory("all")}>Tất cả</Title>
+                            </Col>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Vợt cầu lông" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedCategory("Vợt cầu lông")}>Vợt cầu lông</Title>
+                            </Col>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Giày cầu lông" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedCategory("Giày cầu lông")}>Giày cầu lông</Title>
+                            </Col>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Áo cầu lông" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedCategory("Áo cầu lông")}>Áo cầu lông</Title>
+                            </Col>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedCategory === "Quần cầu lông" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedCategory("Quần cầu lông")}>Quần cầu lông</Title>
+                            </Col>
+                        </Row>
                     </div>
-                    <div class="item2">
-                        <img src='https://theme.hstatic.net/1000344185/1001270599/14/imgaView3.jpg?v=257' alt='' />
+                    <Carousel ref={carouselRef} dots={false} slidesToShow={5} slidesToScroll={1} infinite>
+                        {filteredProducts.map((product) => (
+                            <div key={product.product_id} style={{ padding: "0 8px" }}>
+                                <Card
+                                    onClick={() => navigate(`/product/${product.product_id}`)}
+                                    bordered={true}
+                                    hoverable
+                                    style={{ width: "95%" }}
+                                    cover={<img alt={product.productName} style={{ width: "100%" }} src={`http://localhost:3000${product.image}`} />}
+                                >
+                                    <Meta
+                                        title={product.productName}
+                                        description={
+                                            <>
+                                                <p>Giá gốc: {product.productPrice}₫</p>
+                                                {product.productDiscount ? (
+                                                    <p>Giá khuyến mãi: {(product.productPrice - (product.productPrice * product.productDiscount) / 100)}₫ (-{product.productDiscount}%)</p>
+                                                ) : (
+                                                    <p>Chưa có khuyến mãi</p>
+                                                )}
+                                            </>
+                                        }
+                                    />
+                                </Card>
+                            </div>
+                        ))}
+                    </Carousel>
+
+
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            left: "0",
+                            zIndex: 1,
+                        }}
+                    >
+                        <LeftOutlined onClick={prevSlide} style={{ fontSize: "24px", cursor: "pointer" }} />
                     </div>
-                    <div class="item3">
-                        <img src='https://theme.hstatic.net/1000344185/1001270599/14/imgaView2.jpg?v=257' alt='' />
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            right: "0",
+                            zIndex: 1,
+                        }}
+                    >
+                        <RightOutlined onClick={nextSlide} style={{ fontSize: "24px", cursor: "pointer" }} />
                     </div>
-                    <div class="item4">
-                        <img src='https://theme.hstatic.net/1000344185/1001270599/14/imgaView4.jpg?v=257' alt='' />
+                </div>
+                <h2 className='home-item-title'>Hot Brands</h2>
+                <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }}>
+                    <div style={{
+                        padding: "2%",
+                        border: "1px solid rgba(0, 0, 0, 0.2)",
+                        borderBottom: "none"
+                    }}>
+                        <Row>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Lining" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedBrand("Lining")}>Lining</Title>
+                            </Col>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Mizuno" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedBrand("Mizuno")}>Mizuno</Title>
+                            </Col>
+                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "Victor" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedBrand("Victor")}>Victor</Title>
+                            </Col>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedBrand === "SNB" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedBrand("SNB")}>SNB</Title>
+                            </Col>
+                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedBrand === "Yonex" ? "lightblue" : "transparent" }}>
+                                <Title level={4} onClick={() => setSelectedBrand("Yonex")}>Yonex</Title>
+                            </Col>
+                        </Row>
                     </div>
-                    <div class="item5">
-                        <img src='https://theme.hstatic.net/1000344185/1001270599/14/imgaView5.jpg?v=257' alt='' />
-                    </div>
-                </Row>
+                    <Row>
+                        {filteredBrands.map((product) => (
+                            <div key={product.product_id} style={{ padding: "0 8px" }}>
+                                <Card
+                                    onClick={() => navigate(`/product/${product.product_id}`)}
+                                    bordered={true}
+                                    hoverable
+                                    style={{ width: "95%" }}
+                                    cover={<img alt={product.productName} style={{ width: "100%" }} src={`http://localhost:3000${product.image}`} />}
+                                >
+                                    <Meta
+                                        title={product.productName}
+                                        description={
+                                            <>
+                                                <p>Giá gốc: {product.productPrice}₫</p>
+                                                {product.productDiscount ? (
+                                                    <p>Giá khuyến mãi: {(product.productPrice - (product.productPrice * product.productDiscount) / 100)}₫ (-{product.productDiscount}%)</p>
+                                                ) : (
+                                                    <p>Chưa có khuyến mãi</p>
+                                                )}
+                                            </>
+                                        }
+                                    />
+                                </Card>
+                            </div>
+                        ))}
+                    </Row>
+                </div>
             </div>
+
         </div>
     );
 };
