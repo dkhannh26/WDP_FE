@@ -3,11 +3,9 @@ import { Button, Col, Flex, Image, Input, message, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { API_PATH } from "../../config/api.config";
 import { MESSAGE } from "../../config/message.config";
 import { TSHIRT_URL } from "../../config/url.config";
-import { getListTshirt } from "../../services/product/tshirt.service";
-import { showDeleteConfirm, success } from "../../utils/helper";
+import { success } from "../../utils/helper";
 import Highlighter from 'react-highlight-words';
 import { getProductList } from "../../services/product/product.service";
 

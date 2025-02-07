@@ -107,7 +107,6 @@ export const menu = [
       children: item.children,
     };
   } else if (item.role === role) {
-    console.log(role);
     return {
       key: "/admin" + item.key,
       icon: React.createElement(item.icon),
@@ -115,4 +114,5 @@ export const menu = [
       children: item.children,
     };
   }
+  return null
 });

@@ -36,7 +36,7 @@ import OrderTable from '../components/order/OrderTable';
 import Statistic from "../pages/Statistic";
 import RacketAdmin from "../pages/product-admin/RacketAdmin";
 import RacketTable from "../components/racket/RacketTable";
-import ProductDetail from "../components/product/productDetail";
+import ProductDetail from "../components/product-admin/productDetail";
 
 export const AdminRoutes = (
     <>
