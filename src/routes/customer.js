@@ -15,28 +15,24 @@ import ExchangePolicy from '../pages/ExchangePolicy';
 import Contact from '../pages/Contact';
 import Product from '../pages/Product';
 import Home from "../pages/Home";
-import PantsCustomer from "../pages/product-customer/pant/PantsCustomer";
-import PantDetail from "../pages/product-customer/pant/PantDetail";
-import ShoesCustomer from "../pages/product-customer/shoes/ShoesCustomer";
 import ShoesDetail from "../pages/product-customer/shoes/ShoesDetail";
-import AccessoryCustomer from "../pages/product-customer/accessory/AccessoryCustomer";
 import AccessoryDetail from "../pages/product-customer/accessory/AccessoryDetail";
-import TshirtCustomer from "../pages/product-customer/tshirt/TshirtCustomer";
-import TshirtDetail from "../pages/product-customer/tshirt/TshirtDetail";
+import ProductCustomer from "../pages/product-customer/ProductCustomer";
+import ProductDetail from "../pages/product-customer/ProductDetail";
 export const CustomerRoutes = (
   <>
     <Route path="customer" element={<Layout />}>
       <Route path="profile" element={<User />}></Route>
       <Route path="register" element={<Register />}></Route>
       <Route path="order" element={<OrderCustomer />}></Route>
-      <Route path="pant/:id" element={<PantDetail />} />
-      <Route path="pant" element={<PantsCustomer />} />
+      <Route path="pant/:id" element={<ProductDetail />} />
+      <Route path="pant" element={<ProductCustomer />} />
       <Route path="shoes/:id" element={<ShoesDetail />} />
-      <Route path="shoes" element={<ShoesCustomer />} />
+      <Route path="shoes" element={<ProductCustomer />} />
       <Route path="accessory/:id" element={<AccessoryDetail />} />
-      <Route path="accessory" element={<AccessoryCustomer />} />
-      <Route path="tshirt/:id" element={<TshirtDetail />} />
-      <Route path="tshirt" element={<TshirtCustomer />} />
+      <Route path="accessory" element={<ProductCustomer />} />
+      <Route path="tshirt/:id" element={<ProductDetail />} />
+      <Route path="tshirt" element={<ProductCustomer />} />
       <Route path='about' element={<About />}></Route>
       <Route path='exchange-policy' element={<ExchangePolicy />}></Route>
       <Route path='contact' element={<Contact />}></Route>

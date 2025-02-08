@@ -40,10 +40,10 @@ const Home = () => {
             .flatMap(brand => brand.hotBrands) || []);
     console.log(filteredProducts);
     console.log(filteredBrands);
-    useEffect(() => {
-        getTop10(setTop10);
-        getHotBrand(setHotBrands);
-    }, []);
+    // useEffect(() => {
+    //     getTop10(setTop10);
+    //     getHotBrand(setHotBrands);
+    // }, []);
     return (
         <div>
             <Carousel arrows effect="fade">

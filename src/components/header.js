@@ -214,19 +214,19 @@ const Header = () => {
       key: "HOME",
     },
     {
-      label: <Link to="/customer/tshirt">T-SHIRT</Link>,
+      label: <Link to="/customer/tshirt" state={{ typeLink: 'tshirt' }} >T-SHIRT</Link>,
       key: "T-SHIRT",
     },
     {
-      label: <Link to="/customer/pant">PANTS</Link>,
+      label: <Link to="/customer/pant" state={{ typeLink: 'pant' }}>PANTS</Link>,
       key: "PANTS",
     },
     {
-      label: <Link to="/customer/shoes">SHOES</Link>,
+      label: <Link to="/customer/shoes" state={{ typeLink: 'shoes' }}>SHOES</Link>,
       key: "SHOES",
     },
     {
-      label: <Link to="/customer/accessory">ACCESSORIES</Link>,
+      label: <Link to="/customer/accessory" state={{ typeLink: 'accessory' }}>ACCESSORIES</Link>,
       key: "ACCESSORIES",
     },
 
@@ -315,7 +315,7 @@ const Header = () => {
                                 item.tshirtPrice -
                                 (item.tshirtPrice *
                                   item.tshirtDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
@@ -357,7 +357,7 @@ const Header = () => {
                               {(
                                 item.pantPrice -
                                 (item.pantPrice * item.pantDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
@@ -398,7 +398,7 @@ const Header = () => {
                               {(
                                 item.shoesPrice -
                                 (item.shoesPrice * item.shoesDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
@@ -417,7 +417,7 @@ const Header = () => {
                 ""
               )}
               {searchList?.accessories &&
-              searchList?.accessories?.length !== 0 ? (
+                searchList?.accessories?.length !== 0 ? (
                 <List
                   itemLayout="horizontal"
                   dataSource={searchList?.accessories}
@@ -441,7 +441,7 @@ const Header = () => {
                                 item.accessoryPrice -
                                 (item.accessoryPrice *
                                   item.accessoryDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
