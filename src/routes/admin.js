@@ -32,7 +32,7 @@ import AccountModel from "../components/account/AccountModel";
 import LoginAdmin from "../pages/loginAdmin";
 import Profile from "../pages/Profile";
 import ProfileTable from "../components/profile/ProfileModel";
-import OrderTable from '../components/order/OrderTable';
+import OrderTable from "../components/order/OrderTable";
 import Statistic from "../pages/Statistic";
 import RacketAdmin from "../pages/product-admin/RacketAdmin";
 import RacketTable from "../components/racket/RacketTable";
@@ -98,10 +98,10 @@ export const AdminRoutes = (
                 <Route path="create" element={<ImportModel type="create" />} />
                 <Route path="edit/:id" element={<ImportModel type="edit" />} />
             </Route>
-            <Route path='order' element={<Voucher />}>
+            <Route path="order" element={<Voucher />}>
                 <Route index element={<OrderTable />} />
             </Route>
-            <Route path='statistic' element={<Statistic />}></Route>
+            <Route path="statistic" element={<Statistic />}></Route>
             <Route path="profile" element={<Profile />}>
                 <Route index element={<ProfileTable />} />
             </Route>

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import "../../assets/css/profile.css";
+
 import {
   Button,
   Col,
@@ -19,7 +21,8 @@ import { options } from "./../ProvinceData";
 import "../../assets/css/profile.css";
 const ProfileTable = () => {
   const navigate = useNavigate();
-
+  const [view, setView] = useState("profile");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
     useAuth();
 
@@ -54,7 +57,42 @@ const ProfileTable = () => {
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues, form]);
+  const onChangePassword = (values) => {
+    const { oldPassword, newPassword } = values;
+    // Add API call logic here to change password
+    try {
+      axios
+        .put(`${PATH.profile}/change-password/${user.username}`, {
+          oldPassword,
+          newPassword,
+        })
+        .then((res) => {
+          console.log(res.data);
 
+          if (res.data.success) {
+            notification.success({
+              message: res.data.message,
+              description: "success",
+            });
+
+            setTimeout(
+              () => {
+                window.location.reload();
+              },
+              setView("profile"),
+              1000
+            );
+          } else {
+            notification.error({
+              message: res.data.message,
+              description: "error",
+            });
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const onFinish = (values) => {
     const { email, phone, address } = values;
 
@@ -73,7 +111,7 @@ const ProfileTable = () => {
             });
             // setIsAuthenticated(true);
             setUser({ ...user, email, phone, address });
-            navigate("/customer/profile");
+            setTimeout(() => window.location.reload(), 1000);
           } else {
             notification.error({
               message: res.data.message,
@@ -87,80 +125,246 @@ const ProfileTable = () => {
   };
 
   return (
-    <div className="container profile" style={{ width: "900px" }}>
-      <h3 className="account-title">Account information</h3>
-      <Form onFinish={onFinish} form={form} layout="vertical">
-        <Form.Item
-          name="username"
-          label="Username"
-          rules={[
-            {
-              required: true,
-              message: "Please input your username!",
-            },
-          ]}
-        >
-          <Input
-            disabled={true}
-            placeholder="Username"
-            className="register-input"
-          />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[
-            {
-              required: true,
-              message: "Please input your email!",
-            },
-            { type: "email", message: "Please enter a valid email!" },
-          ]}
-        >
-          <Input
-            disabled={true}
-            placeholder="Email"
-            className="register-input"
-          />
-        </Form.Item>
-        <Form.Item
-          name="phone"
-          label="Phone number"
-          rules={[
-            {
-              required: true,
-              message: "Please input your phone number!",
-            },
-            {
-              pattern: /^[0-9]{10}$/,
-              message: "Phone number must be 10 digits!",
-            },
-          ]}
-        >
-          <Input
-            disabled={true}
-            placeholder="Phone"
-            className="register-input"
-          />
-        </Form.Item>
-        <Form.Item
-          name="address"
-          label="Address"
-          rules={[
-            {
-              required: true,
-              message: "Please select your address!",
-            },
-          ]}
-        >
-          <Input
-            disabled={true}
-            placeholder="Address"
-            className="register-input"
-          />
-        </Form.Item>
-      </Form>
-    </div>
+    <>
+      <Row>
+        {view === "profile" ? (
+          <>
+            <Col>
+              <Button
+                style={{
+                  border: "none",
+                  marginBottom: 5,
+                  fontSize: "15px",
+                  backgroundColor: "#FFFFFF",
+                  fontWeight: "bold",
+                }}
+                onClick={() => {
+                  // navigate("/customer/profile");
+                  setView("changePassword");
+                }}
+              >
+                Change password
+              </Button>
+            </Col>
+            <Col span={6} offset={6}>
+              <h3 className="account-title">Account information</h3>
+            </Col>
+          </>
+        ) : (
+          <>
+            {" "}
+            <Col>
+              <Button
+                style={{
+                  border: "none",
+                  marginBottom: 5,
+                  fontSize: "15px",
+                  backgroundColor: "#FFFFFF",
+                  fontWeight: "bold",
+                }}
+                onClick={() => {
+                  // navigate("/customer/profile");
+                  setView("profile");
+                }}
+              >
+                Back to profile
+              </Button>
+            </Col>
+            <Col span={6} offset={6}>
+              <h3 className="account-title">Change password</h3>
+            </Col>
+          </>
+        )}
+      </Row>
+      <div className="container profile" style={{}}>
+        {view === "profile" ? (
+          <Form onFinish={onFinish} form={form} layout="vertical">
+            <Form.Item
+              name="username"
+              label="Username"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your username!",
+                },
+              ]}
+            >
+              <Input
+                disabled={true}
+                placeholder="Username"
+                className="register-input"
+              />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+                { type: "email", message: "Please enter a valid email!" },
+              ]}
+            >
+              <Input placeholder="Email" className="register-input" />
+            </Form.Item>
+            <Form.Item
+              name="phone"
+              label="Phone number"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your phone number!",
+                },
+                {
+                  pattern: /^[0-9]{10}$/,
+                  message: "Phone number must be 10 digits!",
+                },
+              ]}
+            >
+              <Input placeholder="Phone" className="register-input" />
+            </Form.Item>
+            <Form.Item
+              name="address"
+              label="Address"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select your address!",
+                },
+              ]}
+            >
+              <Select
+                placeholder="Address"
+                options={options}
+                style={{ height: 64, textAlign: "center" }}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{
+                  marginRight: "1%",
+                  height: "auto",
+                  fontSize: "16px",
+                }}
+              >
+                Save
+              </Button>
+              <Button
+                color="default"
+                variant="solid"
+                type="default"
+                onClick={() => {
+                  form.setFieldsValue(initialValues);
+                }}
+                style={{ height: "auto", fontSize: "16px" }}
+              >
+                Cancel
+              </Button>
+            </Form.Item>
+          </Form>
+        ) : (
+          <>
+            <Form
+              onFinish={onChangePassword}
+              // variant={componentVariant}
+              form={form}
+              layout="vertical"
+            >
+              <Form.Item
+                name="oldPassword"
+                label="Old password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your old password!",
+                  },
+                ]}
+              >
+                <Input.Password
+                  placeholder="Old password"
+                  className="register-input"
+                />
+              </Form.Item>
+              <Form.Item
+                name="newPassword"
+                label="New password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your new password!",
+                  },
+                ]}
+              >
+                <Input.Password
+                  placeholder="New Password"
+                  className="register-input"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Confirm password"
+                name="confirmPassword"
+                dependencies={["newPassword"]}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "Please confirm your password!",
+                  },
+                  {},
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("newPassword") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("The two passwords do not match!")
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password
+                  className="register-input"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  visibilityToggle={false}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    marginRight: "1%",
+                    height: "auto",
+                    fontSize: "16px",
+                  }}
+                >
+                  Save
+                </Button>
+                <Button
+                  color="default"
+                  variant="solid"
+                  type="default"
+                  onClick={() => {
+                    setView("profile");
+                  }}
+                  style={{ height: "auto", fontSize: "16px" }}
+                >
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Form>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
