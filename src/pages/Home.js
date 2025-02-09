@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import '../assets/css/home.css';
 import Carousel1 from '../assets/images/carousel1.webp';
 import Carousel2 from '../assets/images/carousel2.webp';
+import Carousel3 from '../assets/images/carousel3.webp';
+import Carousel4 from '../assets/images/carousel4.webp';
+import Carousel5 from '../assets/images/carousel5.webp';
 import { getHotBrand, getTop10 } from '../services/order.service';
 const Home = () => {
     const carouselRef = React.useRef(null);
@@ -46,9 +49,12 @@ const Home = () => {
     }, []);
     return (
         <div>
-            <Carousel arrows effect="fade">
+            <Carousel arrows autoplay autoplaySpeed={5000}>
                 <img src={Carousel1} alt='' />
                 <img src={Carousel2} alt='' />
+                <img src={Carousel3} alt='' />
+                <img src={Carousel4} alt='' />
+                <img src={Carousel5} alt='' />
             </Carousel>
             <Row className='container' style={{ margin: "15px auto", padding: "0 24px" }}>
                 <Col span={6} className='service-item'>
