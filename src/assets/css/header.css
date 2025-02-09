@@ -9,6 +9,34 @@
     /* --text-color: #677279; */
 }
 
+.product-menu {
+    display: flex;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.product-menu-item {
+    max-width: 18%;
+    flex: 1 1 18%;
+    box-sizing: border-box;
+}
+
+.product-menu-item--title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    border-bottom: 1px solid black;
+}
+
+.product-menu-item--list {
+    list-style: none;
+    padding: 0;
+}
+.product-menu-item--list li > * {
+    color: black;
+}
+
 .hide {
     display: none;
 }

@@ -9,15 +9,12 @@ import {
 import {
   Badge,
   Col,
-  Empty,
   Image,
   List,
   Menu,
   Popover,
   Row,
-  message,
-  Typography,
-  InputNumber,
+  Typography, Button, Table,
 } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,7 +27,6 @@ import { getListCart } from "../services/cart.service";
 import axios from "axios";
 import { useAuth } from "./context/AuthContext";
 import "../assets/css/header.css";
-import Logo from "../assets/images/logo.webp";
 import Logo2 from "../assets/images/logo2.jpeg";
 const { Text } = Typography;
 
@@ -208,13 +204,80 @@ const Header = () => {
     </div>
   );
 
+  // const content = (
+  //   <div>
+  //     <Table
+  //       columns={[
+  //         { title: 'VỢT CẦU LÔNG', dataIndex: 'racket', key: 'racket' },
+  //         { title: 'GIÀY CẦU LÔNG', dataIndex: 'shoes', key: 'shoes' },
+  //         { title: 'ÁO CẦU LÔNG', dataIndex: 'shirt', key: 'shirt' },
+  //         { title: 'VỚ CẦU LÔNG', dataIndex: 'socks', key: 'socks' },
+  //         { title: 'QUẦN CẦU LÔNG', dataIndex: 'pants', key: 'pants' },
+  //         { title: 'TÚI VỢT CẦU LÔNG', dataIndex: 'bag', key: 'bag' },
+  //       ]}
+  //       dataSource={[
+  //         { key: '1', racket: <Link to="/customer/product">Vợt Yonex</Link>, shoes: 'Giày cầu lông Yonex', shirt: 'Áo cầu lông Yonex', socks: 'Vớ cầu lông Yonex', pants: 'Quần cầu lông Yonex', bag: 'Túi YONEX' },
+  //         { key: '2', racket: 'Vợt cầu lông Victor', shoes: 'Giày cầu lông Victor', shirt: 'Áo cầu lông VNB', socks: 'Vớ cầu lông Victor', pants: 'Quần cầu lông Victor' },
+  //         // Thêm các dòng khác tương tự
+  //       ]}
+  //       pagination={false}
+  //     />
+  //   </div>
+  // );
+
+  const content = (
+    <div style={{ width: '100vw' }}>
+      <div className="product-menu">
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" >VỢT CẦU LÔNG</h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product">Vợt Yonex</Link></li>
+            <li><Link to="/customer/product">Vợt Victor</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" >GIÀY CẦU LÔNG</h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product">Giày Yonex</Link></li>
+            <li><Link to="/customer/product">Giày Victor</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" >ÁO CẦU LÔNG</h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product">Áo Yonex</Link></li>
+            <li><Link to="/customer/product">Áo Victor</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" >QUẦN CẦU LÔNG</h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product">Quần Yonex</Link></li>
+            <li><Link to="/customer/product">Quần Victor</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" >PHỤ KIỆN CẦU LÔNG</h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product">Băng cổ tay Yonex</Link></li>
+            <li><Link to="/customer/product">Quấn cán Yonex</Link></li>
+          </ul>
+        </div>
+      </div>
+      {/* Thêm các danh mục khác tương tự */}
+    </div>
+  );
+
   const items = [
     {
       label: <Link to="/customer">HOME</Link>,
       key: "HOME",
     },
     {
-      label: <Link to="/customer/product">PRODUCT</Link>,
+      // label: (<Link to="/customer/product">PRODUCT <DownOutlined /></Link>),
+      label: <Popover content={content} >
+        PRODUCT
+      </Popover>,
       key: "PRODUCT",
     },
     {
@@ -307,7 +370,7 @@ const Header = () => {
                                 item.tshirtPrice -
                                 (item.tshirtPrice *
                                   item.tshirtDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
@@ -349,7 +412,7 @@ const Header = () => {
                               {(
                                 item.pantPrice -
                                 (item.pantPrice * item.pantDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
@@ -390,7 +453,7 @@ const Header = () => {
                               {(
                                 item.shoesPrice -
                                 (item.shoesPrice * item.shoesDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
@@ -409,7 +472,7 @@ const Header = () => {
                 ""
               )}
               {searchList?.accessories &&
-              searchList?.accessories?.length !== 0 ? (
+                searchList?.accessories?.length !== 0 ? (
                 <List
                   itemLayout="horizontal"
                   dataSource={searchList?.accessories}
@@ -433,7 +496,7 @@ const Header = () => {
                                 item.accessoryPrice -
                                 (item.accessoryPrice *
                                   item.accessoryDiscountPercent) /
-                                  100
+                                100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
