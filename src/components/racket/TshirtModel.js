@@ -8,7 +8,7 @@ import { getListDiscount } from '../../services/discount.service';
 import UploadImg from '../UploadImg';
 
 const { Option } = Select;
-const TshirtModel = ({ type }) => {
+const RacketModel = ({ type }) => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const { id } = useParams();
@@ -179,4 +179,4 @@ const TshirtModel = ({ type }) => {
 };
 
 
-export default TshirtModel;
+export default RacketModel;

@@ -214,6 +214,10 @@ const Header = () => {
       key: "HOME",
     },
     {
+      label: <Link to="/customer/racket" state={{ typeLink: 'racket' }} >RACKET</Link>,
+      key: "RACKET",
+    },
+    {
       label: <Link to="/customer/tshirt" state={{ typeLink: 'tshirt' }} >T-SHIRT</Link>,
       key: "T-SHIRT",
     },

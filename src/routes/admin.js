@@ -37,6 +37,7 @@ import Statistic from "../pages/Statistic";
 import RacketAdmin from "../pages/product-admin/RacketAdmin";
 import RacketTable from "../components/racket/RacketTable";
 import ProductDetail from "../components/product-admin/productDetail";
+import RacketModel from "../components/racket/TshirtModel";
 
 export const AdminRoutes = (
     <>
@@ -55,8 +56,8 @@ export const AdminRoutes = (
             </Route>
             <Route path="racket" element={<RacketAdmin />}>
                 <Route index element={<RacketTable />} />
-                {/* <Route path="create" element={<TshirtModel type="create" />} />
-                <Route path="edit/:id" element={<TshirtModel type="edit" />} /> */}
+                <Route path="create" element={<RacketModel type="create" />} />
+                {/*<Route path="edit/:id" element={<TshirtModel type="edit" />} /> */}
             </Route>
             <Route path="tshirt" element={<TshirtAdmin />}>
                 <Route index element={<TshirtTable />} />

@@ -4,10 +4,6 @@ import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FilterOutlined } from "@ant-design/icons";
-import {
-  getListTshirtDecrease,
-  getListTshirtIncrease,
-} from "../../services/product/tshirt.service";
 import { getProductList } from "../../services/product/product.service";
 
 const ProductCustomer = () => {
