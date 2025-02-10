@@ -2,27 +2,56 @@ import React, { useState } from "react";
 import axios from "axios";
 import { PATH } from "../config/api.config";
 import { notification } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = ({ carouselRef }) => {
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState(null);
+  const [readOnly, setReadOnly] = useState(false);
+  const navigate = useNavigate();
+
+  const [showCodeInput, setShowCodeInput] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      axios.post(PATH.forgotPassword, { email }).then((res) => {
-        if (res.data.success) {
-          notification.success({
-            message: res.data.message,
-            description: "success",
-          });
-          setEmail("");
-        } else {
-          notification.error({
-            message: res.data.message,
-            description: "error",
-          });
-        }
-      });
+      if (!showCodeInput) {
+        axios.post(PATH.forgotPassword, { email }).then((res) => {
+          if (res.data.success) {
+            notification.success({
+              message: res.data.message,
+              description: "success",
+            });
+
+            localStorage.setItem("token", res.data.token);
+            setShowCodeInput(true);
+            setReadOnly(true);
+          } else {
+            notification.error({
+              message: res.data.message,
+              description: "error",
+            });
+          }
+        });
+      } else {
+        const token = localStorage.getItem("token");
+
+        axios.post(PATH.forgotPassword, { code, token }).then((res) => {
+          if (res.data.success) {
+            notification.success({
+              message: res.data.message,
+              description: "success",
+            });
+
+            navigate(`/customer/reset-password/${res.data.newToken}`);
+          } else {
+            notification.error({
+              message: res.data.message,
+              description: "error",
+            });
+          }
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -35,6 +64,7 @@ const ForgotPassword = ({ carouselRef }) => {
       </div>
       <div className="login-pop-input">
         <input
+          readOnly={readOnly}
           name="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -42,6 +72,18 @@ const ForgotPassword = ({ carouselRef }) => {
         />
         <label className="text">Email</label>
       </div>
+
+      {showCodeInput && (
+        <div className="login-pop-input">
+          <input
+            name="code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            required
+          />
+          <label className="text">Code</label>
+        </div>
+      )}
       <div className="login-pop-recaptcha">
         This site is protected by reCAPTCHA and the Google
         <a

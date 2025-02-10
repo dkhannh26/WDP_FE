@@ -15,17 +15,15 @@ const ResetPassword = () => {
     const { password } = values;
 
     try {
-      axios
-        .post(`${PATH.resetPassword}/${token}`, { password })
-        .then((res) => {
-          console.log(res);
-          if (res && res.data.EC === 0) {
-            alert(res.data.message);
-            navigate("/customer");
-          } else {
-            alert(res.data.message);
-          }
-        });
+      axios.post(`${PATH.resetPassword}/${token}`, { password }).then((res) => {
+        console.log(res);
+        if (res && res.data.EC === 0) {
+          alert(res.data.message);
+          navigate("/customer");
+        } else {
+          alert(res.data.message);
+        }
+      });
     } catch (error) {
       console.log(error);
     }

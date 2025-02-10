@@ -11,7 +11,6 @@ import { getProductList } from "../../services/product/product.service";
 
 const AccessoryTable = () => {
   const [products, setProducts] = useState([]);
-
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
