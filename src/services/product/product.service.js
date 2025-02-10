@@ -1,11 +1,12 @@
 import axios from "axios"
 import { API_PATH } from "../../config/api.config"
 
-export const getProductList = (setProducts, type) => {
-    axios.get(API_PATH.product + `?category=${type}`)
-        .then((res) => {
-            console.log(res.data.data);
+export const getProductList = (setProducts, type, brand) => {
 
+    let typeLowercase = type.toLowerCase()
+
+    axios.get(API_PATH.product + `?category=${typeLowercase}&&brand=${brand}`)
+        .then((res) => {
             setProducts(res.data.data)
         })
         .catch(error => console.error(error))

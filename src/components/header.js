@@ -1,3 +1,4 @@
+// export default Header;
 import React, { useEffect } from "react";
 
 import {
@@ -9,15 +10,12 @@ import {
 import {
   Badge,
   Col,
-  Empty,
   Image,
   List,
   Menu,
   Popover,
   Row,
-  message,
-  Typography,
-  InputNumber,
+  Typography, Button, Table,
 } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,7 +28,6 @@ import { getListCart } from "../services/cart.service";
 import axios from "axios";
 import { useAuth } from "./context/AuthContext";
 import "../assets/css/header.css";
-import Logo from "../assets/images/logo.webp";
 import Logo2 from "../assets/images/logo2.jpeg";
 const { Text } = Typography;
 
@@ -208,32 +205,96 @@ const Header = () => {
     </div>
   );
 
+  // const content = (
+  //   <div>
+  //     <Table
+  //       columns={[
+  //         { title: 'VỢT CẦU LÔNG', dataIndex: 'racket', key: 'racket' },
+  //         { title: 'GIÀY CẦU LÔNG', dataIndex: 'shoes', key: 'shoes' },
+  //         { title: 'ÁO CẦU LÔNG', dataIndex: 'shirt', key: 'shirt' },
+  //         { title: 'VỚ CẦU LÔNG', dataIndex: 'socks', key: 'socks' },
+  //         { title: 'QUẦN CẦU LÔNG', dataIndex: 'pants', key: 'pants' },
+  //         { title: 'TÚI VỢT CẦU LÔNG', dataIndex: 'bag', key: 'bag' },
+  //       ]}
+  //       dataSource={[
+  //         { key: '1', racket: <Link to="/customer/product">Vợt Yonex</Link>, shoes: 'Giày cầu lông Yonex', shirt: 'Áo cầu lông Yonex', socks: 'Vớ cầu lông Yonex', pants: 'Quần cầu lông Yonex', bag: 'Túi YONEX' },
+  //         { key: '2', racket: 'Vợt cầu lông Victor', shoes: 'Giày cầu lông Victor', shirt: 'Áo cầu lông VNB', socks: 'Vớ cầu lông Victor', pants: 'Quần cầu lông Victor' },
+  //         // Thêm các dòng khác tương tự
+  //       ]}
+  //       pagination={false}
+  //     />
+  //   </div>
+  // );
+
+  const content = (
+    <div style={{ width: '100vw' }}>
+      <div className="product-menu">
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" ><Link to="/customer/racket" state={{ typeLink: 'racket' }} >RACKET</Link></h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product?category=Racket&brand=Yonex">Yonex Racket</Link></li>
+            <li><Link to="/customer/product?category=Racket&brand=Victor">Victor Racket</Link></li>
+            <li><Link to="/customer/product?category=Racket&brand=Lining">Lining Racket</Link></li>
+            <li><Link to="/customer/product?category=Racket&brand=Mizuno">Mizuno Racket</Link></li>
+            <li><Link to="/customer/product?category=Racket&brand=Kumpoo">Kumpoo Racket</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" ><Link to="/customer/shoes" state={{ typeLink: 'shoes' }} >Shoes</Link></h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product?category=Shoes&brand=Yonex">Yonex Shoes</Link></li>
+            <li><Link to="/customer/product?category=Shoes&brand=Victor">Victor Shoes</Link></li>
+            <li><Link to="/customer/product?category=Shoes&brand=Lining">Lining Shoes</Link></li>
+            <li><Link to="/customer/product?category=Shoes&brand=Mizuno">Mizuno Shoes</Link></li>
+            <li><Link to="/customer/product?category=Shoes&brand=Kumpoo">Kumpoo Shoes</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" ><Link to="/customer/tshirt" state={{ typeLink: 'tshirt' }} >Shirt</Link></h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product?category=tshirt&brand=Yonex">Yonex Shirt</Link></li>
+            <li><Link to="/customer/product?category=tshirt&brand=Victor">Victor Shirt</Link></li>
+            <li><Link to="/customer/product?category=tshirt&brand=Lining">Lining Shirt</Link></li>
+            <li><Link to="/customer/product?category=tshirt&brand=Mizuno">Mizuno Shirt</Link></li>
+            <li><Link to="/customer/product?category=tshirt&brand=Kumpoo">Kumpoo Shirt</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" ><Link to="/customer/shoes" state={{ typeLink: 'shoes' }} >Pants</Link></h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product?category=Pants&brand=Yonex">Yonex Pants</Link></li>
+            <li><Link to="/customer/product?category=Pants&brand=Victor">Victor Pants</Link></li>
+            <li><Link to="/customer/product?category=Pants&brand=Lining">Lining Pants</Link></li>
+            <li><Link to="/customer/product?category=Pants&brand=Mizuno">Mizuno Pants</Link></li>
+            <li><Link to="/customer/product?category=Pants&brand=Kumpoo">Kumpoo Pants</Link></li>
+          </ul>
+        </div>
+        <div className="product-menu-item">
+          <h4 className="product-menu-item--title" ><Link to="/customer/accessory" state={{ typeLink: 'shoes' }} >ACCESSORIES</Link></h4>
+          <ul className="product-menu-item--list">
+            <li><Link to="/customer/product">Yonex Accessories </Link></li>
+            <li><Link to="/customer/product">Victor Accessories </Link></li>
+            <li><Link to="/customer/product">Lining Accessories </Link></li>
+            <li><Link to="/customer/product">Mizuno Accessories </Link></li>
+            <li><Link to="/customer/product">Kumpoo Accessories </Link></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+
   const items = [
     {
       label: <Link to="/customer">HOME</Link>,
       key: "HOME",
     },
     {
-      label: <Link to="/customer/racket" state={{ typeLink: 'racket' }} >RACKET</Link>,
-      key: "RACKET",
+      // label: (<Link to="/customer/product">PRODUCT <DownOutlined /></Link>),
+      label: <Popover content={content} >
+        PRODUCT
+      </Popover>,
+      key: "PRODUCT",
     },
-    {
-      label: <Link to="/customer/tshirt" state={{ typeLink: 'tshirt' }} >T-SHIRT</Link>,
-      key: "T-SHIRT",
-    },
-    {
-      label: <Link to="/customer/pant" state={{ typeLink: 'pant' }}>PANTS</Link>,
-      key: "PANTS",
-    },
-    {
-      label: <Link to="/customer/shoes" state={{ typeLink: 'shoes' }}>SHOES</Link>,
-      key: "SHOES",
-    },
-    {
-      label: <Link to="/customer/accessory" state={{ typeLink: 'accessory' }}>ACCESSORIES</Link>,
-      key: "ACCESSORIES",
-    },
-
     {
       label: <Link to="/customer/about">ABOUT</Link>,
       key: "ABOUT",

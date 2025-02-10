@@ -38,7 +38,8 @@ export const CustomerRoutes = (
       <Route path='about' element={<About />}></Route>
       <Route path='exchange-policy' element={<ExchangePolicy />}></Route>
       <Route path='contact' element={<Contact />}></Route>
-      <Route path="product" element={<Product />}></Route>
+      <Route path="product/:id" element={<ProductDetail />}></Route>
+      <Route path="product" element={<ProductCustomer />}></Route>
       <Route path="" element={<Home />}></Route>
     </Route>
     <Route

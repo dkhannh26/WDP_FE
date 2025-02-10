@@ -92,7 +92,6 @@ const RacketTable = () => {
       />
     ),
     onFilter: (value, record) => {
-      // console.log('hello' + record[dataIndex]);
 
       return record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
     },

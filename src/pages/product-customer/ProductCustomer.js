@@ -2,7 +2,7 @@ import { Card, Col, Row, Select } from "antd";
 import Meta from "antd/es/card/Meta";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { FilterOutlined } from "@ant-design/icons";
 import { getProductList } from "../../services/product/product.service";
 
@@ -11,9 +11,25 @@ const ProductCustomer = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
+  const category = searchParams.get('category');   // Lấy giá trị của 'query'
+  const brand = searchParams.get('brand');
+
+  console.log(category, brand);
+
+
   useEffect(() => {
-    getProductList(setProducts, state?.typeLink)
-  }, [state]);
+    let filterCategory
+
+    if (category) {
+      filterCategory = category
+    } else {
+      filterCategory = state?.typeLink
+    }
+
+    getProductList(setProducts, filterCategory, brand)
+  }, [state, brand, category]);
 
   const handleFiterChange = (value) => {
     if (value === "increase") {
