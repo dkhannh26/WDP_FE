@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import '../assets/css/home.css';
 import Carousel1 from '../assets/images/carousel1.webp';
 import Carousel2 from '../assets/images/carousel2.webp';
+import Carousel3 from '../assets/images/carousel3.webp';
+import Carousel4 from '../assets/images/carousel4.webp';
+import Carousel5 from '../assets/images/carousel5.webp';
+import NoImage from '../assets/images/no-image.jpg';
 import { getHotBrand, getTop10 } from '../services/order.service';
 const Home = () => {
     const carouselRef = React.useRef(null);
@@ -40,15 +44,18 @@ const Home = () => {
             .flatMap(brand => brand.hotBrands) || []);
     console.log(filteredProducts);
     console.log(filteredBrands);
-    // useEffect(() => {
-    //     getTop10(setTop10);
-    //     getHotBrand(setHotBrands);
-    // }, []);
+    useEffect(() => {
+        getTop10(setTop10);
+        getHotBrand(setHotBrands);
+    }, []);
     return (
         <div>
-            <Carousel arrows effect="fade">
+            <Carousel arrows autoplay autoplaySpeed={5000}>
                 <img src={Carousel1} alt='' />
                 <img src={Carousel2} alt='' />
+                <img src={Carousel3} alt='' />
+                <img src={Carousel4} alt='' />
+                <img src={Carousel5} alt='' />
             </Carousel>
             <Row className='container' style={{ margin: "15px auto", padding: "0 24px" }}>
                 <Col span={6} className='service-item'>
@@ -113,13 +120,13 @@ const Home = () => {
                     </div>
                     <Carousel ref={carouselRef} dots={false} slidesToShow={5} slidesToScroll={1} infinite>
                         {filteredProducts.map((product) => (
-                            <div key={product.product_id} style={{ padding: "0 8px" }}>
+                            <div key={product.product_id} style={{ marginRight: "0px", width: "20%", display: "flex", justifyContent: "center" }}>
                                 <Card
                                     onClick={() => navigate(`/product/${product.product_id}`)}
                                     bordered={true}
                                     hoverable
                                     style={{ width: "95%" }}
-                                    cover={<img alt={product.productName} style={{ width: "100%" }} src={`http://localhost:3000${product.image}`} />}
+                                    cover={<img alt={product.productName} style={{ width: "100%", height: "220px" }} src={product.image ? `http://localhost:3000${product.image}` : NoImage} />}
                                 >
                                     <Meta
                                         title={product.productName}
@@ -188,15 +195,21 @@ const Home = () => {
                             </Col>
                         </Row>
                     </div>
-                    <Row>
+                    <Row style={{ width: '100%', }}>
                         {filteredBrands.map((product) => (
-                            <div key={product.product_id} style={{ padding: "0 8px" }}>
+                            <div key={product.product_id} style={{ marginRight: "0px", width: "20%", display: "flex", justifyContent: "center" }}>
                                 <Card
                                     onClick={() => navigate(`/product/${product.product_id}`)}
                                     bordered={true}
                                     hoverable
                                     style={{ width: "95%" }}
-                                    cover={<img alt={product.productName} style={{ width: "100%" }} src={`http://localhost:3000${product.image}`} />}
+                                    cover={
+                                        <img
+                                            alt={product.productName}
+                                            style={{ width: "100%", height: "220px" }}
+                                            src={product.image ? `http://localhost:3000${product.image}` : NoImage}
+                                        />
+                                    }
                                 >
                                     <Meta
                                         title={product.productName}

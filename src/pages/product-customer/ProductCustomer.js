@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { FilterOutlined } from "@ant-design/icons";
 import { getProductList } from "../../services/product/product.service";
-
+import NoImage from '../../assets/images/no-image.jpg';
 const ProductCustomer = () => {
   const { state } = useLocation();
   const [products, setProducts] = useState([]);
@@ -13,7 +13,7 @@ const ProductCustomer = () => {
 
   const [searchParams] = useSearchParams();
 
-  const category = searchParams.get('category');   // Lấy giá trị của 'query'
+  const category = searchParams.get('category');
   const brand = searchParams.get('brand');
 
   console.log(category, brand);
@@ -94,8 +94,8 @@ const ProductCustomer = () => {
                   cover={
                     <img
                       alt="example"
-                      style={{ width: "100%" }}
-                      src={`http://localhost:3000${item.productImg}`}
+                      style={{ width: "100%", height: '350px' }}
+                      src={item.productImg ? `http://localhost:3000${item.productImg}` : NoImage}
                     />
                   }
                 >
