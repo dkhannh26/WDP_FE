@@ -97,10 +97,10 @@ const Header = () => {
             <List.Item>
               <List.Item.Meta
                 avatar={
-                  item.productImage ? (
+                  item.image ? (
                     <Image
                       width={100}
-                      src={`${API_PATH.image}/${item.product.product_id}/${item.productImage._id}${item.productImage.file_extension}`}
+                      src={`${API_PATH.image}${item.image}`}
                     />
                   ) : (
                     // {`${API_PATH.image}/${item.product.product_id}/${item.productImage._id}${item.productImage.file_extension}`}
@@ -119,7 +119,7 @@ const Header = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    {item.product.name}
+                    {item.product_name}
                   </Text>
                 }
                 description={
@@ -131,7 +131,7 @@ const Header = () => {
                     }}
                   >
                     <Text style={{ color: "#888" }}>
-                      {(item.product.price * item.quantity).toLocaleString()}
+                      {(item.price * item.cartQuantity).toLocaleString()}
                       <Text
                         style={{
                           fontSize: "10px",
@@ -145,8 +145,8 @@ const Header = () => {
                     <br />
                     <Text style={{ color: "#888" }}>
                       Kích thước:{" "}
-                      {item.productSize
-                        ? item.productSize.size_name
+                      {item.product_size_name
+                        ? item.product_size_name
                         : "Không có kích thước"}
                     </Text>
                     <br />
@@ -164,9 +164,9 @@ const Header = () => {
                   }}
                 >
                   {(
-                    (item.product.price -
-                      item.product.price * (item.product.discount / 100)) *
-                    item.quantity
+                    (item.price -
+                      item.price * (item?.discount / 100)) *
+                    item.cartQuantity
                   ).toLocaleString()}
                   <Text
                     style={{

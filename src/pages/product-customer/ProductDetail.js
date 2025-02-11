@@ -94,31 +94,33 @@ const ProductDetail = () => {
     useEffect(() => {
         getProductDetailCustomer(id, setProduct, setImages, setCanvas, selectSize)
     }, [id])
+    useEffect(() => {
+        getProductDetailCustomer(id, setProduct, setImages, setCanvas, selectSize)
+        console.log("sadkjsahida");
+        if (product) {
+            const matchingCartItem = cart.find(item => item.product_size_id === detailId);
+            console.log("dsadá", matchingCartItem);
+            console.log('detailID', detailId);
 
-    // useEffect(() => {
-    //     getProductDetailCustomer(id, setProduct, setImages, setCanvas, selectSize)
-    //     if (productDetail.products) {
-    //         const matchingCartItem = cart.find(item => item.pant_shirt_size_detail_id?._id === detailId);
-    //         console.log(matchingCartItem);
-
-    //         if (matchingCartItem) {
-    //             const updatedQuantity = matchingCartItem.quantity + count;
-    //             console.log(matchingCartItem.product.quantity);
-    //             if (updatedQuantity > matchingCartItem.product.quantity) {
-    //                 alert('sold out');
-    //             } else {
-    //                 AddCartDup(matchingCartItem._id, { quantity: updatedQuantity }, navigate);
-    //             }
-    //         } else {
-    //             const newCart = {
-    //                 account_id: initialValues.userId,
-    //                 pant_shirt_size_detail_id: detailId,
-    //                 quantity: count
-    //             };
-    //             createCart(newCart, navigate);
-    //         }
-    //     }
-    // }, [cart], [productDetail])
+            if (matchingCartItem) {
+                const updatedQuantity = matchingCartItem.cartQuantity + count;
+                console.log(matchingCartItem.quantity);
+                console.log('uodata', updatedQuantity);
+                if (updatedQuantity > matchingCartItem.quantity) {
+                    alert('sold out');
+                } else {
+                    AddCartDup(matchingCartItem._id, { quantity: updatedQuantity }, navigate);
+                }
+            } else {
+                const newCart = {
+                    account_id: initialValues.userId,
+                    product_size_id: detailId,
+                    quantity: count
+                };
+                createCart(newCart, navigate);
+            }
+        }
+    }, [cart],)
     return (
         <>
             <Row style={{ margin: 40 }}>

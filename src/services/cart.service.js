@@ -8,8 +8,9 @@ import { json } from "react-router-dom"
 export const getListCart = (id, setCarts, setTotal) => {
     axios.get(API_PATH.cart + `/${id}`)
         .then((res) => {
-            setCarts(res.data)
-            const amount = res.data?.map(cart => ((cart.product.price - (cart.product.price * (cart.product.discount / 100))) * cart.quantity))
+            setCarts(res.data.data)
+            console.log(res.data.data);
+            const amount = res.data?.data?.map(cart => ((cart.price - (cart.price * (cart.discount / 100))) * cart.cartQuantity))
             // ((item.product.price - (item.product.price * (item.product.discount / 100))) * item.quantity)
             setTotal(amount.reduce((a, b) => a + b, 0))
         })
