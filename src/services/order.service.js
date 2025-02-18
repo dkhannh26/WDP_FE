@@ -20,17 +20,31 @@ export const getOrder = (id, form) => {
         })
 }
 
-export const createOrder = (order, navigate) => {
-    axios.post(API_PATH.order, order)
-        .then(
-            navigate(ORDER_URL.CUSTOMER, {
-                state: { message: MESSAGE.CREATE_SUCCESS }
-            })
-        )
-        .catch(error => {
-            console.log(error)
-        })
-}
+export const createOrder = async (order, navigate) => {
+    try {
+        await axios.post(API_PATH.order, order)
+        const emailData = {
+            to: order.email,
+            subject: 'Xác nhận đơn hàng',
+            body: `Cảm ơn bạn đã đặt hàng. Xin hãy kiểm tra đơn hàng của bạn và phản hồi với chúng tôi nêu xảy ra vấn đề!`
+        };
+
+        const emailAdmin = {
+            to: 'nguyenthanhson.19102003@gmail.com',
+            subject: 'Có Đơn Hàng Cần Xác Nhận',
+            body: `Đơn hàng của khách hàng ${order.name} đang đợi xác nhận!!!`
+        }
+
+        axios.post(API_PATH.sms, emailData);
+        axios.post(API_PATH.sms, emailAdmin);
+
+        navigate(ORDER_URL.CUSTOMER, {
+            state: { message: MESSAGE.CREATE_SUCCESS }
+        });
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
 export const editOrder = (id, order, navigate) => {
     axios.put(API_PATH.order + `/${id}`, order)
@@ -47,23 +61,21 @@ export const editOrder = (id, order, navigate) => {
 export const getOrderDetails = (id, setOrderDetails) => {
     return axios.get(API_PATH.orderDetails + `/${id}`)
         .then((res) => {
-            setOrderDetails(res.data);
+            setOrderDetails(res.data.data);
+            console.log(res.data.data);
             return res.data;
         })
         .catch(error => console.error(error));
 };
 
 export const confirmOrder = (id, messageApi, getListOrder, setOrders, orderDetails) => {
-    const quantities = orderDetails.map(detail => detail.quantity);
-    const pant_shirt_size_detail_id = orderDetails.map(detail => detail.pant_shirt_size_detail_id);
-    const shoes_size_detail_id = orderDetails.map(detail => detail.shoes_size_detail_id);
-    const accessory_id = orderDetails.map(detail => detail.accessory_id);
+    console.log(orderDetails);
+    const quantities = orderDetails.data?.map(detail => detail.cartQuantity);
+    const product_size_id = orderDetails.data?.map(detail => detail.product_size_id);
 
     const updateData = {
         quantities,
-        pant_shirt_size_detail_id,
-        shoes_size_detail_id,
-        accessory_id
+        product_size_id,
     };
 
     axios.put(API_PATH.confirmOrder + `/${id}`, { updateData })

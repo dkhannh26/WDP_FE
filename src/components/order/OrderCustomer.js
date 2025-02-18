@@ -1,24 +1,52 @@
-import { CheckOutlined, EyeInvisibleOutlined, EyeOutlined, TruckOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined, TruckOutlined } from "@ant-design/icons";
 import { Button, Image, List, Space, Table, Typography, message } from "antd";
 import { useEffect, useState } from "react";
-import { getListDoneOrder, getListOrder, getListPendingOrder, getOrderDetails, shippedOrder } from "../../services/order.service";
+import { cancelOrder, getListDoneOrder, getListOrder, getListPendingOrder, getOrderDetails, shippedOrder } from "../../services/order.service";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import { API_PATH, PATH } from "../../config/api.config";
 const { Text, Title } = Typography;
 
 const OrderCustomer = () => {
-    const [status, setStatus] = useState("pending"); // Trạng thái hiện tại
-    const [order, setOrders] = useState([]);
+    const [status, setStatus] = useState("pending");
+    const [orders, setOrders] = useState([]);
     const [orderDetails, setOrderDetails] = useState([]);
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [filteredOrders, setFilteredOrders] = useState(orders);
     const [messageApi, contextHolder] = message.useMessage()
+    const onChange = (e) => {
+        const value = e.target.value.toLowerCase();
+
+        const filtered = orders.filter(
+            (orders) =>
+                orders.account_id?.username.toLowerCase().includes(value) ||
+                orders.phone.toLowerCase().includes(value) ||
+                orders.address.toLowerCase().includes(value) ||
+                orders.status.toLowerCase().includes(value)
+
+        );
+        setFilteredOrders(filtered);
+    };
     const columns = [
         {
             title: 'No.',
             render: (text, record, index) => index + 1,
+            width: '5%',
+        },
+        {
+            title: 'Day',
+            dataIndex: 'createdAt',
             width: '10%',
+            render: (text) => new Date(text).toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }),
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
             title: 'Phone',
@@ -52,6 +80,7 @@ const OrderCustomer = () => {
                     <Space>
                         {record.status === 'delivered' && (
                             <>
+                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi, getListDoneOrder(initialValues.userId, setOrders), setOrders)}></Button>
                                 <Button shape="round" icon={<CheckOutlined style={{ color: 'green' }} />} onClick={() => shippedOrder(_id, messageApi, () => getListDoneOrder(initialValues.userId, setOrders), setOrders)}></Button>
                             </>
                         )}
@@ -63,7 +92,7 @@ const OrderCustomer = () => {
     ];
 
 
-    console.log(order);
+    console.log(orders);
     const toggleExpand = (id) => {
         const newExpandedRowKeys = expandedRowKeys.includes(id)
             ? expandedRowKeys.filter((key) => key !== id)
@@ -103,21 +132,20 @@ const OrderCustomer = () => {
                     bordered
                     style={{ marginBottom: 10 }}
                     renderItem={(item) => {
-                        console.log(`${API_PATH.image}/${item.product.id}/${item.productImage.id}${item.productImage.file_extension}`);
                         return (
                             <List.Item>
                                 <List.Item.Meta
                                     avatar={
-                                        item.productImage ? (
-                                            <Image width={100} src={`${API_PATH.image}/${item.product.id}/${item.productImage.id}${item.productImage.file_extension}`} />
+                                        item.image ? (
+                                            <Image width={100} src={`${API_PATH.image}${item.image}`} />
                                         ) : (
                                             <Image width={170} height={200} src="https://product.hstatic.net/1000344185/product/img_4125_4feb7a360b3b4f00bd2465a85ef2d9e3_small.jpg" />
                                         )
                                     }
-                                    title={`${item.product.name} - Size: ${item.size ? item.size.size_name : "Không có kích thước"}`}
+                                    title={`${item.product_name} - Size: ${item.product_size_name ? item?.product_size_name : "Không có kích thước"}`}
                                     description={`x${item.quantity}`}
                                 />
-                                <Title level={4}><del>{(item.product?.price * item.quantity).toLocaleString()}đ</del><span style={{ color: 'red' }}>{((item.product?.price - (item.product?.price * (item.discount / 100))) * item.quantity).toLocaleString()}đ</span></Title>
+                                <Title level={4}><del>{(item?.price * item?.cartQuantity).toLocaleString()}đ</del><span style={{ color: 'red' }}>{((item?.price - (item?.price * (item.discount / 100))) * item?.cartQuantity).toLocaleString()}đ</span></Title>
 
                             </List.Item>
                         )
@@ -159,15 +187,22 @@ const OrderCustomer = () => {
 
         fetchData();
     }, [isAuthenticated]);
-
     useEffect(() => {
-        if (initialValues.userId) {
+        if (!initialValues.userId) return;
+
+        const fetchOrders = async () => {
+            let data = [];
             if (status === "pending") {
-                getListPendingOrder(initialValues.userId, setOrders);
+                data = await getListPendingOrder(initialValues.userId);
             } else if (status === "done") {
-                getListDoneOrder(initialValues.userId, setOrders);
+                data = await getListDoneOrder(initialValues.userId);
             }
-        }
+
+            setOrders(data);
+            setFilteredOrders(data);
+        };
+
+        fetchOrders();
     }, [status, initialValues.userId]);
 
     if (isLoading) return <div>Loading...</div>;
@@ -184,7 +219,7 @@ const OrderCustomer = () => {
             </div>
             <Table
                 columns={columns}
-                dataSource={order}
+                dataSource={filteredOrders}
                 rowKey="_id"
                 expandable={{
                     expandIcon: ({ onExpand, expanded, record }) => (

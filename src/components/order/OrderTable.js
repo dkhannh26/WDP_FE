@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, DeleteOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Col, Flex, Space, Table, message } from 'antd';
+import { Button, Col, Flex, Row, Space, Table, message } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { API_PATH } from "../../config/api.config";
 import { MESSAGE } from '../../config/message.config';
 import { cancelOrder, confirmOrder, getListOrder, getOrderDetails } from '../../services/order.service';
 import { showDeleteConfirm, success } from '../../utils/helper';
+import Search from 'antd/es/transfer/search';
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([])
@@ -14,8 +15,22 @@ const OrderTable = () => {
     const [orderDetails, setOrderDetails] = useState({});
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage()
+    const [filteredOrders, setFilteredOrders] = useState(orders);
     const location = useLocation();
     const { state } = location;
+    const onChange = (e) => {
+        const value = e.target.value.toLowerCase();
+
+        const filtered = orders.filter(
+            (orders) =>
+                orders.account_id?.username.toLowerCase().includes(value) ||
+                orders.phone.toLowerCase().includes(value) ||
+                orders.address.toLowerCase().includes(value) ||
+                orders.status.toLowerCase().includes(value)
+
+        );
+        setFilteredOrders(filtered);
+    };
 
 
 
@@ -23,7 +38,21 @@ const OrderTable = () => {
         {
             title: 'No.',
             render: (text, record, index) => index + 1,
+            width: '5%',
+        },
+        {
+            title: 'Day',
+            dataIndex: 'createdAt',
             width: '10%',
+            render: (text) => new Date(text).toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }),
+            sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
             title: 'Account',
@@ -107,15 +136,20 @@ const OrderTable = () => {
             <div>
                 {details.map((detail) => (
                     <div key={detail._id} style={{ borderBottom: '1px solid #888' }}>
-                        <p><b>Name:</b> {detail.product?.name}</p>
-                        <p><b>Price:</b> <del>{detail.product?.price.toLocaleString()}đ</del> <span style={{ color: 'red' }}>{((detail.product?.price - (detail.product?.price * (detail.discount / 100))) * detail.quantity).toLocaleString()}đ</span></p>
-                        <p><b>Quantity:</b> {detail.quantity}</p>
+                        <p><b>Name:</b> {detail?.product_name}</p>
+                        <p><b>Price:</b> <del>{detail?.price.toLocaleString()}đ</del> <span style={{ color: 'red' }}>{((detail.price - (detail.price * (detail.discount / 100))) * detail.cartQuantity).toLocaleString()}đ</span></p>
+                        <p><b>Quantity:</b> {detail.cartQuantity}</p>
                     </div>
                 ))}
             </div>
         );
     };
-
+    useEffect(() => {
+        getListOrder((data) => {
+            setOrders(data);
+            setFilteredOrders(data);
+        });
+    }, []);
     useEffect(() => {
         if (state?.message === MESSAGE.CREATE_SUCCESS) {
             console.log('message', state?.message)
@@ -138,9 +172,26 @@ const OrderTable = () => {
                     <Title level={2}>Order Management</Title>
                 </Col>
             </Flex>
+            <Row style={{ marginLeft: 0 }}>
+                <Col span={6}>
+                    <Search
+                        placeholder="Enter something to search"
+                        allowClear
+                        enterButton
+                        size="large"
+                        onChange={onChange}
+                        style={{
+                            width: 350,
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            marginBottom: "10px",
+                        }}
+                    />
+                </Col>
+            </Row>
             <Table
                 columns={columns}
-                dataSource={orders}
+                dataSource={filteredOrders}
                 rowKey="_id"
                 expandable={{
                     expandIcon: ({ onExpand, expanded, record }) => (
