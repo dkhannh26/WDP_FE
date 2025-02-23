@@ -15,32 +15,30 @@ import {
   Menu,
   Popover,
   Row,
-  Typography, Button, Table,
+  Typography,
 } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../assets/css/header.css";
-import { getSearchList } from "../services/product/search.service";
-import LoginPopover from "./login";
-import { CART_URL, PAYMENT_URL } from "../config/url.config";
-import { API_PATH, PATH } from "../config/api.config";
-import { getListCart } from "../services/cart.service";
+import "../../assets/css/header.css";
+import { getSearchList } from "../../services/product/search.service";
+import LoginPopover from "../login";
+import { CART_URL, PAYMENT_URL } from "../../config/url.config";
+import { API_PATH, PATH } from "../../config/api.config";
+import { getListCart } from "../../services/cart.service";
 import axios from "axios";
-import { useAuth } from "./context/AuthContext";
-import "../assets/css/header.css";
-import Logo2 from "../assets/images/logo2.jpeg";
+import { useAuth } from "../context/AuthContext";
+import Logo2 from "../../assets/images/logo2.jpeg";
 const { Text } = Typography;
 
 const Header = () => {
   const [searchFocus, setSearchForcus] = useState(false);
   const [searchList, setSearchList] = useState([]);
-  const [isCheck, setIsCheck] = useState();
+
   const [carts, setCarts] = useState([]);
-  const [voucher, setVoucher] = useState([]);
   // const [messageApi, contextHolder] = message.useMessage(null)
   const [totalAmount, setTotalAmount] = useState(Number);
   const [total, setTotal] = useState(Number);
-  const [initialTotal, setInitialTotal] = useState(0);
+
 
   const { isAuthenticated, username, user } = useAuth();
   const [initialValues, setInitialValues] = useState({
@@ -75,12 +73,10 @@ const Header = () => {
     if (initialValues.userId) {
       getListCart(initialValues.userId, setCarts, (total) => {
         setTotal(total);
-        setInitialTotal(total);
       });
-      setIsCheck(null);
     }
   }, [totalAmount, initialValues.userId]);
-  console.log(initialValues.userId);
+
   const cartPopover = (
     <div className="cart-pop">
       <div className="card-pop-title text">

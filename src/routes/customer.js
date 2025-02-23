@@ -1,24 +1,22 @@
 import React from "react";
-import Layout from "../components/layout";
-import Register from "../pages/Register";
-import SuccessRegister from "../pages/SuccessRegister";
-import User from "../pages/User";
-import ResetPassword from "../pages/ResetPassword";
-import Payment from '../pages/Payment';
-import PaymentModel from '../components/payment/PaymentModel';
-import Cart from '../pages/Cart';
-import CartList from '../components/cart/CartList';
-import OrderCustomer from '../components/order/OrderCustomer';
 import { Route } from 'react-router-dom';
-import About from '../pages/About';
-import ExchangePolicy from '../pages/ExchangePolicy';
-import Contact from '../pages/Contact';
-import Product from '../pages/Product';
-import Home from "../pages/Home";
-import ShoesDetail from "../pages/product-customer/shoes/ShoesDetail";
-import AccessoryDetail from "../pages/product-customer/accessory/AccessoryDetail";
+import CartList from '../components/cart/CartList';
+import Layout from "../components/common/layout";
+import OrderCustomer from '../components/order/OrderCustomer';
+import PaymentModel from '../components/payment/PaymentModel';
+import About from '../pages/intro/About';
+import Cart from '../pages/Cart';
+import Contact from '../pages/intro/Contact';
+import ExchangePolicy from '../pages/intro/ExchangePolicy';
+import Payment from '../pages/Payment';
 import ProductCustomer from "../pages/product-customer/ProductCustomer";
 import ProductDetail from "../pages/product-customer/ProductDetail";
+import Register from "../pages/Register";
+import ResetPassword from "../pages/ResetPassword";
+import SuccessRegister from "../pages/SuccessRegister";
+import User from "../pages/User";
+import Home from "../pages/intro/Home";
+
 export const CustomerRoutes = (
   <>
     <Route path="customer" element={<Layout />}>
@@ -29,9 +27,9 @@ export const CustomerRoutes = (
       <Route path="pant" element={<ProductCustomer />} />
       <Route path="racket/:id" element={<ProductDetail />} />
       <Route path="racket" element={<ProductCustomer />} />
-      <Route path="shoes/:id" element={<ShoesDetail />} />
+      <Route path="shoes/:id" element={<ProductDetail />} />
       <Route path="shoes" element={<ProductCustomer />} />
-      <Route path="accessory/:id" element={<AccessoryDetail />} />
+      <Route path="accessory/:id" element={<ProductDetail />} />
       <Route path="accessory" element={<ProductCustomer />} />
       <Route path="tshirt/:id" element={<ProductDetail />} />
       <Route path="tshirt" element={<ProductCustomer />} />

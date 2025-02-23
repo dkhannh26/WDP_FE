@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/css/footer.css'
+import '../../assets/css/footer.css'
 import { Col, Row } from 'antd';
 import { EnvironmentFilled, PhoneFilled, MailFilled, FacebookFilled, InstagramFilled } from '@ant-design/icons';
 

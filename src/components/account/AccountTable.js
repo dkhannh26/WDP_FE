@@ -33,10 +33,10 @@ const AccountTable = () => {
 
     const filtered = account.filter(
       (account) =>
-        account.username.toLowerCase().includes(value) ||
-        account.email.toLowerCase().includes(value) ||
-        account.phone.toLowerCase().includes(value) ||
-        account.address.toLowerCase().includes(value)
+        account?.username?.toLowerCase().includes(value) ||
+        account?.email?.toLowerCase().includes(value) ||
+        account?.phone?.toLowerCase().includes(value) ||
+        account?.address?.toLowerCase().includes(value)
     );
     setFilteredAccounts(filtered);
   };

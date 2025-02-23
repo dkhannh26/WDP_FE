@@ -14,7 +14,6 @@ export const getListTshirt = (setTshirts) => {
 export const getTshirtCustomer = (id, setTshirt, setImages, setCanvas, selectSize) => {
   axios.get(API_PATH.tshirt + `/${id}`)
     .then((res) => {
-      // console.log(res.data)
       setTshirt(res.data)
       const images = res.data?.images
       let imgArrResult = []

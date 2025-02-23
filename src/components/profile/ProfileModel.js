@@ -9,14 +9,13 @@ import {
   notification,
   Row,
   Select,
-  Table,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/context/AuthContext";
 
 import axios from "axios";
 import { PATH } from "../../config/api.config";
-import { options } from "./../ProvinceData";
+import { options } from "../../utils/ProvinceData";
 
 import "../../assets/css/profile.css";
 const ProfileTable = () => {

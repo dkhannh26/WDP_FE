@@ -6,31 +6,37 @@ export const DISCOUNT_URL = {
 export const VOUCHER_URL = {
   INDEX: "/admin/voucher",
   CREATE: "/admin/voucher/create",
-  EDIT: "/admin/voucher/create",
+  EDIT: "/admin/voucher/edit",
+};
+
+export const RACKET_URL = {
+  INDEX: "/admin/racket",
+  CREATE: "/admin/racket/create",
+  EDIT: "/admin/racket/edit",
 };
 
 export const TSHIRT_URL = {
   INDEX: "/admin/tshirt",
   CREATE: "/admin/tshirt/create",
-  EDIT: "/admin/tshirt/create",
+  EDIT: "/admin/tshirt/edit",
 };
 
 export const PANT_URL = {
   INDEX: "/admin/pant",
   CREATE: "/admin/pant/create",
-  EDIT: "/admin/pant/create",
+  EDIT: "/admin/pant/edit",
 };
 
 export const SHOES_URL = {
   INDEX: "/admin/shoes",
   CREATE: "/admin/shoes/create",
-  EDIT: "/admin/shoes/create",
+  EDIT: "/admin/shoes/edit",
 };
 
 export const ACCESSORY_URL = {
   INDEX: "/admin/accessory",
   CREATE: "/admin/accessory/create",
-  EDIT: "/admin/accessory/create",
+  EDIT: "/admin/accessory/edit",
 };
 export const SIZE_URL = {
   PANTSHIRT_INDEX: "/admin/pantTshirtSize",

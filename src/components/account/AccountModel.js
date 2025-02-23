@@ -21,7 +21,7 @@ import {
   getAccount,
   getDiscount,
 } from "../../services/account.service";
-import { options } from "../ProvinceData";
+import { options } from "../../utils/ProvinceData";
 const AccountModel = ({ type }) => {
   const [date, setDate] = useState();
   const [form] = Form.useForm();

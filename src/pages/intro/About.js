@@ -2,8 +2,8 @@ import React from 'react';
 import { FaHandsHelping } from 'react-icons/fa';
 import { RiUserHeartLine } from "react-icons/ri";
 import { IoShirtOutline } from "react-icons/io5";
-import About1 from '../assets/images/about1.jpeg'
-import About2 from '../assets/images/about2.jpeg'
+import About1 from '../../assets/images/about1.jpeg'
+import About2 from '../../assets/images/about2.jpeg'
 
 const About = () => {
     return (
@@ -50,7 +50,7 @@ const About = () => {
             </section>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', fontSize: '70px' }}>
                 <RiUserHeartLine />
-                <IoShirtOutline style={{margin: '0 40px'}} />
+                <IoShirtOutline style={{ margin: '0 40px' }} />
                 <FaHandsHelping />
             </div>
         </div>

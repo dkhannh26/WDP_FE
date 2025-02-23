@@ -1,9 +1,10 @@
 import { Button, Col, Image, Row, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
 import { getProductDetail } from '../../services/product/product.service';
 import { EditOutlined } from '@ant-design/icons';
+import { TSHIRT_URL } from '../../config/url.config';
 
 const { Text } = Typography;
 const ProductDetail = () => {
@@ -11,6 +12,9 @@ const ProductDetail = () => {
     const [product, setProduct] = useState()
     const [images, setImages] = useState()
     const { id } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const editPath = location.pathname.replace('/detail/', '/edit/');
 
     useEffect(() => {
         getProductDetail(id, setProduct, setImages, setCanvas)
@@ -50,7 +54,7 @@ const ProductDetail = () => {
                 </Col>
                 <Col span={10}>
                     <Row>
-                        <Title level={3}>{product?.name}</Title>
+                        <Title level={3} style={{ textAlign: 'left' }} >{product?.name}</Title>
                     </Row>
                     <Row
                         style={{
@@ -59,7 +63,7 @@ const ProductDetail = () => {
                         }}
                     >
                         <span><Text style={{ fontSize: 16, fontWeight: 600 }}>Thương hiệu:{' '}</Text>
-                            <Text style={{ fontSize: 16, fontWeight: 400 }}>{product?.brand}</Text></span>
+                            <Text style={{ fontSize: 16, fontWeight: 400 }}>{product?.brand?.name}</Text></span>
                     </Row>
                     <Row
                         style={{
@@ -149,7 +153,7 @@ const ProductDetail = () => {
                         }}
                     >
                         <Space>
-                            <Button icon={<EditOutlined />} size={30}>
+                            <Button icon={<EditOutlined />} size={30} onClick={() => navigate(editPath)}>
                                 Chỉnh sửa thông tin
                             </Button>
                             <Button danger>

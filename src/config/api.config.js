@@ -3,6 +3,7 @@ const baseURL = "http://localhost:3000/";
 export const API_PATH = {
   user: baseURL + "users",
   discount: baseURL + "discount",
+  brand: baseURL + "brand",
   voucher: baseURL + "voucher",
   search: baseURL + "product/search",
   tshirt: baseURL + "product/tshirt",
@@ -31,6 +32,7 @@ export const API_PATH = {
   admin: baseURL + "admin",
   hotProduct: baseURL + "order/hotProduct",
   hotBrand: baseURL + "order/hotBrand",
+
 }
 export const PATH = {
   user: baseURL + "users",

@@ -4,14 +4,14 @@ import Meta from "antd/es/card/Meta";
 import Title from 'antd/es/typography/Title';
 import { default as React, useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import '../assets/css/home.css';
-import Carousel1 from '../assets/images/carousel1.webp';
-import Carousel2 from '../assets/images/carousel2.webp';
-import Carousel3 from '../assets/images/carousel3.webp';
-import Carousel4 from '../assets/images/carousel4.webp';
-import Carousel5 from '../assets/images/carousel5.webp';
-import NoImage from '../assets/images/no-image.jpg';
-import { getHotBrand, getTop10 } from '../services/order.service';
+import '../../assets/css/home.css';
+import Carousel1 from '../../assets/images/carousel1.webp';
+import Carousel2 from '../../assets/images/carousel2.webp';
+import Carousel3 from '../../assets/images/carousel3.webp';
+import Carousel4 from '../../assets/images/carousel4.webp';
+import Carousel5 from '../../assets/images/carousel5.webp';
+import NoImage from '../../assets/images/no-image.jpg';
+import { getHotBrand, getTop10 } from '../../services/order.service';
 const Home = () => {
     const carouselRef = React.useRef(null);
 

@@ -1,49 +1,43 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import Dashboard from "../pages/Dashboard";
-import Discount from "../pages/Discount";
-import Voucher from "../pages/Discount";
-import Size from "../pages/Size";
-import Import from "../pages/Import";
-import ImportTable from "../components/import/ImportTable";
-import ImportModel from "../components/import/ImportModel";
-import DiscountTable from "../components/discount/DiscountTable";
-import DiscountModel from "../components/discount/DiscountModel";
-import VoucherTable from "../components/voucher/VoucherTable";
-import VoucherModel from "../components/voucher/VoucherModel";
-import TshirtAdmin from "../pages/product-admin/TshirtAdmin";
-import TshirtTable from "../components/tshirt/TshirtTable";
-import TshirtModel from "../components/tshirt/TshirtModel";
-import PantTable from "../components/pant/PantTable";
-import PantModel from "../components/pant/PantModel";
-import AccessoryAdmin from "../pages/product-admin/AccessoryAdmin";
-import AccessoryTable from "../components/accessory/AccessoryTable";
-import AccessoryModel from "../components/accessory/AccessoryModel";
-import ShoesAdmin from "../pages/product-admin/ShoesAdmin";
-import ShoesTable from "../components/shoes/ShoesTable";
-import ShoesModel from "../components/shoes/ShoesModel";
-import PantShirtSizeTable from "../components/size/PantShirtSizeTable";
-import PantShirtSizeModel from "../components/size/PantShirtSizeModel";
-import ShoesSizeTable from "../components/size/ShoesSizeTable";
-import ShoesSizeModel from "../components/size/ShoesSizeModel";
-import Account from "../pages/Account";
-import AccountTable from "../components/account/AccountTable";
 import AccountModel from "../components/account/AccountModel";
-import LoginAdmin from "../pages/loginAdmin";
-import Profile from "../pages/Profile";
-import ProfileTable from "../components/profile/ProfileModel";
+import AccountTable from "../components/account/AccountTable";
+import DiscountModel from "../components/discount/DiscountModel";
+import DiscountTable from "../components/discount/DiscountTable";
+import ImportModel from "../components/import/ImportModel";
+import ImportTable from "../components/import/ImportTable";
 import OrderTable from "../components/order/OrderTable";
-import Statistic from "../pages/Statistic";
-import RacketAdmin from "../pages/product-admin/RacketAdmin";
-import RacketTable from "../components/racket/RacketTable";
+import AccessoryTable from "../components/product-admin/AccessoryTable";
+import PantTable from "../components/product-admin/PantTable";
 import ProductDetail from "../components/product-admin/productDetail";
-import RacketModel from "../components/racket/TshirtModel";
+import ProductForm from "../components/product-admin/ProductForm";
+import RacketTable from "../components/product-admin/RacketTable";
+import ShoesTable from "../components/product-admin/ShoesTable";
+import TshirtTable from "../components/product-admin/TshirtTable";
+import ProfileTable from "../components/profile/ProfileModel";
+import PantShirtSizeModel from "../components/size/PantShirtSizeModel";
+import PantShirtSizeTable from "../components/size/PantShirtSizeTable";
+import ShoesSizeModel from "../components/size/ShoesSizeModel";
+import ShoesSizeTable from "../components/size/ShoesSizeTable";
+import VoucherModel from "../components/voucher/VoucherModel";
+import VoucherTable from "../components/voucher/VoucherTable";
+import Account from "../pages/Account";
+import { default as Discount, default as Voucher } from "../pages/Discount";
+import Import from "../pages/Import";
+import Dashboard from "../pages/intro/Dashboard";
+import LoginAdmin from "../pages/loginAdmin";
+import AccessoryAdmin from "../pages/product-admin/AccessoryAdmin";
+import RacketAdmin from "../pages/product-admin/RacketAdmin";
+import ShoesAdmin from "../pages/product-admin/ShoesAdmin";
+import TshirtAdmin from "../pages/product-admin/TshirtAdmin";
+import Profile from "../pages/Profile";
+import Size from "../pages/Size";
+import Statistic from "../pages/Statistic";
 
 export const AdminRoutes = (
     <>
         <Route path="admin/login" element={<LoginAdmin />} />
         <Route path="admin" element={<Dashboard />}>
-            <Route path="product/:id" element={<ProductDetail />}></Route>
             <Route path="discount" element={<Discount />}>
                 <Route index element={<DiscountTable />} />
                 <Route path="create" element={<DiscountModel type="create" />} />
@@ -56,28 +50,34 @@ export const AdminRoutes = (
             </Route>
             <Route path="racket" element={<RacketAdmin />}>
                 <Route index element={<RacketTable />} />
-                <Route path="create" element={<RacketModel type="create" />} />
-                {/*<Route path="edit/:id" element={<TshirtModel type="edit" />} /> */}
+                <Route path="detail/:id" element={<ProductDetail />} />
+                <Route path="create" element={<ProductForm typeAction="create" typeProduct="racket" />} />
+                <Route path="edit/:id" element={<ProductForm typeAction="edit" typeProduct="racket" />} />
+                {/* <Route path="edit/:id" element={<TshirtModel type="edit" />} /> */}
             </Route>
             <Route path="tshirt" element={<TshirtAdmin />}>
                 <Route index element={<TshirtTable />} />
-                <Route path="create" element={<TshirtModel type="create" />} />
-                <Route path="edit/:id" element={<TshirtModel type="edit" />} />
+                <Route path="detail/:id" element={<ProductDetail />} />
+                <Route path="create" element={<ProductForm typeAction="create" typeProduct="tshirt" />} />
+                <Route path="edit/:id" element={<ProductForm typeAction="edit" typeProduct="tshirt" />} />
             </Route>
             <Route path="pant" element={<TshirtAdmin />}>
                 <Route index element={<PantTable />} />
-                <Route path="create" element={<PantModel type="create" />} />
-                <Route path="edit/:id" element={<PantModel type="edit" />} />
+                <Route path="detail/:id" element={<ProductDetail />} />
+                <Route path="create" element={<ProductForm typeAction="create" typeProduct="pant" />} />
+                <Route path="edit/:id" element={<ProductForm typeAction="edit" typeProduct="pant" />} />
             </Route>
             <Route path="shoes" element={<ShoesAdmin />}>
                 <Route index element={<ShoesTable />} />
-                <Route path="create" element={<ShoesModel type="create" />} />
-                <Route path="edit/:id" element={<ShoesModel type="edit" />} />
+                <Route path="detail/:id" element={<ProductDetail />} />
+                <Route path="create" element={<ProductForm typeAction="create" typeProduct="shoes" />} />
+                <Route path="edit/:id" element={<ProductForm typeAction="edit" typeProduct="shoes" />} />
             </Route>
             <Route path="accessory" element={<AccessoryAdmin />}>
                 <Route index element={<AccessoryTable />} />
-                <Route path="create" element={<AccessoryModel type="create" />} />
-                <Route path="edit/:id" element={<AccessoryModel type="edit" />} />
+                <Route path="detail/:id" element={<ProductDetail />} />
+                <Route path="create" element={<ProductForm typeAction="create" />} typeProduct="accessory" />
+                <Route path="edit/:id" element={<ProductForm typeAction="edit" typeProduct="accessory" />} />
             </Route>
             <Route path="pantTshirtSize" element={<Size />}>
                 <Route index element={<PantShirtSizeTable />} />

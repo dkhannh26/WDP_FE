@@ -3,10 +3,9 @@ import { Modal } from "antd";
 import axios from "axios";
 import { API_PATH } from "../config/api.config";
 import moment from "moment";
-import { getListAccount } from "../services/account.service";
 const { confirm } = Modal;
 
-export const showDeleteConfirm = (id, messageApi, getListDiscount, setDiscounts, URL) => {
+export const showDeleteConfirm = (id, messageApi, getList, setList, URL, typeProduct) => {
   confirm({
     title: 'Are you sure delete?',
     icon: <ExclamationCircleFilled />,
@@ -14,12 +13,14 @@ export const showDeleteConfirm = (id, messageApi, getListDiscount, setDiscounts,
     okType: 'danger',
     cancelText: 'No',
     onOk() {
+      console.log(URL + `/${id}`);
+
       axios.delete(URL + `/${id}`)
         .then(() => {
           success('Deleted Succesfully', messageApi)
         })
         .then(() => {
-          getListDiscount(setDiscounts)
+          getList(setList, typeProduct)
         })
         .catch(error => console.error(error))
     },
