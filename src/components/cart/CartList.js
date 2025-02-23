@@ -79,17 +79,17 @@ const CartList = () => {
         }
     }, [totalAmount, initialValues.userId]);
 
-    console.log(carts);
     // let amount = carts?.map(cart => cart.product.price * cart.quantity);
     // console.log('amount', amount)
     // const total = amount.reduce((a, b) => a + b, 0);
     // setTotalAmount(total);
 
-    // console.log(carts);
+    console.log(carts);
     // console.log(voucher);
 
 
     return (
+
         <div style={{ padding: '20px' }}>
 
             <Row gutter={16} style={{ marginTop: '20px' }}>
@@ -99,50 +99,66 @@ const CartList = () => {
                     </Text>
                     <List
                         itemLayout="horizontal"
-                        dataSource={carts}
+                        dataSource={carts || []}
                         renderItem={(item) => {
-                            return (<List.Item>
-                                <List.Item.Meta
-                                    avatar={
-                                        item.productImage ? (
-                                            <Image width={100} src={`${API_PATH.image}/${item.product.product_id}/${item.productImage._id}${item.productImage.file_extension}`} />
-                                            // {`${API_PATH.image}/${item.product.product_id}/${item.productImage._id}${item.productImage.file_extension}`}
-                                            // <span>{item.productImage ? item.productImage._id : "default extension"}</span>
-
-                                        ) : (
-                                            <Image width={100} src="path-to-default-image" />
-                                            // <span>{item.productImage ? item.productImage.file_extension : "default extension"}</span>
-                                        )
-                                    }
-                                    title={
-                                        <Text style={{ display: 'block', textAlign: 'left', fontSize: '15px', fontWeight: 'bold' }}>{item.product.name}</Text>
-                                    }
-                                    description={(
-                                        <div style={{ marginTop: '5px', display: 'block', textAlign: 'left' }}>
-                                            <Text style={{ color: '#888' }}>{(item.product.price * item.quantity).toLocaleString()}<Text style={{ fontSize: '10px', color: '#888', textDecorationLine: 'underline' }}>đ</Text></Text>
-                                            <br />
-                                            <Text style={{ color: '#888' }}>Kích thước: {item.productSize ? item.productSize.size_name : "Không có kích thước"}</Text>
-                                            <br />
-                                            <InputNumber min={1} max={item.product.quantity} defaultValue={Math.min(item.quantity, item.product.quantity)} onChange={(value) => onChange(value, item._id)} />
-                                        </div>
-                                    )}
-                                    style={{ marginLeft: '10px' }}
-                                />
-                                <div style={{ textAlign: 'right' }}>
-                                    <Button type="link" onClick={() => showDeleteConfirm(item._id, messageApi,
-                                        () => getListCart(initialValues.userId, setCarts, (total) => {
-                                            setTotal(total);
-                                            setInitialTotal(total)
-                                        }), setCarts, API_PATH.cart)}><CloseOutlined style={{ color: 'black' }} /></Button>
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <Text style={{ fontSize: '15px', color: 'black', fontWeight: 'bold' }}>{((item.product.price - (item.product.price * (item.product.discount / 100))) * item.quantity).toLocaleString()}<Text style={{ fontSize: '10px', color: 'black', textDecorationLine: 'underline' }}>đ</Text></Text>
-                                </div>
-                            </List.Item>)
-                        }
-                        }
+                            return (
+                                <List.Item>
+                                    <List.Item.Meta
+                                        avatar={
+                                            item.image ? (
+                                                <Image width={100} src={`${API_PATH.image}${item.image}`} />
+                                            ) : (
+                                                <Image width={100} src="path-to-default-image" />
+                                            )
+                                        }
+                                        title={
+                                            <Text style={{ display: 'block', textAlign: 'left', fontSize: '15px', fontWeight: 'bold' }}>
+                                                {item.product_name}
+                                            </Text>
+                                        }
+                                        description={
+                                            <div style={{ marginTop: '5px', display: 'block', textAlign: 'left' }}>
+                                                <Text style={{ color: '#888' }}>
+                                                    {item.price.toLocaleString()}đ
+                                                </Text>
+                                                <br />
+                                                <Text style={{ color: '#888' }}>Kích thước: {item.product_size_name || "Không có kích thước"}</Text>
+                                                <br />
+                                                <InputNumber
+                                                    min={1}
+                                                    defaultValue={item.cartQuantity}
+                                                    max={item.quantity}
+                                                    onChange={(value) => onChange(value, item._id)}
+                                                />
+                                            </div>
+                                        }
+                                        style={{ marginLeft: '10px' }}
+                                    />
+                                    <div style={{ textAlign: 'right' }}>
+                                        <Button
+                                            type="link"
+                                            onClick={() =>
+                                                showDeleteConfirm(
+                                                    item._id,
+                                                    messageApi,
+                                                    () => getListCart(initialValues.userId, setCarts, setTotal),
+                                                    setCarts,
+                                                    API_PATH.cart
+                                                )
+                                            }
+                                        >
+                                            <CloseOutlined style={{ color: 'black' }} />
+                                        </Button>
+                                        <br />
+                                        <Text style={{ fontSize: '15px', color: 'black', fontWeight: 'bold' }}>
+                                            {item.price.toLocaleString()}đ
+                                        </Text>
+                                    </div>
+                                </List.Item>
+                            );
+                        }}
                     />
+
                     {/* <Card bordered={false} style={{ backgroundColor: '#f5f5f5' }}>
                         <Text strong style={{ fontSize: '16px', textAlign: 'left', display: 'block', color: '#888' }}>Ghi chú đơn hàng</Text>
                         <Form.Item style={{ marginTop: '10px' }}>
@@ -174,7 +190,17 @@ const CartList = () => {
                                     {total.toLocaleString()}<Text style={{ fontSize: '15px', color: 'red', textDecorationLine: 'underline' }}>đ</Text>
                                 </Text>
                             </Row>
-                            {carts.length !== 0 ? <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })}>
+                            {carts.length !== 0 ? <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => {
+                                const hasSoldOutItem = carts.filter(item => item.quantity < 0);
+                                if (hasSoldOutItem) {
+                                    const message = hasSoldOutItem.map(item =>
+                                        `Sản phẩm: ${item.product_name}, Size: ${item.product_size_name}`
+                                    ).join("\n");
+                                    alert(`Sản phẩm hết hàng:\n${message}`);
+                                } else {
+                                    navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } });
+                                }
+                            }}>
                                 <Text style={{ fontWeight: 'bold', color: 'white', fontSize: '14px' }}>THANH TOÁN</Text>
                             </Button> : ''}
 

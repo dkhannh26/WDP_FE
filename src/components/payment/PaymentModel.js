@@ -6,7 +6,7 @@ import { deleteCart, getListCart } from '../../services/cart.service';
 import LocationSelector from './LocationSelector';
 import { useLocation, useNavigate } from 'react-router';
 import { createOrder } from '../../services/order.service';
-import { createPayment } from '../../services/payment.service';
+import { createPayOS, createPayment } from '../../services/payment.service';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { API_PATH, PATH } from '../../config/api.config';
@@ -34,6 +34,7 @@ const PaymentModel = () => {
     const [language, setLanguage] = useState('vn');
     const [isCOD, setIsCOD] = useState(false);
     const [isVNPay, setIsVNPay] = useState(false);
+    const [isPayOS, setIsPayOS] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(null);
 
     // const fetchShippingMethods = (city, district, ward) => {
@@ -87,6 +88,14 @@ const PaymentModel = () => {
             setPaymentMethod(null);
         }
     };
+    const handlePayOSChange = (e) => {
+        setIsPayOS(e.target.checked);
+        if (e.target.checked) {
+            setPaymentMethod('PayOS');
+        } else {
+            setPaymentMethod(null);
+        }
+    };
     const {
         isAuthenticated,
         user,
@@ -120,7 +129,7 @@ const PaymentModel = () => {
         fetchData();
     }, [isAuthenticated]);
     const onFinish = () => {
-        if (!isCOD && !isVNPay) {
+        if (!isCOD && !isVNPay && !isPayOS) {
             alert('Vui lòng chọn phương thức thanh toán');
             return;
         }
@@ -135,18 +144,17 @@ const PaymentModel = () => {
             email,
             address,
             voucherTotal,
-            cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.quantity, accessory_id: cart.accessory_id, shoes_size_detail_id: cart.shoes_size_detail_id, pant_shirt_size_detail_id: cart.pant_shirt_size_detail_id }))
+            cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id }))
         };
         const order = {
             account_id: initialValues.userId,
             phone: values.phone,
+            email: initialValues.email,
             address: selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + values.address,
             total_price: values.voucherTotal,
             orderItems: values.cartItems.map(item => ({
-                accessory_id: item.accessory_id,
+                product_size_id: item.product_size_id,
                 quantity: item.quantity,
-                shoes_size_detail_id: item.shoes_size_detail_id,
-                pant_shirt_size_detail_id: item.pant_shirt_size_detail_id,
             })),
         };
         if (isCOD) {
@@ -154,6 +162,8 @@ const PaymentModel = () => {
             createOrder(order, navigate);
         } else if (isVNPay) {
             createPayment(voucherTotal, bankCode, language, name, selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + address, phone);
+        } else if (isPayOS) {
+            createPayOS(voucherTotal, bankCode, language, name, selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + address, phone);
         }
     };
     useEffect(() => {
@@ -189,18 +199,17 @@ const PaymentModel = () => {
                 email,
                 address,
                 voucherTotal,
-                cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.quantity, accessory_id: cart.accessory_id, shoes_size_detail_id: cart.shoes_size_detail_id, pant_shirt_size_detail_id: cart.pant_shirt_size_detail_id }))
+                cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id }))
             };
             const order = {
                 account_id: initialValues.userId,
                 phone: values.phone,
-                address: values.address,
-                total_price: values.voucherTotal / 100,
+                email: initialValues.email,
+                address: selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + values.address,
+                total_price: values.voucherTotal,
                 orderItems: values.cartItems.map(item => ({
-                    accessory_id: item.accessory_id,
+                    product_size_id: item.product_size_id,
                     quantity: item.quantity,
-                    shoes_size_detail_id: item.shoes_size_detail_id,
-                    pant_shirt_size_detail_id: item.pant_shirt_size_detail_id,
                 })),
             };
             deleteCart(initialValues.userId);
@@ -330,6 +339,20 @@ const PaymentModel = () => {
                                     Thanh toán bằng ví VNPay
                                 </Title>
                             </Checkbox>
+                            <Checkbox
+                                checked={paymentMethod === 'PayOS'}
+                                onChange={handlePayOSChange}
+                                style={{ fontSize: '18px', lineHeight: '24px', marginTop: '3%' }}
+                            >
+                                <Title level={5} style={{ margin: 0, fontSize: '18px', color: '#888', display: 'flex', alignItems: 'center' }}>
+                                    <Image
+                                        src='https://i.ytimg.com/vi/Q-DYUEwwkTA/sddefault.jpg'
+                                        alt='PayOS'
+                                        style={{ width: '24px', height: '24px', marginRight: '8px' }}
+                                    />
+                                    Thanh toán bằng PayOS
+                                </Title>
+                            </Checkbox>
                         </Card>
                         <Row style={{ alignItems: 'center', justifyContent: 'space-between', marginTop: '3%' }}>
                             <Col>
@@ -354,23 +377,23 @@ const PaymentModel = () => {
                                 <List.Item.Meta
                                     avatar={
                                         item.productImage ? (
-                                            <Image width={100} src={`${API_PATH.image}/${item.product.product_id}/${item.productImage._id}${item.productImage.file_extension}`} />
+                                            <Image width={100} src={`${API_PATH.image}${item.image}`} />
                                         ) : (
                                             <Image width={100} src="path-to-default-image" />
                                         )
                                     }
                                     title={
-                                        <Text style={{ display: 'block', textAlign: 'left', fontSize: '15px', fontWeight: 'bold' }}>{item.product.name}</Text>
+                                        <Text style={{ display: 'block', textAlign: 'left', fontSize: '15px', fontWeight: 'bold' }}>{item.product_name}</Text>
                                     }
                                     description={(
                                         <div style={{ marginTop: '5px', display: 'block', textAlign: 'left' }}>
-                                            <Text style={{ color: '#888' }}>Kích thước: {item.productSize ? item.productSize.size_name : "Không có kích thước"}</Text>
+                                            <Text style={{ color: '#888' }}>Kích thước: {item.product_size_name ? item.product_size_name : "Không có kích thước"}</Text>
                                         </div>
                                     )}
                                     style={{ marginLeft: '10px' }}
                                 />
                                 <div style={{ textAlign: 'right' }}>
-                                    <Text style={{ fontSize: '15px', color: 'black', fontWeight: 'bold' }}>{((item.product.price - (item.product.price * (item.product.discount / 100))) * item.quantity).toLocaleString()}<Text style={{ fontSize: '10px', color: 'black', textDecorationLine: 'underline' }}>đ</Text></Text>
+                                    <Text style={{ fontSize: '15px', color: 'black', fontWeight: 'bold' }}>{((item.price - (item.price * (item.discount / 100))) * item.cartQuantity).toLocaleString()}<Text style={{ fontSize: '10px', color: 'black', textDecorationLine: 'underline' }}>đ</Text></Text>
                                 </div>
                             </List.Item>
                         )}
