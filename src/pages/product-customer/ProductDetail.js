@@ -99,25 +99,32 @@ const ProductDetail = () => {
         console.log("sadkjsahida");
         if (product) {
             const matchingCartItem = cart.find(item => item.product_size_id === detailId);
+            const selectedSize = product.size.find(item => item.product_size_id === detailId);
+            const availableQuantity = selectedSize ? selectedSize.quantity : 0;
             console.log("dsadá", matchingCartItem);
-            console.log('detailID', detailId);
+            console.log('detailID', availableQuantity);
 
             if (matchingCartItem) {
                 const updatedQuantity = matchingCartItem.cartQuantity + count;
                 console.log(matchingCartItem.quantity);
                 console.log('uodata', updatedQuantity);
-                if (updatedQuantity > matchingCartItem.quantity) {
+                if (updatedQuantity > matchingCartItem.quantity || matchingCartItem.quantity < 0) {
                     alert('sold out');
                 } else {
                     AddCartDup(matchingCartItem._id, { quantity: updatedQuantity }, navigate);
                 }
             } else {
-                const newCart = {
-                    account_id: initialValues.userId,
-                    product_size_id: detailId,
-                    quantity: count
-                };
-                createCart(newCart, navigate);
+                if (availableQuantity > 0) {
+                    const newCart = {
+                        account_id: initialValues.userId,
+                        product_size_id: detailId,
+                        quantity: count
+                    };
+                    createCart(newCart, navigate);
+                }
+                else {
+                    alert('sold out');
+                }
             }
         }
     }, [cart],)

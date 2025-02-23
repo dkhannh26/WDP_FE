@@ -190,7 +190,17 @@ const CartList = () => {
                                     {total.toLocaleString()}<Text style={{ fontSize: '15px', color: 'red', textDecorationLine: 'underline' }}>đ</Text>
                                 </Text>
                             </Row>
-                            {carts.length !== 0 ? <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })}>
+                            {carts.length !== 0 ? <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => {
+                                const hasSoldOutItem = carts.filter(item => item.quantity < 0);
+                                if (hasSoldOutItem) {
+                                    const message = hasSoldOutItem.map(item =>
+                                        `Sản phẩm: ${item.product_name}, Size: ${item.product_size_name}`
+                                    ).join("\n");
+                                    alert(`Sản phẩm hết hàng:\n${message}`);
+                                } else {
+                                    navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } });
+                                }
+                            }}>
                                 <Text style={{ fontWeight: 'bold', color: 'white', fontSize: '14px' }}>THANH TOÁN</Text>
                             </Button> : ''}
 
