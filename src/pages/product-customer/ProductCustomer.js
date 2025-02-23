@@ -16,8 +16,6 @@ const ProductCustomer = () => {
   const category = searchParams.get('category');
   const brand = searchParams.get('brand');
 
-  console.log(category, brand);
-
 
   useEffect(() => {
     let filterCategory

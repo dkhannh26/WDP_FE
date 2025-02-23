@@ -147,6 +147,7 @@ const ShoesTable = () => {
       dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
+      sorter: (a, b) => a.productPrice - b.productPrice,
     },
     {
       title: "Discount percent",
@@ -156,6 +157,7 @@ const ShoesTable = () => {
         return "-";
       },
       width: "10%",
+      sorter: (a, b) => a.productDiscountPercent - b.productDiscountPercent,
     },
     {
       title: "Action",

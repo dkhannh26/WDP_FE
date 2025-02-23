@@ -122,7 +122,6 @@ const RacketTable = () => {
       title: "No.",
       render: (text, record, index) => index + 1,
       width: "10%",
-
     },
     {
       title: "Image",
@@ -146,6 +145,7 @@ const RacketTable = () => {
       dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
+      sorter: (a, b) => a.productPrice - b.productPrice,
     },
     {
       title: "Discount percent",
@@ -155,6 +155,7 @@ const RacketTable = () => {
         return "-";
       },
       width: "10%",
+      sorter: (a, b) => a.productDiscountPercent - b.productDiscountPercent,
     },
     {
       title: "Action",

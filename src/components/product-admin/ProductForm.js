@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select, Space, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,8 +9,7 @@ import RacketSize from '../size/RacketSize.js';
 import ShoesSize from '../size/ShoesSize.js';
 import TshirtSize from '../size/TshirtSize.js';
 import UploadImg from '../common/UploadImg';
-
-
+const { Text } = Typography;
 const { Option } = Select;
 
 
@@ -23,6 +22,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
     const [sizes, setSizes] = useState()
     const [fileList, setFileList] = useState([]);
     const [error, setError] = useState(null)
+    const [brandError, setBrandError] = useState('')
 
     const currentDate = new Date();
     const handleFileListChange = (newFileList) => {
@@ -30,10 +30,19 @@ const ProductForm = ({ typeAction, typeProduct }) => {
     };
 
     const onFinish = async (values) => {
+
+        if (values.brand === undefined) {
+            setBrandError('Please choose a brand')
+            return
+        } else {
+            setBrandError('')
+        }
+
         const product = {
             name: values.name,
             price: values.price,
             category: typeProduct,
+            brand_id: values.brand,
             size: {
                 S: values.S,
                 M: values.M,
@@ -42,6 +51,13 @@ const ProductForm = ({ typeAction, typeProduct }) => {
                 XLL: values.XLL,
                 "3U": values["3U"],
                 "4U": values["4U"],
+                "37": values["37"],
+                "38": values["38"],
+                "39": values["39"],
+                "40": values["40"],
+                "41": values["41"],
+                "42": values["42"],
+                "43": values["43"],
             },
             discount_id: values.discount,
         }
@@ -173,7 +189,11 @@ const ProductForm = ({ typeAction, typeProduct }) => {
                         >
                             <UploadImg onFileListChange={handleFileListChange} filesApi={fileList}></UploadImg>
                         </Form.Item>
+
                         <Form.Item {...tailLayout}>
+                            <Row style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Text type="danger">{brandError}</Text>
+                            </Row>
                             <Space>
                                 <Button type="primary" htmlType="submit" >
                                     {typeAction === 'create' ? 'Insert' : 'Edit'}

@@ -70,8 +70,9 @@ export const getProductDetailCustomer = (id, setProduct, setImages, setCanvas, s
 export const getProductDetailAdmin = (id, form, setSizes, handleFileListChange, setError) => {
     axios.get(API_PATH.product + `/${id}`)
         .then((res) => {
-            setSizes(res.data.size)
+            console.log(res.data);
 
+            setSizes(res.data.size)
             form.setFieldsValue({
                 discount: res.data.discount?.discount_id,
                 name: res.data.name,
