@@ -1,4 +1,9 @@
-import { LikeFilled, LikeOutlined, MoreOutlined } from "@ant-design/icons";
+import {
+  FilterOutlined,
+  LikeFilled,
+  LikeOutlined,
+  MoreOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -8,6 +13,7 @@ import {
   Menu,
   Modal,
   Row,
+  Select,
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -26,6 +32,8 @@ import { useAuth } from "../context/AuthContext";
 
 const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const [feedback, setFeedback] = useState([]);
+  const [filteredFeedbacks, setFilteredFeedbacks] = useState(feedback);
+
   const [feedbackArr, setFeedbackArr] = useState([]);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,6 +105,9 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   useEffect(() => {
     console.log("Feedback array đã được cập nhật:", feedbackArr);
   }, [feedbackArr]);
+  useEffect(() => {
+    setFilteredFeedbacks([...feedback]);
+  }, [feedback]);
   const likeButton = async (feedback_id, account_id) => {
     setFeedbackArr((prev) =>
       prev.includes(feedback_id)
@@ -114,9 +125,37 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     setRefreshTrigger((prev) => prev + 1);
   };
 
+  const handleFilterChange = (value) => {
+    let filtered = [...feedback];
+    console.log(filtered);
+
+    switch (value) {
+      case "like_increase":
+        filtered.sort((a, b) => b.likeCount - a.likeCount);
+        break;
+      case "like_decrease":
+        filtered.sort((a, b) => a.likeCount - b.likeCount);
+        break;
+      case "date_increase":
+        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+        break;
+      case "date_decrease":
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+    }
+    setFilteredFeedbacks(filtered);
+  };
+
   return (
     <div style={{ width: 900, margin: "auto", marginTop: 100 }}>
-      <Row style={{ justifyContent: "space-between", paddingBottom: 40 }}>
+      <Row
+        style={{
+          justifyContent: "space-between",
+          paddingBottom: 40,
+          borderBottom: "1px solid gray",
+        }}
+      >
         <p style={{ fontSize: 25, fontWeight: "bold" }}>Feedback</p>
         <Button
           style={{ backgroundColor: "black", borderRadius: 0 }}
@@ -126,6 +165,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
           Write Feedback
         </Button>
       </Row>
+
       <Modal
         title="Write new feedback"
         open={isModalOpen}
@@ -178,15 +218,34 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
           </Form.Item>
         </Form>
       </Modal>
-
+      <Col span={6}>
+        <div style={{ fontWeight: 600, fontSize: 20, marginTop: 20 }}>
+          <FilterOutlined />
+          <Select
+            defaultValue="Date"
+            style={{
+              marginLeft: 20,
+            }}
+            onChange={handleFilterChange}
+          >
+            <Select.OptGroup label="Like">
+              <Select.Option value="like_increase">Increase</Select.Option>
+              <Select.Option value="like_decrease">Decrease</Select.Option>
+            </Select.OptGroup>
+            <Select.OptGroup label="Date">
+              <Select.Option value="date_increase">Increase</Select.Option>
+              <Select.Option value="date_decrease">Decrease</Select.Option>
+            </Select.OptGroup>
+          </Select>
+        </div>
+      </Col>
       <List
         style={{
-          padding: "30px 0",
-          borderTop: "1px solid gray",
+          paddingBottom: "30px",
           borderBottom: "1px solid gray",
         }}
         itemLayout="horizontal"
-        dataSource={feedback}
+        dataSource={filteredFeedbacks}
         split={false}
         renderItem={(item, index) => {
           const menu = (
