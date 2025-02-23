@@ -8,6 +8,7 @@ import axios from 'axios';
 import { AddCartDup, createCart, getListCart } from '../../services/cart.service';
 import { PATH } from '../../config/api.config';
 import { getProductDetailCustomer } from '../../services/product/product.service';
+import CustomerFeedback from '../../components/feedback/CustomerFeedback';
 const { Text } = Typography;
 
 const ProductDetail = () => {
@@ -287,10 +288,13 @@ const ProductDetail = () => {
                 </Col>
             </Row>
             <Row>
-                {/* <CustomerFeedback product_id={id} userId={initialValues.userId} /> */}
+                <CustomerFeedback product_id={id} userId={initialValues.userId} />
             </Row>
         </>
     );
 };
 
 export default ProductDetail;
+
+
+
