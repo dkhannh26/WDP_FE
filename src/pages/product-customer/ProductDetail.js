@@ -5,9 +5,8 @@ import Title from 'antd/es/typography/Title';
 import '../../assets/css/sizeBtn.css'
 import { useAuth } from '../../components/context/AuthContext';
 import axios from 'axios';
-import { AddCartDup, createCart, getListCart, getProductDetail } from '../../services/cart.service';
+import { AddCartDup, createCart, getListCart } from '../../services/cart.service';
 import { PATH } from '../../config/api.config';
-import CustomerFeedback from '../../components/feedback/CustomerFeedback';
 import { getProductDetailCustomer } from '../../services/product/product.service';
 const { Text } = Typography;
 

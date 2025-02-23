@@ -1,9 +1,7 @@
 import axios from "axios"
 import { API_PATH } from "../config/api.config"
-import { CART_URL } from "../config/url.config"
-import { DISCOUNT_URL } from "../config/url.config"
 import { MESSAGE } from "../config/message.config"
-import { json } from "react-router-dom"
+import { CART_URL } from "../config/url.config"
 
 export const getListCart = (id, setCarts, setTotal) => {
     axios.get(API_PATH.cart + `/${id}`)
