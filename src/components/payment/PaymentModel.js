@@ -199,18 +199,17 @@ const PaymentModel = () => {
                 email,
                 address,
                 voucherTotal,
-                cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.quantity, accessory_id: cart.accessory_id, shoes_size_detail_id: cart.shoes_size_detail_id, pant_shirt_size_detail_id: cart.pant_shirt_size_detail_id }))
+                cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id }))
             };
             const order = {
                 account_id: initialValues.userId,
                 phone: values.phone,
-                address: values.address,
-                total_price: values.voucherTotal / 100,
+                email: initialValues.email,
+                address: selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + values.address,
+                total_price: values.voucherTotal,
                 orderItems: values.cartItems.map(item => ({
-                    accessory_id: item.accessory_id,
+                    product_size_id: item.product_size_id,
                     quantity: item.quantity,
-                    shoes_size_detail_id: item.shoes_size_detail_id,
-                    pant_shirt_size_detail_id: item.pant_shirt_size_detail_id,
                 })),
             };
             deleteCart(initialValues.userId);
