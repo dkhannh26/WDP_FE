@@ -45,8 +45,6 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const selectId = product_id;
   const onFinish = (values) => {
-    console.log("Success:", values.content);
-    console.log(userId);
     const feedbackData = {
       content: values.content,
       account_id: userId,
@@ -65,12 +63,12 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const editFeedback = (feedbackItem, id) => {
     setCurrentFeedback(true);
     setId(id);
-    console.log(id);
     form.setFieldsValue({ content: feedbackItem.content });
     setIsModalOpen(true);
   };
 
-  const showModal = () => {
+  const showModal = async (action) => {
+    form.resetFields();
     setIsModalOpen(true);
   };
 
@@ -127,7 +125,6 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
 
   const handleFilterChange = (value) => {
     let filtered = [...feedback];
-    console.log(filtered);
 
     switch (value) {
       case "like_increase":
@@ -160,7 +157,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         <Button
           style={{ backgroundColor: "black", borderRadius: 0 }}
           type="primary"
-          onClick={showModal}
+          onClick={() => showModal('add-new')}
         >
           Write Feedback
         </Button>
@@ -171,6 +168,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
+
       >
         <Form
           className="customer-feedback"
