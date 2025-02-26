@@ -32,6 +32,8 @@ const OrderTable = () => {
         setFilteredOrders(filtered);
     };
 
+    console.log('dequy');
+
 
 
     const columns = [
@@ -100,9 +102,10 @@ const OrderTable = () => {
                                     shape="round"
                                     icon={<CheckOutlined style={{ color: 'green' }} />}
                                     onClick={() => {
-                                        getOrderDetails(_id, setOrderDetails).then(orderDetails => {
-                                            confirmOrder(_id, messageApi, getListOrder, setOrders, orderDetails);
-                                        });
+                                        getOrderDetails(_id, setOrderDetails)
+                                            .then(orderDetails => {
+                                                confirmOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails);
+                                            });
                                     }}
                                 ></Button>
                             </>
@@ -130,7 +133,6 @@ const OrderTable = () => {
 
     const expandedRowRender = (record) => {
         const details = orderDetails[record._id];
-        console.log(details);
         if (!details || details.length === 0) return null;
         return (
             <div>
@@ -144,24 +146,28 @@ const OrderTable = () => {
             </div>
         );
     };
+
+    // useEffect(() => {
+    //     getListOrder((data) => {
+    //         setOrders(data);
+    //         setFilteredOrders(data);
+    //     });
+    // }, []);
+
+
     useEffect(() => {
-        getListOrder((data) => {
-            setOrders(data);
-            setFilteredOrders(data);
-        });
+        getListOrder(setOrders, setFilteredOrders)
     }, []);
+
     useEffect(() => {
         if (state?.message === MESSAGE.CREATE_SUCCESS) {
-            console.log('message', state?.message)
             success(state.message, messageApi);
             navigate(location.pathname, { replace: true }); //xóa state sau khi sử dụng
         } else if (state?.message === MESSAGE.UPDATE_SUCCESS) {
-            console.log('message', state?.message)
             success(state.message, messageApi);
             navigate(location.pathname, { replace: true });
         }
 
-        getListOrder(setOrders)
     }, [state, navigate, messageApi, location.pathname])
 
     return (

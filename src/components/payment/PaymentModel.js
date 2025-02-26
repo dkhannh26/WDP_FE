@@ -205,7 +205,7 @@ const PaymentModel = () => {
                 account_id: initialValues.userId,
                 phone: values.phone,
                 email: initialValues.email,
-                address: selectedCity + ' ' + selectedDistrict + ' ' + selectedWard + ' ' + values.address,
+                address: values.address,
                 total_price: values.voucherTotal,
                 orderItems: values.cartItems.map(item => ({
                     product_size_id: item.product_size_id,
@@ -376,8 +376,8 @@ const PaymentModel = () => {
                             <List.Item>
                                 <List.Item.Meta
                                     avatar={
-                                        item.productImage ? (
-                                            <Image width={100} src={`${API_PATH.image}${item.image}`} />
+                                        item.image ? (
+                                            <Image width={100} src={`${API_PATH.image}/${item.product_id}/${item.image}`} />
                                         ) : (
                                             <Image width={100} src="path-to-default-image" />
                                         )

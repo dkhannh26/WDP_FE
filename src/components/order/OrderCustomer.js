@@ -15,19 +15,21 @@ const OrderCustomer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [messageApi, contextHolder] = message.useMessage()
-    const onChange = (e) => {
-        const value = e.target.value.toLowerCase();
 
-        const filtered = orders.filter(
-            (orders) =>
-                orders.account_id?.username.toLowerCase().includes(value) ||
-                orders.phone.toLowerCase().includes(value) ||
-                orders.address.toLowerCase().includes(value) ||
-                orders.status.toLowerCase().includes(value)
 
-        );
-        setFilteredOrders(filtered);
-    };
+    // const onChange = (e) => {
+    //     const value = e.target.value.toLowerCase();
+
+    //     const filtered = orders.filter(
+    //         (orders) =>
+    //             orders.account_id?.username.toLowerCase().includes(value) ||
+    //             orders.phone.toLowerCase().includes(value) ||
+    //             orders.address.toLowerCase().includes(value) ||
+    //             orders.status.toLowerCase().includes(value)
+
+    //     );
+    //     setFilteredOrders(filtered);
+    // };
     const columns = [
         {
             title: 'No.',
@@ -80,8 +82,19 @@ const OrderCustomer = () => {
                     <Space>
                         {record.status === 'delivered' && (
                             <>
-                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi, getListDoneOrder(initialValues.userId, setOrders), setOrders)}></Button>
-                                <Button shape="round" icon={<CheckOutlined style={{ color: 'green' }} />} onClick={() => shippedOrder(_id, messageApi, () => getListDoneOrder(initialValues.userId, setOrders), setOrders)}></Button>
+                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi,
+                                    () => getListDoneOrder(initialValues.userId, (data) => {
+                                        setOrders(data);
+                                        setFilteredOrders(data);
+                                    }),
+                                    setOrders, setFilteredOrders)}>
+                                </Button>
+                                <Button shape="round" icon={<CheckOutlined style={{ color: 'green' }} />} onClick={() => shippedOrder(_id, messageApi,
+                                    () => getListDoneOrder(initialValues.userId, (data) => {
+                                        setOrders(data);
+                                        setFilteredOrders(data);
+                                    }),
+                                    setOrders, setFilteredOrders)}></Button>
                             </>
                         )}
                     </Space>
@@ -91,8 +104,6 @@ const OrderCustomer = () => {
         },
     ];
 
-
-    console.log(orders);
     const toggleExpand = (id) => {
         const newExpandedRowKeys = expandedRowKeys.includes(id)
             ? expandedRowKeys.filter((key) => key !== id)
@@ -137,13 +148,13 @@ const OrderCustomer = () => {
                                 <List.Item.Meta
                                     avatar={
                                         item.image ? (
-                                            <Image width={100} src={`${API_PATH.image}${item.image}`} />
+                                            <Image width={180} height={200} src={`${API_PATH.image}/${item.product_id}/${item.image}`} />
                                         ) : (
-                                            <Image width={170} height={200} src="https://product.hstatic.net/1000344185/product/img_4125_4feb7a360b3b4f00bd2465a85ef2d9e3_small.jpg" />
+                                            <Image width={180} height={200} src="" />
                                         )
                                     }
                                     title={`${item.product_name} - Size: ${item.product_size_name ? item?.product_size_name : "Không có kích thước"}`}
-                                    description={`x${item.quantity}`}
+                                    description={`x${item.cartQuantity}`}
                                 />
                                 <Title level={4}><del>{(item?.price * item?.cartQuantity).toLocaleString()}đ</del><span style={{ color: 'red' }}>{((item?.price - (item?.price * (item.discount / 100))) * item?.cartQuantity).toLocaleString()}đ</span></Title>
 
@@ -191,17 +202,18 @@ const OrderCustomer = () => {
         if (!initialValues.userId) return;
 
         const fetchOrders = async () => {
-            let data = [];
             if (status === "pending") {
-                data = await getListPendingOrder(initialValues.userId);
+                getListPendingOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                });
             } else if (status === "done") {
-                data = await getListDoneOrder(initialValues.userId);
+                getListDoneOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                });
             }
-
-            setOrders(data);
-            setFilteredOrders(data);
         };
-
         fetchOrders();
     }, [status, initialValues.userId]);
 

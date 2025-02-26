@@ -106,7 +106,7 @@ const CartList = () => {
                                     <List.Item.Meta
                                         avatar={
                                             item.image ? (
-                                                <Image width={100} src={`${API_PATH.image}${item.image}`} />
+                                                <Image width={100} src={`${API_PATH.image}/${item.product_id}/${item.image}`} />
                                             ) : (
                                                 <Image width={100} src="path-to-default-image" />
                                             )
@@ -150,9 +150,7 @@ const CartList = () => {
                                             <CloseOutlined style={{ color: 'black' }} />
                                         </Button>
                                         <br />
-                                        <Text style={{ fontSize: '15px', color: 'black', fontWeight: 'bold' }}>
-                                            {item.price.toLocaleString()}đ
-                                        </Text>
+                                        <Text style={{ fontSize: '15px', color: 'black', fontWeight: 'bold' }}>{((item.price - (item.price * (item.discount / 100))) * item.cartQuantity).toLocaleString()}<Text style={{ fontSize: '10px', color: 'black', textDecorationLine: 'underline' }}>đ</Text></Text>
                                     </div>
                                 </List.Item>
                             );
@@ -192,7 +190,7 @@ const CartList = () => {
                             </Row>
                             {carts.length !== 0 ? <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => {
                                 const hasSoldOutItem = carts.filter(item => item.quantity < 0);
-                                if (hasSoldOutItem) {
+                                if (hasSoldOutItem?.length > 0) {
                                     const message = hasSoldOutItem.map(item =>
                                         `Sản phẩm: ${item.product_name}, Size: ${item.product_size_name}`
                                     ).join("\n");
@@ -209,7 +207,7 @@ const CartList = () => {
                     </div>
                 </Col>
             </Row>
-        </div >
+        </div>
     );
 }
 

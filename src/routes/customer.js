@@ -23,6 +23,7 @@ export const CustomerRoutes = (
       <Route path="profile" element={<User />}></Route>
       <Route path="register" element={<Register />}></Route>
       <Route path="order" element={<OrderCustomer />}></Route>
+      <Route path="product/:id" element={<ProductDetail />} />
       <Route path="pant/:id" element={<ProductDetail />} />
       <Route path="pant" element={<ProductCustomer />} />
       <Route path="racket/:id" element={<ProductDetail />} />

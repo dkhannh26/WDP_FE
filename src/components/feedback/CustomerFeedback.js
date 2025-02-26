@@ -128,14 +128,13 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
 
     switch (value) {
       case "like_increase":
-        filtered.sort((a, b) => b.likeCount - a.likeCount);
+        filtered.sort((a, b) => a.likeCount - b.likeCount);
         break;
       case "like_decrease":
-        filtered.sort((a, b) => a.likeCount - b.likeCount);
+        filtered.sort((a, b) => b.likeCount - a.likeCount);
         break;
       case "date_increase":
         filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-
         break;
       case "date_decrease":
         filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

@@ -122,7 +122,7 @@ const Home = () => {
                         {filteredProducts.map((product) => (
                             <div key={product.product_id} style={{ marginRight: "0px", width: "20%", display: "flex", justifyContent: "center" }}>
                                 <Card
-                                    onClick={() => navigate(`/product/${product.product_id}`)}
+                                    onClick={() => navigate(`/customer/product/${product.product_id}`)}
                                     bordered={true}
                                     hoverable
                                     style={{ width: "95%" }}
@@ -199,7 +199,7 @@ const Home = () => {
                         {filteredBrands.map((product) => (
                             <div key={product.product_id} style={{ marginRight: "0px", width: "20%", display: "flex", justifyContent: "center" }}>
                                 <Card
-                                    onClick={() => navigate(`/product/${product.product_id}`)}
+                                    onClick={() => navigate(`/customer/product/${product.product_id}`)}
                                     bordered={true}
                                     hoverable
                                     style={{ width: "95%" }}

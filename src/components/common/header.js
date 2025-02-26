@@ -93,7 +93,7 @@ const Header = () => {
                   item.image ? (
                     <Image
                       width={100}
-                      src={`${API_PATH.image}${item.image}`}
+                      src={`${API_PATH.image}/${item.product_id}/${item.image}`}
                     />
                   ) : (
                     // {`${API_PATH.image}/${item.product.product_id}/${item.productImage._id}${item.productImage.file_extension}`}

@@ -3,10 +3,11 @@ import { API_PATH } from "../config/api.config"
 import { ORDER_URL } from "../config/url.config"
 import { MESSAGE } from "../config/message.config"
 
-export const getListOrder = (setOrders) => {
+export const getListOrder = (setOrders, setFilteredOrders) => {
     axios.get(API_PATH.order)
         .then((res) => {
             setOrders(res.data)
+            setFilteredOrders(res.data)
         })
         .catch(error => console.error(error))
 }
@@ -68,8 +69,7 @@ export const getOrderDetails = (id, setOrderDetails) => {
         .catch(error => console.error(error));
 };
 
-export const confirmOrder = (id, messageApi, getListOrder, setOrders, orderDetails) => {
-    console.log(orderDetails);
+export const confirmOrder = (id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails) => {
     const quantities = orderDetails.data?.map(detail => detail.cartQuantity);
     const product_size_id = orderDetails.data?.map(detail => detail.product_size_id);
 
@@ -81,31 +81,32 @@ export const confirmOrder = (id, messageApi, getListOrder, setOrders, orderDetai
     axios.put(API_PATH.confirmOrder + `/${id}`, { updateData })
         .then(() => {
             success('Confirm Successfully', messageApi);
-            return getListOrder(setOrders);
+            return getListOrder(setOrders, setFilteredOrders);
         })
         .catch(error => {
             console.error(error);
         });
 };
 
-export const cancelOrder = (id, messageApi, getListOrder, setOrders) => {
+export const cancelOrder = (id, messageApi, getListOrder, setOrders, setFilteredOrders) => {
     axios.put(API_PATH.cancelOrder + `/${id}`)
         .then(() => {
             success('Cancel Succesfully', messageApi)
         })
         .then(() => {
-            getListOrder(setOrders)
+            getListOrder(setOrders, setFilteredOrders)
         })
         .catch(error => console.error(error))
 }
 
-export const shippedOrder = (id, messageApi, getListOrder, setOrders) => {
+export const shippedOrder = (id, messageApi, getListOrder, setOrders, setFilteredOrders) => {
     axios.put(API_PATH.shippedOrder + `/${id}`)
         .then(() => {
             success('Cancel Succesfully', messageApi)
         })
         .then(() => {
-            getListOrder(setOrders)
+            getListOrder(setOrders, setFilteredOrders)
+
         })
         .catch(error => console.error(error))
 }
@@ -118,10 +119,10 @@ export const getListPendingOrder = (id, setOrderDetails) => {
         .catch(error => console.error(error))
 }
 
-export const getListDoneOrder = (id, setOrderDetails) => {
+export const getListDoneOrder = (id, setOrders) => {
     axios.get(API_PATH.doneOrder + `/${id}`)
         .then((res) => {
-            setOrderDetails(res.data);
+            setOrders(res.data);
         })
         .catch(error => console.error(error))
 }
