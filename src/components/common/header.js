@@ -351,167 +351,41 @@ const Header = () => {
           </div>
           {searchFocus ? (
             <div className="search-item">
-              {searchList?.tshirts && searchList?.tshirts?.length !== 0 ? (
+              {searchList?.products &&
+                searchList?.products?.length !== 0 ? (
                 <List
                   itemLayout="horizontal"
-                  dataSource={searchList?.tshirts}
+                  dataSource={searchList?.products}
                   renderItem={(item, index) => (
                     <List.Item style={{ cursor: "pointer" }}>
                       <List.Item.Meta
                         onClick={() => {
-                          console.log("ao");
-                          navigate(`/customer/tshirt/${item.tshirtId}`);
+                          navigate(`/customer/product/${item.productId}`);
                         }}
                         avatar={
                           <img
-                            src={"http://localhost:3000" + item.tshirtImg}
+                            src={"http://localhost:3000" + item.productImg}
                             alt=""
                           />
                         }
-                        title={<p>{item.tshirtName}</p>}
+                        title={<p>{item.productName}</p>}
                         description={
-                          item.tshirtDiscountPercent ? (
+                          item.productDiscountPercent ? (
                             <p>
                               {(
-                                item.tshirtPrice -
-                                (item.tshirtPrice *
-                                  item.tshirtDiscountPercent) /
+                                item.productPrice -
+                                (item.productPrice *
+                                  item.productDiscountPercent) /
                                 100
                               ).toLocaleString("vi-VN")}
                               ₫
                               <del>
-                                {item.tshirtPrice.toLocaleString("vi-VN")}₫
-                              </del>
-                            </p>
-                          ) : (
-                            <p>{item.tshirtPrice.toLocaleString("vi-VN")}₫</p>
-                          )
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                <div></div>
-              )}
-              {searchList?.pants && searchList?.pants?.length !== 0 ? (
-                <List
-                  itemLayout="horizontal"
-                  dataSource={searchList?.pants}
-                  renderItem={(item, index) => (
-                    <List.Item style={{ cursor: "pointer" }}>
-                      <List.Item.Meta
-                        onClick={() => {
-                          console.log("ao");
-                          navigate(`/customer/pant/${item.pantId}`);
-                        }}
-                        avatar={
-                          <img
-                            src={"http://localhost:3000" + item.pantImg}
-                            alt=""
-                          />
-                        }
-                        title={<p>{item.pantName}</p>}
-                        description={
-                          item.pantDiscountPercent ? (
-                            <p>
-                              {(
-                                item.pantPrice -
-                                (item.pantPrice * item.pantDiscountPercent) /
-                                100
-                              ).toLocaleString("vi-VN")}
-                              ₫
-                              <del>
-                                {item.pantPrice.toLocaleString("vi-VN")}₫
-                              </del>
-                            </p>
-                          ) : (
-                            <p>{item.pantPrice.toLocaleString("vi-VN")}₫</p>
-                          )
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                ""
-              )}
-              {searchList?.shoesList && searchList?.shoesList?.length !== 0 ? (
-                <List
-                  itemLayout="horizontal"
-                  dataSource={searchList?.shoesList}
-                  renderItem={(item, index) => (
-                    <List.Item style={{ cursor: "pointer" }}>
-                      <List.Item.Meta
-                        onClick={() => {
-                          navigate(`/customer/shoes/${item.shoesId}`);
-                        }}
-                        avatar={
-                          <img
-                            src={"http://localhost:3000" + item.shoesImg}
-                            alt=""
-                          />
-                        }
-                        title={<p>{item.shoesName}</p>}
-                        description={
-                          item.shoesDiscountPercent ? (
-                            <p>
-                              {(
-                                item.shoesPrice -
-                                (item.shoesPrice * item.shoesDiscountPercent) /
-                                100
-                              ).toLocaleString("vi-VN")}
-                              ₫
-                              <del>
-                                {item.shoesPrice.toLocaleString("vi-VN")}₫
-                              </del>
-                            </p>
-                          ) : (
-                            <p>{item.shoesPrice.toLocaleString("vi-VN")}₫</p>
-                          )
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
-              ) : (
-                ""
-              )}
-              {searchList?.accessories &&
-                searchList?.accessories?.length !== 0 ? (
-                <List
-                  itemLayout="horizontal"
-                  dataSource={searchList?.accessories}
-                  renderItem={(item, index) => (
-                    <List.Item style={{ cursor: "pointer" }}>
-                      <List.Item.Meta
-                        onClick={() => {
-                          navigate(`/customer/accessory/${item.accessoryId}`);
-                        }}
-                        avatar={
-                          <img
-                            src={"http://localhost:3000" + item.accessoryImg}
-                            alt=""
-                          />
-                        }
-                        title={<p>{item.accessoryName}</p>}
-                        description={
-                          item.accessoryDiscountPercent ? (
-                            <p>
-                              {(
-                                item.accessoryPrice -
-                                (item.accessoryPrice *
-                                  item.accessoryDiscountPercent) /
-                                100
-                              ).toLocaleString("vi-VN")}
-                              ₫
-                              <del>
-                                {item.accessoryPrice.toLocaleString("vi-VN")}₫
+                                {item.productPrice.toLocaleString("vi-VN")}₫
                               </del>
                             </p>
                           ) : (
                             <p>
-                              {item.accessoryPrice.toLocaleString("vi-VN")}₫
+                              {item.productPrice.toLocaleString("vi-VN")}₫
                             </p>
                           )
                         }
