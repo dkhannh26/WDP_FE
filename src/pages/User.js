@@ -32,6 +32,7 @@ const User = () => {
     email: "",
     phone: "",
     address: "",
+    password: "",
   });
   const [dataSource, setDataSource] = useState([]);
 
@@ -46,6 +47,7 @@ const User = () => {
             email: res?.data?.user?.email,
             phone: res?.data?.user?.phone,
             address: res?.data?.user?.address,
+            password: res?.data?.user?.password,
           });
         });
       }
@@ -65,8 +67,9 @@ const User = () => {
   }, [location.state]);
 
   const onChangePassword = (values) => {
-    const { oldPassword, newPassword } = values;
+    let { oldPassword, newPassword } = values;
     // Add API call logic here to change password
+    if (initialValues.password === null) oldPassword = null;
     try {
       axios
         .put(`${PATH.profile}/change-password/${user.username}`, {
@@ -365,21 +368,25 @@ const User = () => {
                 form={form}
                 layout="vertical"
               >
-                <Form.Item
-                  name="oldPassword"
-                  label="Old password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your old password!",
-                    },
-                  ]}
-                >
-                  <Input.Password
-                    placeholder="Old password"
-                    className="register-input"
-                  />
-                </Form.Item>
+                {initialValues.password != null ? (
+                  <Form.Item
+                    name="oldPassword"
+                    label="Old password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your old password!",
+                      },
+                    ]}
+                  >
+                    <Input.Password
+                      placeholder="Old password"
+                      className="register-input"
+                    />
+                  </Form.Item>
+                ) : (
+                  <></>
+                )}
                 <Form.Item
                   name="newPassword"
                   label="New password"

@@ -6,7 +6,8 @@ import { Button, Carousel, Form, Input, List, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import ForgotPassword from "./forgotPassword";
-
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import { googleAuth } from "../services/auth.service";
 const LoginPopover = () => {
   const navigate = useNavigate();
   const [username, setUsernameState] = useState("");
@@ -53,17 +54,39 @@ const LoginPopover = () => {
     }
   };
 
-  // const onChange = (currentSlide) => {
-  //   console.log(currentSlide);
-  // };
-
   const carouselRef = useRef(null);
 
-  // const gotoSlide = (slideIndex) => {
-  //   if (carouselRef.current) {
-  //     carouselRef.current.goTo(slideIndex, true);
-  //   }
-  // };
+  const handleError = () => {
+    alert("Login failed");
+  };
+
+  const handleSuccess = async (response) => {
+    try {
+      let data = await googleAuth(response.credential);
+
+      if (data && data.EC === 0) {
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("token", data.token);
+
+        setIsAuthenticated(true);
+        // setUsername(res);
+        notification.success({
+          message: data.message,
+          description: "success",
+        });
+        setUsernameState("");
+        setPassword("");
+
+        setTimeout(() => {
+          navigate("/customer/profile");
+        }, 1000);
+      } else {
+        alert("Your email already exists in the system");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -119,6 +142,23 @@ const LoginPopover = () => {
             <button type="submit" className="login-pop-btn">
               ĐĂNG NHẬP
             </button>
+            <div className="or-divider">
+              <span>Hoặc</span>
+            </div>
+
+            {/* <button className="login-pop-btn">ĐĂNG NHẬP VỚI GOOGLE</button> */}
+
+            <div className="google-button-container">
+              <GoogleLogin
+                size="large"
+                theme="filled_black"
+                text="signin_with"
+                shape="rectangular"
+                width="346px"
+                onSuccess={handleSuccess}
+                onError={handleError}
+              />
+            </div>
             <div className="login-pop-navigate text">
               <p>
                 Khách hàng mới?
