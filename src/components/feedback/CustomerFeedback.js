@@ -12,6 +12,8 @@ import {
   List,
   Menu,
   Modal,
+  Progress,
+  Rate,
   Row,
   Select,
   message,
@@ -33,22 +35,36 @@ import { useAuth } from "../context/AuthContext";
 const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const [feedback, setFeedback] = useState([]);
   const [filteredFeedbacks, setFilteredFeedbacks] = useState(feedback);
-
-  const [feedbackArr, setFeedbackArr] = useState([]);
+  const [feedbackLikeArr, setFeedbackLikeArr] = useState([]);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const [currentFeedback, setCurrentFeedback] = useState(false);
   const [id, setId] = useState("");
-
   const { user } = useAuth();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const selectId = product_id;
+  const [rating, setRating] = useState(0);
+  const [avgRating, setAvgRating] = useState(0);
+  const [ratingDistribution, setAvgRatingDistribution] = useState({
+    5: 0,
+    4: 0,
+    3: 0,
+    2: 0,
+    1: 0,
+  });
+
+  const totalReviews = feedback.length;
+
+  const handleRatingChange = (value) => {
+    setRating(value);
+  };
   const onFinish = (values) => {
     const feedbackData = {
       content: values.content,
       account_id: userId,
       product_id,
+      star: rating,
     };
     if (currentFeedback) {
       updateFeedback(id, feedbackData);
@@ -95,19 +111,31 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     }
     if (user.id) {
       getFeedbackLike(user.id).then((data) => {
-        setFeedbackArr(data);
+        setFeedbackLikeArr(data);
       });
     }
   }, [selectId, user?.id, refreshTrigger]);
 
   useEffect(() => {
-    console.log("Feedback array đã được cập nhật:", feedbackArr);
-  }, [feedbackArr]);
+    console.log("Feedback like array: ", feedbackLikeArr);
+  }, [feedbackLikeArr]);
   useEffect(() => {
     setFilteredFeedbacks([...feedback]);
+    let sum = 0;
+    const newDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    feedback.forEach((e) => {
+      sum += e.star;
+      if (e.star >= 1 && e.star <= 5) {
+        newDistribution[e.star] += 1;
+      }
+    });
+    setAvgRating(sum / feedback.length);
+    setAvgRatingDistribution(newDistribution);
+    console.log(ratingDistribution);
   }, [feedback]);
+
   const likeButton = async (feedback_id, account_id) => {
-    setFeedbackArr((prev) =>
+    setFeedbackLikeArr((prev) =>
       prev.includes(feedback_id)
         ? prev.filter((id) => id !== feedback_id)
         : [...prev, feedback_id]
@@ -115,9 +143,9 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     try {
       await likeFeedback(feedback_id, account_id);
       const updatedLikes = await getFeedbackLike(account_id);
-      setFeedbackArr(updatedLikes);
+      setFeedbackLikeArr(updatedLikes);
     } catch (error) {
-      console.error("Lỗi khi cập nhật like:", error);
+      console.error(error);
     }
 
     setRefreshTrigger((prev) => prev + 1);
@@ -143,8 +171,14 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     setFilteredFeedbacks(filtered);
   };
 
+  const totalRatings = totalReviews;
+  const getPercent = (count) =>
+    totalRatings > 0 ? Math.round((count / totalRatings) * 100) : 0;
+
+  console.log(ratingDistribution[5]);
+
   return (
-    <div style={{ width: 900, margin: "auto", marginTop: 100 }}>
+    <div style={{ width: 1200, margin: "auto", marginTop: 100 }}>
       <Row
         style={{
           justifyContent: "space-between",
@@ -153,21 +187,73 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         }}
       >
         <p style={{ fontSize: 25, fontWeight: "bold" }}>Feedback</p>
+      </Row>
+      <Row className="rating-summary">
+        <Col span={10}>
+          <div className="average-rating">
+            <p className="average-score">{avgRating.toFixed(1)}/5</p>
+            <Rate
+              value={avgRating}
+              disabled
+              allowHalf
+              style={{ fontSize: "16px", color: "#ff8c00" }}
+            />
+            <p className="review-count">{totalReviews} đánh giá và nhận xét</p>
+          </div>
+        </Col>
+        <Col span={1} style={{ borderLeft: "2px solid #d9d9d9" }}></Col>
+        <Col span={13}>
+          <div className="rating-distribution">
+            {[5, 4, 3, 2, 1].map((star) => (
+              <div key={star} className="rating-row">
+                <span className="star-label">
+                  {star}{" "}
+                  <Rate
+                    value={star}
+                    disabled
+                    count={1}
+                    style={{ fontSize: "16px", color: "#ff8c00" }}
+                  />
+                </span>
+                <Progress
+                  percent={getPercent(ratingDistribution[star])}
+                  showInfo={false}
+                  strokeColor={"#ff4d4f"}
+                  trailColor="#f0f0f0"
+                  strokeWidth={10}
+                  style={{ width: "200px" }}
+                />
+                <span className="rating-count">
+                  {ratingDistribution[star]} đánh giá
+                </span>
+              </div>
+            ))}
+          </div>
+        </Col>
+      </Row>
+      <Row style={{ justifyContent: "center", fontSize: 16, marginBottom: 10 }}>
+        <p>Bạn đánh giá sao sản phẩm này?</p>
+      </Row>
+      <Row style={{ justifyContent: "center" }}>
         <Button
-          style={{ backgroundColor: "black", borderRadius: 0 }}
+          style={{
+            backgroundColor: "black",
+            borderRadius: 0,
+            width: "30%",
+            borderRadius: "16px",
+          }}
           type="primary"
-          onClick={() => showModal('add-new')}
+          onClick={() => showModal("add-new")}
         >
           Write Feedback
         </Button>
       </Row>
 
       <Modal
-        title="Write new feedback"
+        title="Đánh giá & nhận xét sản phẩm"
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
-
       >
         <Form
           className="customer-feedback"
@@ -177,6 +263,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
             remember: true,
           }}
           onFinish={onFinish}
+          layout="vertical"
         >
           <Form.Item
             name="content"
@@ -185,32 +272,36 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                 min: 3,
                 max: 200,
                 message: "Content length must be between 3 and 200 characters.",
+                required: true,
+                message: "Vui lòng nhập đánh giá!",
               },
             ]}
+            className="input-form-item"
           >
             <TextArea
+              placeholder="Xin mời chia sẻ nhận xét về sản phẩm..."
               autoSize={{
                 minRows: 4,
                 maxRows: 5,
               }}
             />
           </Form.Item>
-
+          <Form.Item
+            name="rating"
+            label="Bạn thấy sản phẩm này như thế nào?"
+            className="rating-form-item"
+            rules={[{ required: true, message: "Vui lòng đánh giá sản phẩm!" }]}
+          >
+            <Rate defaultValue={0} onChange={handleRatingChange} />
+          </Form.Item>
           <Form.Item style={{ marginTop: 20 }}>
             <Button
               color="default"
               variant="solid"
               htmlType="submit"
-              style={{ marginRight: 15 }}
+              style={{ padding: 18, width: "100%", borderRadius: "12px" }}
             >
               Send feedback
-            </Button>
-            <Button
-              color="default"
-              variant="outlined"
-              onClick={() => form.resetFields()}
-            >
-              Cancel
             </Button>
           </Form.Item>
         </Form>
@@ -255,21 +346,27 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
             <List.Item style={{ marginBottom: 15, display: "block" }}>
               <Row style={{ display: "flex", alignItems: "center" }}>
                 <Col span={6}>
-                  <b>{item.account_id.username}</b>
+                  <b style={{ fontSize: "16px" }}>{item.account_id.username}</b>
                 </Col>
-                <Col span={4} offset={13}>
-                  <p>{new Date(item.createdAt).toDateString()}</p>
+                <Col span={5} offset={13}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <p>{new Date(item.createdAt).toDateString()}</p>
+                    {userId === item.account_id._id && (
+                      <Dropdown overlay={menu} trigger={["click"]}>
+                        <Button
+                          style={{ borderColor: "white" }}
+                          icon={<MoreOutlined />}
+                        />
+                      </Dropdown>
+                    )}
+                  </div>
                 </Col>
-                {userId === item.account_id._id && (
-                  <Col span={1}>
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                      <Button
-                        style={{ borderColor: "white" }}
-                        icon={<MoreOutlined />}
-                      />
-                    </Dropdown>
-                  </Col>
-                )}
               </Row>
               <div
                 style={{
@@ -287,9 +384,9 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                       <b>Đánh giá: </b>
                     </p>
                   </Col>
-                  {/* <Col>
-                    <Rate allowHalf disabled defaultValue={2.5} />
-                  </Col> */}
+                  <Col>
+                    <Rate allowHalf disabled defaultValue={item.star} />
+                  </Col>
                 </Row>
                 <Row>
                   <Col span={2}>
@@ -307,7 +404,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                 <Button
                   style={{ borderColor: "white" }}
                   icon={
-                    feedbackArr.includes(item._id) ? (
+                    feedbackLikeArr.includes(item._id) ? (
                       <LikeFilled />
                     ) : (
                       <LikeOutlined />
