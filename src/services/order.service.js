@@ -149,3 +149,11 @@ export const getHotBrand = (setHotBrands) => {
         })
         .catch(error => console.error(error))
 }
+
+export const getListOrderDetail = (id, setOrderDetails) => {
+    axios.get(API_PATH.allDetail + `/${id}`)
+        .then((res) => {
+            setOrderDetails(res.data)
+        })
+        .catch(error => console.error(error))
+}

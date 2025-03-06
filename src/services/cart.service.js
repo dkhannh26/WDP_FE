@@ -77,6 +77,22 @@ export const AddCartDup = (id, cart, navigate) => {
         });
 };
 
+export const AddOver = (id, cart, navigate) => {
+    axios.put(API_PATH.cart + `/${id}`, cart)
+        .then((res) => {
+            const updatedQuantity = res.data;
+            console.log('quantity', updatedQuantity.quantity);
+            alert(`There are already ${updatedQuantity.quantity} of these products in your cart.`);
+            navigate(CART_URL.INDEX, {
+                state: { message: MESSAGE.CREATE_SUCCESS }
+            });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
+
+
 export const deleteCart = (id) => {
     axios.delete(API_PATH.cartDelete + `/${id}`)
         .then((res) => {
