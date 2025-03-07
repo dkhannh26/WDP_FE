@@ -3,12 +3,15 @@ import {
   LikeFilled,
   LikeOutlined,
   MoreOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 import {
   Button,
+  Card,
   Col,
   Dropdown,
   Form,
+  Image,
   List,
   Menu,
   Modal,
@@ -16,6 +19,7 @@ import {
   Rate,
   Row,
   Select,
+  Upload,
   message,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
@@ -28,9 +32,11 @@ import {
   getListFeedback,
   likeFeedback,
   updateFeedback,
+  getFeedbackImg,
 } from "../../services/feedback.service";
 import { showDeleteConfirm } from "../../utils/helper";
 import { useAuth } from "../context/AuthContext";
+import UploadImg from "../common/UploadImg";
 
 const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const [feedback, setFeedback] = useState([]);
@@ -53,38 +59,75 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     2: 0,
     1: 0,
   });
+  const [fileList, setFileList] = useState([]);
 
   const totalReviews = feedback.length;
-
+  const handleFileListChange = (newFileList) => {
+    setFileList(newFileList);
+  };
   const handleRatingChange = (value) => {
     setRating(value);
   };
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const feedbackData = {
       content: values.content,
       account_id: userId,
       product_id,
       star: rating,
     };
-    if (currentFeedback) {
-      updateFeedback(id, feedbackData);
-      setCurrentFeedback(false);
-    } else {
-      createFeedback(feedbackData);
+    let result;
+    try {
+      if (currentFeedback) {
+        result = await updateFeedback(id, feedbackData, fileList);
+        setCurrentFeedback(false);
+        setFeedback((prev) =>
+          prev.map((item) =>
+            item._id === id
+              ? { ...item, ...feedbackData, imageUrls: result.imageUrls || [] }
+              : item
+          )
+        );
+      } else {
+        result = await createFeedback(feedbackData, fileList);
+        const newFeedback = {
+          _id: result.feedbackId,
+          ...feedbackData,
+          account_id: { _id: userId, username: user.username }, // Giả sử username từ user
+          createdAt: new Date().toISOString(),
+          likeCount: 0,
+          imageUrls: result.imageUrls || [],
+        };
+        setFeedback((prev) => [...prev, newFeedback]);
+      }
+      setFileList([]);
+      form.resetFields();
+      setIsModalOpen(false);
+      setRefreshTrigger((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error in onFinish:", error);
     }
-    form.resetFields();
-    setIsModalOpen(false);
-    setRefreshTrigger((prev) => prev + 1);
   };
-  const editFeedback = (feedbackItem, id) => {
+  const editFeedback = async (feedbackItem, id) => {
     setCurrentFeedback(true);
     setId(id);
-    form.setFieldsValue({ content: feedbackItem.content });
+    console.log(feedbackItem);
+    setRating(feedbackItem.star);
+    form.setFieldsValue({
+      content: feedbackItem.content,
+      rating: feedbackItem.star,
+    });
+
+    let fileList = await getFeedbackImg(id);
+
+    setFileList(fileList || []);
+
     setIsModalOpen(true);
   };
 
   const showModal = async (action) => {
     form.resetFields();
+    setFileList([]);
+
     setIsModalOpen(true);
   };
 
@@ -106,19 +149,16 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     }
   };
   useEffect(() => {
-    if (selectId) {
-      getListFeedback(selectId, setFeedback);
-    }
+    getListFeedback(selectId, setFeedback);
+
     if (user.id) {
       getFeedbackLike(user.id).then((data) => {
         setFeedbackLikeArr(data);
       });
     }
+    console.log(feedback);
   }, [selectId, user?.id, refreshTrigger]);
 
-  useEffect(() => {
-    console.log("Feedback like array: ", feedbackLikeArr);
-  }, [feedbackLikeArr]);
   useEffect(() => {
     setFilteredFeedbacks([...feedback]);
     let sum = 0;
@@ -131,7 +171,6 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     });
     setAvgRating(sum / feedback.length);
     setAvgRatingDistribution(newDistribution);
-    console.log(ratingDistribution);
   }, [feedback]);
 
   const likeButton = async (feedback_id, account_id) => {
@@ -174,8 +213,6 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const totalRatings = totalReviews;
   const getPercent = (count) =>
     totalRatings > 0 ? Math.round((count / totalRatings) * 100) : 0;
-
-  console.log(ratingDistribution[5]);
 
   return (
     <div style={{ width: 1200, margin: "auto", marginTop: 100 }}>
@@ -294,6 +331,17 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
           >
             <Rate defaultValue={0} onChange={handleRatingChange} />
           </Form.Item>
+          <Form.Item
+            name="rating"
+            label="Bạn thấy sản phẩm này như thế nào?"
+            className="rating-form-item"
+            rules={[{ required: true, message: "Vui lòng đánh giá sản phẩm!" }]}
+          >
+            <UploadImg
+              onFileListChange={handleFileListChange}
+              filesApi={fileList}
+            ></UploadImg>
+          </Form.Item>
           <Form.Item style={{ marginTop: 20 }}>
             <Button
               color="default"
@@ -399,10 +447,26 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                   </Col>
                 </Row>
               </div>
-
+              <Row className="feedback-image-container">
+                {item?.imageUrls && item.imageUrls.length > 0
+                  ? item.imageUrls.map((url, index) => (
+                      <Image
+                        key={index}
+                        preview={true}
+                        className="feedback-image"
+                        width={100}
+                        height={100}
+                        src={`http://localhost:3000${url}`}
+                      />
+                    ))
+                  : ""}
+              </Row>
               <Row>
                 <Button
-                  style={{ borderColor: "white" }}
+                  size="large"
+                  style={{
+                    borderColor: "white",
+                  }}
                   icon={
                     feedbackLikeArr.includes(item._id) ? (
                       <LikeFilled />

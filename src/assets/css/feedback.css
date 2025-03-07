@@ -102,21 +102,25 @@
 .ant-progress-bg {
   border-radius: 4px;
 }
+.feedback-image-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
 
-/* Responsive
-@media (max-width: 768px) {
-  .rating-summary {
-    padding: 12px;
-    max-width: 300px;
-  }
+.feedback-image {
+  object-fit: cover;
+  min-width: 100%;
+  min-height: 100%;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
 
-  .average-score {
-    font-size: 20px;
-  }
-
-  .star-label,
-  .rating-count,
-  .review-count {
-    font-size: 12px;
-  }
-} */
+.feedback-image:hover {
+  transform: scale(1.05);
+  border-color: #1890ff;
+}
