@@ -1,9 +1,9 @@
-import { Card, Col, Row, Select } from "antd";
+import { Card, Col, Row, Select, Rate } from "antd";
 import Meta from "antd/es/card/Meta";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { FilterOutlined } from "@ant-design/icons";
+import { FilterOutlined, HeartFilled } from "@ant-design/icons";
 import { getProductList } from "../../services/product/product.service";
 import NoImage from '../../assets/images/no-image.jpg';
 const ProductCustomer = () => {
@@ -88,7 +88,7 @@ const ProductCustomer = () => {
                   onClick={() => navigate(`${item.productId}`)}
                   bordered={false}
                   hoverable
-                  style={{ width: "95%", marginLeft: "5%" }}
+                  style={{ width: "95%", marginLeft: "5%", marginBottom:'10px' }}
                   cover={
                     <img
                       alt="example"
@@ -121,6 +121,11 @@ const ProductCustomer = () => {
                     }
                   />
                 </Card>
+                <Rate
+                          count={1}
+                          character=<HeartFilled />
+                          className="heart-filled"
+                        />
               </Col>
             );
           })}

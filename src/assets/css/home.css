@@ -79,3 +79,12 @@
     object-fit: cover;
     cursor: pointer;
 }
+
+.heart-filled {
+    font-size: 28px;
+    color: #f51c1c;
+    position: absolute;
+    bottom: 35px;
+    right: 35px;
+}
+
