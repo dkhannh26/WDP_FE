@@ -169,7 +169,9 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         newDistribution[e.star] += 1;
       }
     });
-    setAvgRating(sum / feedback.length);
+    feedback.length === 0
+      ? setAvgRating(0)
+      : setAvgRating(sum / feedback.length);
     setAvgRatingDistribution(newDistribution);
   }, [feedback]);
 
