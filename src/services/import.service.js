@@ -2,6 +2,7 @@ import axios from "axios";
 import { API_PATH } from "../config/api.config";
 import { DISCOUNT_URL, IMPORT_URL } from "../config/url.config";
 import { MESSAGE } from "../config/message.config";
+import { Alert } from "antd";
 
 export const getListImport = (setImports) => {
   axios
@@ -20,15 +21,17 @@ export const getListImport = (setImports) => {
 export const createImport = (importList, navigate) => {
   axios
     .post(API_PATH.import + `/createDetail`, importList)
-    .then(() => {
-      navigate(IMPORT_URL.INDEX, {
-        state: { message: MESSAGE.CREATE_SUCCESS },
-      });
+    .then((res) => {
+      if (res.data.status === "ok") {
+        navigate(IMPORT_URL.INDEX, {
+          state: { message: MESSAGE.CREATE_SUCCESS },
+        });
+      } else {
+        alert("Cannot find product with name: " + res.data.name);
+      }
     })
     .catch((error) => {
-      if (error.response.status === 400) {
-        alert("Wrong product name, please try again");
-      }
+      console.log(error);
     });
 };
 
@@ -71,4 +74,22 @@ export const confirmImport = (_id, navigate) => {
     .catch((error) => {
       console.log(error);
     });
+};
+
+export const downloadTemplate = async () => {
+  try {
+    const response = await axios.get(API_PATH.import + `/download`, {
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "example-import.xlsx");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Lỗi khi tải file:", error);
+  }
 };

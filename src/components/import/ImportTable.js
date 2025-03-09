@@ -150,9 +150,8 @@ const ImportTable = () => {
       navigate(location.pathname, { replace: true });
     }
 
-    // console.log(importDetail);
-
     getListImport(setImports);
+    console.log(imports);
   }, [state, navigate, messageApi, location.pathname]);
 
   return (

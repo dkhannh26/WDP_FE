@@ -1,11 +1,11 @@
-import { UploadOutlined } from "@ant-design/icons";
+import { DownloadOutlined, UploadOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Row, Space, Upload, message } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { layout, tailLayout } from "../../config/style.config";
-import { createImport } from "../../services/import.service";
+import { createImport, downloadTemplate } from "../../services/import.service";
 
 const ImportModel = ({ type }) => {
   const [importList, setImportList] = useState([]);
@@ -54,6 +54,19 @@ const ImportModel = ({ type }) => {
         <Title level={3}>
           {type === "create" ? "New Import" : "Edit Discount"}
         </Title>
+      </Row>
+      <Row>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<DownloadOutlined />}
+          size="large"
+          variant="solid"
+          color="default"
+          onClick={() => downloadTemplate()}
+        >
+          Import template
+        </Button>
       </Row>
       <Row>
         <Col offset={4} span={12}>
