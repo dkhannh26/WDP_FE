@@ -30,7 +30,6 @@ const ProductForm = ({ typeAction, typeProduct }) => {
     };
 
     const onFinish = async (values) => {
-
         if (values.brand === undefined) {
             setBrandError('Please choose a brand')
             return
@@ -152,8 +151,23 @@ const ProductForm = ({ typeAction, typeProduct }) => {
                             >
                                 {discounts?.map((discount) => {
                                     const date = new Date(discount?.expired_at)
+                                    const formattedDate = date.toLocaleDateString('en-GB', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    });
                                     if (date > currentDate) return (
-                                        <Option value={discount._id}>{discount.percent}%</Option>
+                                        <Option value={discount._id}>
+                                            <div style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between'
+                                            }}>
+                                                {discount.percent}%
+                                                <p>
+                                                    Exp: {formattedDate}
+                                                </p>
+                                            </div>
+                                        </Option>
                                     )
                                     return null
                                 })}

@@ -76,7 +76,7 @@ export const AdminRoutes = (
             <Route path="accessory" element={<AccessoryAdmin />}>
                 <Route index element={<AccessoryTable />} />
                 <Route path="detail/:id" element={<ProductDetail />} />
-                <Route path="create" element={<ProductForm typeAction="create" />} typeProduct="accessory" />
+                <Route path="create" element={<ProductForm typeAction="create" typeProduct="accessory" />} />
                 <Route path="edit/:id" element={<ProductForm typeAction="edit" typeProduct="accessory" />} />
             </Route>
             <Route path="pantTshirtSize" element={<Size />}>

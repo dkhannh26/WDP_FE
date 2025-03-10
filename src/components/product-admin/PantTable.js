@@ -214,7 +214,6 @@ const PantTable = () => {
     getProductList(setProducts, 'pant');
   }, [state, navigate, messageApi, location.pathname]);
 
-  console.log(products);
 
   return (
     <>

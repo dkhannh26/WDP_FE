@@ -7,11 +7,11 @@ import {
   Typography,
   Tooltip,
   Space,
-  Alert,
 } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
 import {
+  Tooltip as TooltipChart,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -21,13 +21,17 @@ import {
   Bar,
   ResponsiveContainer,
   Rectangle,
+  LabelList,
 } from "recharts";
+
 import { exportExcel, getStatistic } from "../services/statistic.service";
+
 const Statistic = () => {
-  const [year, setYear] = useState(2024);
+  const [year, setYear] = useState(2025);
   const [statistic, setStatistic] = useState([]);
   const [ordersByMonth, setOrderByMonth] = useState([]);
   const [numberOfCategory, setNumberOfCategory] = useState([]);
+  const [ratingOfCategory, setRatingOfCategory] = useState([])
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -35,10 +39,9 @@ const Statistic = () => {
   };
 
   useEffect(() => {
-    getStatistic(year, setStatistic, setOrderByMonth, setNumberOfCategory);
+    getStatistic(year, setStatistic, setOrderByMonth, setNumberOfCategory, setRatingOfCategory);
   }, [year]);
 
-  console.log(ordersByMonth);
 
   return (
     <div>
@@ -48,12 +51,16 @@ const Statistic = () => {
       <Row style={{}}>
         <Space>
           <Select
-            defaultValue="2024"
+            defaultValue="2025"
             style={{
               width: 120,
             }}
             onChange={handleChange}
             options={[
+              {
+                value: "2025",
+                label: "2025",
+              },
               {
                 value: "2024",
                 label: "2024",
@@ -81,18 +88,19 @@ const Statistic = () => {
         </Space>
       </Row>
 
-      <Row gutter={16} style={{ margin: "20px 0" }}>
-        <Col span={6}>
+      <Row gutter={10} style={{ margin: "20px 0" }}>
+        <Col span={4}>
           <div style={areaNumberStyle}>
             <Typography style={{ textAlign: "left", fontSize: 18 }}>
               Revenue
             </Typography>
             <Title level={2} style={{ margin: 0 }}>
-              {statistic?.revenue}₫
+              {statistic?.revenue?.toLocaleString('vi-VN')}₫
             </Title>
           </div>
         </Col>
-        <Col span={6}>
+
+        <Col span={4}>
           <div style={areaNumberStyle}>
             <Typography style={{ textAlign: "left", fontSize: 18 }}>
               Products sold
@@ -102,7 +110,7 @@ const Statistic = () => {
             </Title>
           </div>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <div style={areaNumberStyle}>
             <Typography style={{ textAlign: "left", fontSize: 18 }}>
               Buyers
@@ -112,7 +120,7 @@ const Statistic = () => {
             </Title>
           </div>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <div style={areaNumberStyle}>
             <Typography style={{ textAlign: "left", fontSize: 18 }}>
               Orders
@@ -122,11 +130,30 @@ const Statistic = () => {
             </Title>
           </div>
         </Col>
+        <Col span={4}>
+          <div style={areaNumberStyle}>
+            <Typography style={{ textAlign: "left", fontSize: 18 }}>
+              Imports
+            </Typography>
+            <Title level={2} style={{ margin: 0 }}>
+              {statistic?.imports}
+            </Title>
+          </div>
+        </Col>
+        <Col span={4}>
+          <div style={areaNumberStyle}>
+            <Typography style={{ textAlign: "left", fontSize: 18 }}>
+              Rating
+            </Typography>
+            <Title level={2} style={{ margin: 0 }}>
+              5
+            </Title>
+          </div>
+        </Col>
       </Row>
       <Row
         gutter={20}
         style={{
-          // padding: '0 20px',
           display: "flex",
           justifyContent: "center",
         }}
@@ -136,7 +163,8 @@ const Statistic = () => {
             style={{
               marginRight: 0,
               backgroundColor: "white",
-              height: 300,
+              height: 330,
+              paddingBottom: 20,
               borderRadius: 10,
               display: "flex",
               alignItems: "center",
@@ -169,6 +197,9 @@ const Statistic = () => {
                   fill="#8884d8"
                 />
               </AreaChart>
+              <p style={{ fontSize: '14px', color: '#666' }}>
+                The chart displays monthly revenue.
+              </p>
             </ResponsiveContainer>
           </div>
         </Col>
@@ -177,7 +208,8 @@ const Statistic = () => {
             style={{
               marginRight: 0,
               backgroundColor: "white",
-              height: 300,
+              height: 330,
+              paddingBottom: 20,
               borderRadius: 10,
               display: "flex",
               alignItems: "center",
@@ -205,6 +237,40 @@ const Statistic = () => {
                   activeBar={<Rectangle fill="pink" stroke="blue" />}
                 />
               </BarChart>
+              <p style={{ fontSize: '14px', color: '#666' }}>
+                The chart displays the number of product solds.
+              </p>
+            </ResponsiveContainer>
+          </div>
+        </Col>
+        <Col span={24} style={{ marginTop: 20 }}>
+          <div
+            style={{
+              padding: 40,
+              paddingBottom: 40,
+              backgroundColor: "white",
+              height: 350,
+              borderRadius: 10,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <ResponsiveContainer>
+              <BarChart data={ratingOfCategory} layout="vertical">
+                <CartesianGrid strokeDasharray="3 1" />
+                <XAxis type="number" domain={[0, 5]} />
+                <YAxis type="category" dataKey="category" tick={{ fontSize: 13 }} />
+                <TooltipChart />
+                <Bar dataKey="avgRating" name="Average Rating" fill="#8884d8" background={{ fill: '#eee' }}>
+                  <LabelList dataKey="averageStar" position="right" />
+                </Bar>
+              </BarChart>
+              <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0' }}>
+                <p style={{ fontSize: '14px', color: '#666', margin: '0 auto' }}>
+                  The chart displays the average rating of product categories (maximum 5 stars).
+                </p>
+                <p style={{ fontSize: '14px', color: '#8884D8', position: 'absolute', right: 40 }}> <u>See details</u></p>
+              </div>
             </ResponsiveContainer>
           </div>
         </Col>

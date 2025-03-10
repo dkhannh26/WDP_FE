@@ -96,7 +96,7 @@ const ProductDetail = () => {
     }, [id])
     useEffect(() => {
         getProductDetailCustomer(id, setProduct, setImages, setCanvas, selectSize)
-        console.log("sadkjsahida");
+
         if (product) {
             const matchingCartItem = cart.find(item => item.product_size_id === detailId);
             const selectedSize = product.size.find(item => item.product_size_id === detailId);

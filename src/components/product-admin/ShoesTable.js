@@ -185,7 +185,7 @@ const ShoesTable = () => {
                   messageApi,
                   getProductList,
                   setProducts,
-                  API_PATH.shoes,
+                  API_PATH.product,
                   'shoes'
                 )
               }

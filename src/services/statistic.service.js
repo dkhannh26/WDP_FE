@@ -5,30 +5,60 @@ export const getStatistic = (
   year,
   setStatistic,
   setOrderByMonth,
-  setNumberOfCategory
+  setNumberOfCategory,
+  setRatingOfCategory
 ) => {
   axios
     .get(API_PATH.statistic + `/${year}`)
     .then((res) => {
       const ordersByMonth = res.data.ordersByMonth;
       setStatistic(res.data);
-      console.log(res.data);
+
       setOrderByMonth([
-        { name: "January", orders: ordersByMonth[1] },
-        { name: "February", orders: ordersByMonth[2] },
-        { name: "March", orders: ordersByMonth[3] },
-        { name: "April", orders: ordersByMonth[4] },
-        { name: "May", orders: ordersByMonth[5] },
-        { name: "June", orders: ordersByMonth[6] },
-        { name: "July", orders: ordersByMonth[7] },
-        { name: "August", orders: ordersByMonth[8] },
-        { name: "September", orders: ordersByMonth[9] },
-        { name: "October", orders: ordersByMonth[10] },
-        { name: "November", orders: ordersByMonth[11] },
-        { name: "December", orders: ordersByMonth[12] },
+        { name: "January", orders: ordersByMonth['01'] },
+        { name: "February", orders: ordersByMonth['02'] },
+        { name: "March", orders: ordersByMonth['03'] },
+        { name: "April", orders: ordersByMonth['04'] },
+        { name: "May", orders: ordersByMonth['05'] },
+        { name: "June", orders: ordersByMonth['06'] },
+        { name: "July", orders: ordersByMonth['07'] },
+        { name: "August", orders: ordersByMonth['08'] },
+        { name: "September", orders: ordersByMonth['09'] },
+        { name: "October", orders: ordersByMonth['10'] },
+        { name: "November", orders: ordersByMonth['11'] },
+        { name: "December", orders: ordersByMonth['12'] },
       ]);
 
+      const validateRatingOfCategory = [
+        {
+          avgRating: res?.data?.ratingOfCategory?.find(item => item.category === "racket")?.averageStar || 0,
+          category: "Racket"
+        },
+        {
+          avgRating: res?.data?.ratingOfCategory?.find(item => item.category === "tshirt")?.averageStar || 0,
+          category: "T-shirt"
+        },
+        {
+          avgRating: res?.data?.ratingOfCategory?.find(item => item.category === "pant")?.averageStar || 0,
+          category: "Pants"
+        },
+        {
+          avgRating: res?.data?.ratingOfCategory?.find(item => item.category === "shoes")?.averageStar || 0,
+          category: "Shoes"
+        },
+        {
+          avgRating: res?.data?.ratingOfCategory?.find(item => item.category === "accessory")?.averageStar || 0,
+          category: "Accessory"
+        },
+      ]
+
+      setRatingOfCategory(validateRatingOfCategory)
+
       setNumberOfCategory([
+        {
+          name: "Racket",
+          quantity: res.data.racketNumber,
+        },
         {
           name: "T-shirt",
           quantity: res.data.tshirtsNumber,

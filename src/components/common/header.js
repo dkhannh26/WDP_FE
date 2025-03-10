@@ -221,7 +221,8 @@ const Header = () => {
   //     />
   //   </div>
   // );
-
+  // 679213310fa42750dca02571
+  // 67beeae9daecac4619edda90
   const content = (
     <div style={{ width: '100vw' }}>
       <div className="product-menu">
@@ -268,11 +269,11 @@ const Header = () => {
         <div className="product-menu-item">
           <h4 className="product-menu-item--title" ><Link to="/customer/accessory" state={{ typeLink: 'shoes' }} >ACCESSORIES</Link></h4>
           <ul className="product-menu-item--list">
-            <li><Link to="/customer/product">Yonex Accessories </Link></li>
-            <li><Link to="/customer/product">Victor Accessories </Link></li>
-            <li><Link to="/customer/product">Lining Accessories </Link></li>
-            <li><Link to="/customer/product">Mizuno Accessories </Link></li>
-            <li><Link to="/customer/product">Kumpoo Accessories </Link></li>
+            <li><Link to="/customer/product?category=Accessory&brand=Yonex">Yonex Accessories </Link></li>
+            <li><Link to="/customer/product?category=Accessory&brand=Victor">Victor Accessories </Link></li>
+            <li><Link to="/customer/product?category=Accessory&brand=Lining">Lining Accessories </Link></li>
+            <li><Link to="/customer/product?category=Accessory&brand=Mizuno">Mizuno Accessories </Link></li>
+            <li><Link to="/customer/product?category=Accessory&brand=Kumpoo">Kumpoo Accessories </Link></li>
           </ul>
         </div>
       </div>

@@ -58,7 +58,6 @@ export const getListRacketDecrease = (setRacketList) => {
 export const getRacket = (id, form, handleFileListChange, setError) => {
     axios.get(API_PATH.racket + `/${id}`)
         .then((res) => {
-
             let M, L, S, XL, XXL;
             for (const item of res.data.size) {
                 if (item['S'] !== undefined) {
