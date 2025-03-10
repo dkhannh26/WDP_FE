@@ -80,7 +80,7 @@ export const getStatistic = (
     .catch((error) => console.error(error));
 };
 
-export const exportExcel = (statistic, ordersByMonth, numberOfCategory) => {
+export const exportExcel = (statistic, ordersByMonth, numberOfCategory, imports, ratings) => {
   console.log("statistic " + JSON.stringify(statistic));
   console.log("ordersByMonth " + JSON.stringify(ordersByMonth));
   console.log("numberOfCategory " + JSON.stringify(numberOfCategory));
@@ -91,6 +91,8 @@ export const exportExcel = (statistic, ordersByMonth, numberOfCategory) => {
         statistic,
         ordersByMonth,
         numberOfCategory,
+        imports,
+        ratings
       },
       { responseType: "blob" }
     )

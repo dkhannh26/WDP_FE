@@ -72,7 +72,7 @@ const Header = () => {
 
   useEffect(() => {
     getListBrand(setBrands);
-  })
+  }, [])
 
   useEffect(() => {
     if (initialValues.userId) {

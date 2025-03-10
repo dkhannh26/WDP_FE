@@ -79,7 +79,7 @@ const Statistic = () => {
             <Button
               icon={<DownloadOutlined />}
               onClick={() => {
-                exportExcel(statistic, ordersByMonth, numberOfCategory);
+                exportExcel(statistic, ordersByMonth, numberOfCategory, statistic?.imports, statistic.numberOfRating);
               }}
             >
               Download
@@ -146,7 +146,7 @@ const Statistic = () => {
               Rating
             </Typography>
             <Title level={2} style={{ margin: 0 }}>
-              5
+              {statistic?.numberOfRating}
             </Title>
           </div>
         </Col>

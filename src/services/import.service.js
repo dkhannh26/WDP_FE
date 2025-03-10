@@ -1,8 +1,7 @@
 import axios from "axios";
 import { API_PATH } from "../config/api.config";
-import { DISCOUNT_URL, IMPORT_URL } from "../config/url.config";
 import { MESSAGE } from "../config/message.config";
-import { Alert } from "antd";
+import { IMPORT_URL } from "../config/url.config";
 
 export const getListImport = (setImports) => {
   axios

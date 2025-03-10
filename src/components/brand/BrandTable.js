@@ -28,7 +28,6 @@ const BrandTable = () => {
         setFilteredBrands(filtered);
     };
 
-
     const columns = [
         {
             title: 'No.',
@@ -52,7 +51,7 @@ const BrandTable = () => {
         {
             title: 'Brand Name',
             dataIndex: 'name',
-            sorter: (a, b) => a.name - b.name,
+            // sorter: (a, b) => a.name - b.name,
             width: '15%',
         },
         {

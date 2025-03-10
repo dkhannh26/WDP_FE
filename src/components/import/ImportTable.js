@@ -13,7 +13,6 @@ import {
 import { showDeleteImportConfirm, success } from "../../utils/helper";
 
 const ImportTable = () => {
-  const [discounts, setDiscounts] = useState([]);
   const [imports, setImports] = useState([]);
   const [importDetail, setImportDetail] = useState([]);
   const navigate = useNavigate();

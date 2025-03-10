@@ -57,6 +57,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
         "41": values["41"],
         "42": values["42"],
         "43": values["43"],
+        "ONE SIZE": values["ONE SIZE"]
       },
       discount_id: values.discount,
     }
@@ -176,6 +177,21 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             {(typeAction === 'create' && (typeProduct === 'tshirt' || typeProduct === 'pant')) && <TshirtSize error={error} />}
             {(typeAction === 'create' && typeProduct === 'shoes') && <ShoesSize error={error} />}
             {(typeAction === 'create' && typeProduct === 'racket') && <RacketSize error={error} />}
+            {(typeAction === 'create' && typeProduct === 'accessory') &&
+              <Form.Item
+                name={"ONE SIZE"}
+                label={`Quantity of size ONE SIZE`}
+                rules={[
+                  {
+                    required: true,
+                    type: 'number',
+                    min: 0,
+                  },
+                ]}
+              >
+                <InputNumber style={{ width: '100%' }} />
+              </Form.Item>
+            }
 
             {
               sizes?.map(item => {

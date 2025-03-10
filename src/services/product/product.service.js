@@ -70,7 +70,6 @@ export const getProductDetailCustomer = (id, setProduct, setImages, setCanvas, s
 export const getProductDetailAdmin = (id, form, setSizes, handleFileListChange, setError) => {
     axios.get(API_PATH.product + `/${id}`)
         .then((res) => {
-            console.log(res.data);
 
             setSizes(res.data.size)
             form.setFieldsValue({
@@ -90,6 +89,7 @@ export const getProductDetailAdmin = (id, form, setSizes, handleFileListChange, 
                 "40": res.data?.size?.find(item => item.size_name === '40')?.quantity,
                 "41": res.data?.size?.find(item => item.size_name === '41')?.quantity,
                 "42": res.data?.size?.find(item => item.size_name === '42')?.quantity,
+                "ONE SIZE": res.data?.size?.find(item => item.size_name === 'ONE SIZE')?.quantity,
             });
 
             const images = res.data?.images
