@@ -33,6 +33,8 @@ import TshirtAdmin from "../pages/product-admin/TshirtAdmin";
 import Profile from "../pages/Profile";
 import Size from "../pages/Size";
 import Statistic from "../pages/Statistic";
+import BrandModel from "../components/brand/BrandModel";
+import BrandTable from "../components/brand/BrandTable";
 
 export const AdminRoutes = (
     <>
@@ -105,6 +107,11 @@ export const AdminRoutes = (
             <Route path="statistic" element={<Statistic />}></Route>
             <Route path="profile" element={<Profile />}>
                 <Route index element={<ProfileTable />} />
+            </Route>
+            <Route path="brand" element={<Discount />}>
+                <Route index element={<BrandTable />} />
+                <Route path="create" element={<BrandModel type="create" />} />
+                <Route path="edit/:id" element={<BrandModel type="edit" />} />
             </Route>
         </Route>
     </>

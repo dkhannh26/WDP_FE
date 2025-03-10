@@ -75,3 +75,8 @@ export const PAYMENT_URL = {
   CREATE: '/customer/payment/create',
   EDIT: '/customer/payment/create'
 }
+export const BRAND_URL = {
+  INDEX: "/admin/brand",
+  CREATE: "/admin/brand/create",
+  EDIT: "/admin/brand/create",
+};

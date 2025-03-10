@@ -16,13 +16,20 @@ export const showDeleteConfirm = (id, messageApi, getList, setList, URL, typePro
       console.log(URL + `/${id}`);
 
       axios.delete(URL + `/${id}`)
-        .then(() => {
-          success('Deleted Succesfully', messageApi)
+        .then((response) => {
+          const { message } = response.data;
+          success(message, messageApi);
         })
         .then(() => {
           getList(setList, typeProduct)
         })
-        .catch(error => console.error(error))
+        .catch((error) => {
+          if (error.response) {
+            const { message } = error.response.data;
+            errorMsg(message, messageApi);
+          }
+          console.error(error);
+        })
     },
     onCancel() {
       console.log('Cancel');
@@ -34,6 +41,12 @@ export const success = (message, messageApi) => {
   messageApi.open({
     type: "success",
     content: message,
+  });
+};
+export const errorMsg = (msg, messageApi) => {
+  messageApi.open({
+    type: 'error',
+    content: msg,
   });
 };
 

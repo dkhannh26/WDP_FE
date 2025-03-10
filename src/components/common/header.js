@@ -28,6 +28,7 @@ import { getListCart } from "../../services/cart.service";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import Logo2 from "../../assets/images/logo2.jpeg";
+import { getListBrand } from "../../services/brand.service";
 const { Text } = Typography;
 
 const Header = () => {
@@ -38,7 +39,7 @@ const Header = () => {
   // const [messageApi, contextHolder] = message.useMessage(null)
   const [totalAmount, setTotalAmount] = useState(Number);
   const [total, setTotal] = useState(Number);
-
+  const [brands, setBrands] = useState([]);
 
   const { isAuthenticated, username, user } = useAuth();
   const [initialValues, setInitialValues] = useState({
@@ -68,6 +69,10 @@ const Header = () => {
 
     fetchData();
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    getListBrand(setBrands);
+  })
 
   useEffect(() => {
     if (initialValues.userId) {
@@ -221,65 +226,37 @@ const Header = () => {
   //     />
   //   </div>
   // );
-  // 679213310fa42750dca02571
-  // 67beeae9daecac4619edda90
+  const categories = [
+    { title: 'Racket', path: '/customer/racket', typeLink: 'racket', query: 'Racket' },
+    { title: 'Shoes', path: '/customer/shoes', typeLink: 'shoes', query: 'Shoes' },
+    { title: 'Shirt', path: '/customer/tshirt', typeLink: 'tshirt', query: 'tshirt' },
+    { title: 'Pants', path: '/customer/shoes', typeLink: 'shoes', query: 'Pants' },
+    { title: 'Accessories', path: '/customer/accessory', typeLink: 'shoes', query: 'Accessories' },
+  ];
   const content = (
     <div style={{ width: '100vw' }}>
       <div className="product-menu">
-        <div className="product-menu-item">
-          <h4 className="product-menu-item--title" ><Link to="/customer/racket" state={{ typeLink: 'racket' }} >RACKET</Link></h4>
-          <ul className="product-menu-item--list">
-            <li><Link to="/customer/product?category=Racket&brand=Yonex">Yonex Racket</Link></li>
-            <li><Link to="/customer/product?category=Racket&brand=Victor">Victor Racket</Link></li>
-            <li><Link to="/customer/product?category=Racket&brand=Lining">Lining Racket</Link></li>
-            <li><Link to="/customer/product?category=Racket&brand=Mizuno">Mizuno Racket</Link></li>
-            <li><Link to="/customer/product?category=Racket&brand=Kumpoo">Kumpoo Racket</Link></li>
-          </ul>
-        </div>
-        <div className="product-menu-item">
-          <h4 className="product-menu-item--title" ><Link to="/customer/shoes" state={{ typeLink: 'shoes' }} >Shoes</Link></h4>
-          <ul className="product-menu-item--list">
-            <li><Link to="/customer/product?category=Shoes&brand=Yonex">Yonex Shoes</Link></li>
-            <li><Link to="/customer/product?category=Shoes&brand=Victor">Victor Shoes</Link></li>
-            <li><Link to="/customer/product?category=Shoes&brand=Lining">Lining Shoes</Link></li>
-            <li><Link to="/customer/product?category=Shoes&brand=Mizuno">Mizuno Shoes</Link></li>
-            <li><Link to="/customer/product?category=Shoes&brand=Kumpoo">Kumpoo Shoes</Link></li>
-          </ul>
-        </div>
-        <div className="product-menu-item">
-          <h4 className="product-menu-item--title" ><Link to="/customer/tshirt" state={{ typeLink: 'tshirt' }} >Shirt</Link></h4>
-          <ul className="product-menu-item--list">
-            <li><Link to="/customer/product?category=tshirt&brand=Yonex">Yonex Shirt</Link></li>
-            <li><Link to="/customer/product?category=tshirt&brand=Victor">Victor Shirt</Link></li>
-            <li><Link to="/customer/product?category=tshirt&brand=Lining">Lining Shirt</Link></li>
-            <li><Link to="/customer/product?category=tshirt&brand=Mizuno">Mizuno Shirt</Link></li>
-            <li><Link to="/customer/product?category=tshirt&brand=Kumpoo">Kumpoo Shirt</Link></li>
-          </ul>
-        </div>
-        <div className="product-menu-item">
-          <h4 className="product-menu-item--title" ><Link to="/customer/shoes" state={{ typeLink: 'shoes' }} >Pants</Link></h4>
-          <ul className="product-menu-item--list">
-            <li><Link to="/customer/product?category=Pants&brand=Yonex">Yonex Pants</Link></li>
-            <li><Link to="/customer/product?category=Pants&brand=Victor">Victor Pants</Link></li>
-            <li><Link to="/customer/product?category=Pants&brand=Lining">Lining Pants</Link></li>
-            <li><Link to="/customer/product?category=Pants&brand=Mizuno">Mizuno Pants</Link></li>
-            <li><Link to="/customer/product?category=Pants&brand=Kumpoo">Kumpoo Pants</Link></li>
-          </ul>
-        </div>
-        <div className="product-menu-item">
-          <h4 className="product-menu-item--title" ><Link to="/customer/accessory" state={{ typeLink: 'shoes' }} >ACCESSORIES</Link></h4>
-          <ul className="product-menu-item--list">
-            <li><Link to="/customer/product?category=Accessory&brand=Yonex">Yonex Accessories </Link></li>
-            <li><Link to="/customer/product?category=Accessory&brand=Victor">Victor Accessories </Link></li>
-            <li><Link to="/customer/product?category=Accessory&brand=Lining">Lining Accessories </Link></li>
-            <li><Link to="/customer/product?category=Accessory&brand=Mizuno">Mizuno Accessories </Link></li>
-            <li><Link to="/customer/product?category=Accessory&brand=Kumpoo">Kumpoo Accessories </Link></li>
-          </ul>
-        </div>
+        {categories.map(category => (
+          <div className="product-menu-item" key={category.title}>
+            <h4 className="product-menu-item--title">
+              <Link to={category.path} state={{ typeLink: category.typeLink }}>
+                {category.title}
+              </Link>
+            </h4>
+            <ul className="product-menu-item--list">
+              {brands.map(brand => (
+                <li key={`${category.query.toLowerCase()}-${brand._id}`}>
+                  <Link to={`/customer/product?category=${category.query}&brand=${brand.name}`}>
+                    {brand.name} {category.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );
-
   const items = [
     {
       label: <Link to="/customer">HOME</Link>,

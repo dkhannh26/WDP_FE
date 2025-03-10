@@ -8,6 +8,7 @@ import {
   TagOutlined,
   UsergroupDeleteOutlined,
   UserOutlined,
+  SignatureOutlined,
 } from "@ant-design/icons";
 import React from "react";
 
@@ -97,6 +98,12 @@ export const menu = [
     title: "Order",
     key: "/order",
     role: "staff",
+  },
+  {
+    icon: SignatureOutlined,
+    title: "Brand",
+    key: "/brand",
+    role: "admin",
   },
 ].map((item, index) => {
   if (item.role === "") {
