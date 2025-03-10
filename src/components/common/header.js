@@ -6,7 +6,7 @@ import {
   SearchOutlined,
   ShoppingOutlined,
   UserOutlined,
-  HeartFilled,
+  HeartOutlined,
 } from "@ant-design/icons";
 import {
   Badge,
@@ -583,8 +583,8 @@ const Header = () => {
             style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
             onClick={() => navigate(WISHLIST_URL.INDEX)}
           >
-            <HeartFilled style={{ fontSize: "24px" }} />
-            <span>wishlist</span>
+            <HeartOutlined style={{ fontSize: "24px" }} />
+            <span>Wish List</span>
           </span>
         </Col>
       </Row>
