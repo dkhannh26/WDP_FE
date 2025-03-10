@@ -190,7 +190,11 @@ const RacketTable = () => {
             ></Button>
           </Space>
         ) : (
-          ""
+          <Button
+            shape="round"
+            icon={<SearchOutlined />}
+            onClick={() => navigate(`detail/${_id}`)}
+          ></Button>
         );
       },
       width: "15%",
@@ -210,8 +214,6 @@ const RacketTable = () => {
 
     getProductList(setProducts, 'racket');
   }, [state, navigate, messageApi, location.pathname]);
-
-  console.log(products);
 
   return (
     <>

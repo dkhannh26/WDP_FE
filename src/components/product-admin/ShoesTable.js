@@ -192,7 +192,11 @@ const ShoesTable = () => {
             ></Button>
           </Space>
         ) : (
-          ""
+          <Button
+            shape="round"
+            icon={<SearchOutlined />}
+            onClick={() => navigate(`detail/${_id}`)}
+          ></Button>
         );
       },
       width: "15%",
