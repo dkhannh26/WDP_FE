@@ -116,6 +116,11 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             <Form.Item
               name="brand"
               label="Brand"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <Select
                 placeholder="Select a brand"

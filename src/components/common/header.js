@@ -230,8 +230,8 @@ const Header = () => {
     { title: 'Racket', path: '/customer/racket', typeLink: 'racket', query: 'Racket' },
     { title: 'Shoes', path: '/customer/shoes', typeLink: 'shoes', query: 'Shoes' },
     { title: 'Shirt', path: '/customer/tshirt', typeLink: 'tshirt', query: 'tshirt' },
-    { title: 'Pants', path: '/customer/shoes', typeLink: 'shoes', query: 'Pants' },
-    { title: 'Accessories', path: '/customer/accessory', typeLink: 'shoes', query: 'Accessories' },
+    { title: 'Pants', path: '/customer/pant', typeLink: 'pant', query: 'pants' },
+    { title: 'Accessories', path: '/customer/accessory', typeLink: 'accessory', query: 'Accessories' },
   ];
   const content = (
     <div style={{ width: '100vw' }}>

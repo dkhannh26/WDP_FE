@@ -52,12 +52,12 @@ const ProductCustomer = () => {
   return (
     <Row>
       <Col offset={1} span={21}>
-        <Title level={2} style={{ marginTop: "20px" }}>
+        {/* <Title level={2} style={{ marginTop: "20px" }}>
           {state?.typeLink === "tshirt" && "T-shirt"}
           {state?.typeLink === "pant" && "Pant"}
           {state?.typeLink === "shoes" && "Shoes"}
           {state?.typeLink === "accessory" && "Accessory"}
-        </Title>
+        </Title> */}
         <Row style={{ margin: "20px", marginLeft: 0 }}>
           <div className="product-filter">
             <FilterOutlined /> Filter
