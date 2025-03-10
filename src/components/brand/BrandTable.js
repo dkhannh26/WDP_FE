@@ -36,16 +36,16 @@ const BrandTable = () => {
             width: '10%',
         },
         {
-            title: 'Day',
+            title: 'Created Date',
             dataIndex: 'createdAt',
             width: '10%',
             render: (text) => new Date(text).toLocaleString('vi-VN', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                // hour: '2-digit',
+                // minute: '2-digit',
+                // second: '2-digit'
             }),
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
@@ -100,7 +100,7 @@ const BrandTable = () => {
             <Row style={{ marginLeft: 0 }}>
                 <Col span={6}>
                     <Search
-                        placeholder="Enter something to search"
+                        placeholder="Enter text to search by name"
                         allowClear
                         enterButton
                         size="large"

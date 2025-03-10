@@ -227,11 +227,11 @@ const Header = () => {
   //   </div>
   // );
   const categories = [
-    { title: 'RACKET', path: '/customer/racket', typeLink: 'racket', query: 'Racket' },
+    { title: 'Racket', path: '/customer/racket', typeLink: 'racket', query: 'Racket' },
     { title: 'Shoes', path: '/customer/shoes', typeLink: 'shoes', query: 'Shoes' },
     { title: 'Shirt', path: '/customer/tshirt', typeLink: 'tshirt', query: 'tshirt' },
     { title: 'Pants', path: '/customer/shoes', typeLink: 'shoes', query: 'Pants' },
-    { title: 'ACCESSORIES', path: '/customer/accessory', typeLink: 'shoes', query: 'Accessories' },
+    { title: 'Accessories', path: '/customer/accessory', typeLink: 'shoes', query: 'Accessories' },
   ];
   const content = (
     <div style={{ width: '100vw' }}>
