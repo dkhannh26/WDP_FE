@@ -40,6 +40,7 @@ export const getProductDetail = (id, setProduct, setImages, setCanvas) => {
 export const getProductDetailCustomer = (id, setProduct, setImages, setCanvas, selectSize) => {
     axios.get(API_PATH.product + `/${id}`)
         .then((res) => {
+            console.log(res.data);
             setProduct(res.data)
             const images = res.data?.images
             let imgArrResult = []

@@ -6,6 +6,7 @@ import {
   SearchOutlined,
   ShoppingOutlined,
   UserOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
 import {
   Badge,
@@ -22,11 +23,12 @@ import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/header.css";
 import { getSearchList } from "../../services/product/search.service";
 import LoginPopover from "../login";
-import { CART_URL, PAYMENT_URL } from "../../config/url.config";
+import { CART_URL, PAYMENT_URL, WISHLIST_URL } from "../../config/url.config";
 import { API_PATH, PATH } from "../../config/api.config";
 import { getListCart } from "../../services/cart.service";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { useRefresh } from '../../context/RefreshContext';
 import Logo2 from "../../assets/images/logo2.jpeg";
 const { Text } = Typography;
 
@@ -38,7 +40,7 @@ const Header = () => {
   // const [messageApi, contextHolder] = message.useMessage(null)
   const [totalAmount, setTotalAmount] = useState(Number);
   const [total, setTotal] = useState(Number);
-
+  const { refresh } = useRefresh();
 
   const { isAuthenticated, username, user } = useAuth();
   const [initialValues, setInitialValues] = useState({
@@ -75,7 +77,7 @@ const Header = () => {
         setTotal(total);
       });
     }
-  }, [totalAmount, initialValues.userId]);
+  }, [totalAmount, initialValues.userId, refresh]);
 
   const cartPopover = (
     <div className="cart-pop">
@@ -200,6 +202,7 @@ const Header = () => {
       </div>
     </div>
   );
+
 
   // const content = (
   //   <div>
@@ -576,6 +579,13 @@ const Header = () => {
             </Badge>
             <p style={{ marginLeft: 10 }}>Giỏ hàng</p>
           </Popover>
+          <span
+            style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
+            onClick={() => navigate(WISHLIST_URL.INDEX)}
+          >
+            <HeartFilled style={{ fontSize: "24px" }} />
+            <span>wishlist</span>
+          </span>
         </Col>
       </Row>
       <Row className="container header-menu">

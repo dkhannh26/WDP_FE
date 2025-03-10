@@ -75,3 +75,8 @@ export const PAYMENT_URL = {
   CREATE: '/customer/payment/create',
   EDIT: '/customer/payment/create'
 }
+export const WISHLIST_URL = {
+  INDEX: '/customer/wishlist',
+  CREATE: '/customer/wishlist/create',
+  EDIT: '/customer/wishlist/create'
+}
