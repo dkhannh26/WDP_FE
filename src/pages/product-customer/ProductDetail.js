@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title';
 import '../../assets/css/sizeBtn.css'
 import { useAuth } from '../../components/context/AuthContext';
 import axios from 'axios';
-import { AddCartDup, createCart, getListCart } from '../../services/cart.service';
+import { AddCartDup, AddOver, createCart, getListCart } from '../../services/cart.service';
 import { PATH } from '../../config/api.config';
 import { getProductDetailCustomer } from '../../services/product/product.service';
 import CustomerFeedback from '../../components/feedback/CustomerFeedback';
@@ -36,7 +36,11 @@ const ProductDetail = () => {
     const [count, setCount] = useState(1);
 
     const handleIncrement = () => {
-        if (count < sizeNumber) setCount(count + 1);
+        setCount(count + 1);
+        if (count + 1 > sizeNumber) {
+            alert(`This product of ours is only left ${sizeNumber} product`)
+            setCount(count);
+        }
     };
 
     const handleDecrement = () => {
@@ -109,7 +113,7 @@ const ProductDetail = () => {
                 console.log(matchingCartItem.quantity);
                 console.log('uodata', updatedQuantity);
                 if (updatedQuantity > matchingCartItem.quantity || matchingCartItem.quantity < 0) {
-                    alert('sold out');
+                    AddOver(matchingCartItem._id, { quantity: matchingCartItem.quantity }, navigate);
                 } else {
                     AddCartDup(matchingCartItem._id, { quantity: updatedQuantity }, navigate);
                 }

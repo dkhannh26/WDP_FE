@@ -127,8 +127,15 @@ const CartList = () => {
                                                 <InputNumber
                                                     min={1}
                                                     defaultValue={item.cartQuantity}
-                                                    max={item.quantity}
-                                                    onChange={(value) => onChange(value, item._id)}
+                                                    value={item.cartQuantity}
+                                                    onChange={(value) => {
+                                                        if (value > item.quantity) {
+                                                            alert(`This product of ours is only left ${item.quantity} product`)
+                                                            return;
+                                                        }
+                                                        onChange(value, item._id)
+                                                    }
+                                                    }
                                                 />
                                             </div>
                                         }

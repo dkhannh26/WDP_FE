@@ -144,7 +144,7 @@ const PaymentModel = () => {
             email,
             address,
             voucherTotal,
-            cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id }))
+            cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id, discount: cart.discount }))
         };
         const order = {
             account_id: initialValues.userId,
@@ -155,6 +155,7 @@ const PaymentModel = () => {
             orderItems: values.cartItems.map(item => ({
                 product_size_id: item.product_size_id,
                 quantity: item.quantity,
+                discount: item.discount,
             })),
         };
         if (isCOD) {
@@ -199,7 +200,7 @@ const PaymentModel = () => {
                 email,
                 address,
                 voucherTotal,
-                cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id }))
+                cartItems: carts.map(cart => ({ id: cart._id, quantity: cart.cartQuantity, product_size_id: cart.product_size_id, discount: cart.discount }))
             };
             const order = {
                 account_id: initialValues.userId,
@@ -210,6 +211,7 @@ const PaymentModel = () => {
                 orderItems: values.cartItems.map(item => ({
                     product_size_id: item.product_size_id,
                     quantity: item.quantity,
+                    discount: item.discount,
                 })),
             };
             deleteCart(initialValues.userId);

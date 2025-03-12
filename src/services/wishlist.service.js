@@ -49,3 +49,4 @@ export const editWishlist = (id, wishlist, navigate) => {
 export const checkWishlist = (userId, productId) => {
   return axios.get(`${API_PATH.wishlist}/check?userId=${userId}&productId=${productId}`);
 };
+
