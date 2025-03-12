@@ -39,6 +39,16 @@ export const createCart = (cart, navigate) => {
         })
 }
 
+export const createCartWishlist = (cart) => {
+    axios.post(API_PATH.cart, cart)
+        .then((res) => {
+            console.log(res.data);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
+
 export const getProductDetail = (id, setProductDetail) => {
     axios.get(API_PATH.productDetail + `/${id}`)
         .then((res) => {
@@ -71,6 +81,16 @@ export const AddCartDup = (id, cart, navigate) => {
             navigate(CART_URL.INDEX, {
                 state: { message: MESSAGE.CREATE_SUCCESS }
             });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
+
+export const AddCartDupWishlist = (id, cart) => {
+    axios.put(API_PATH.cart + `/${id}`, cart)
+        .then((res) => {
+            console.log(res.data);
         })
         .catch(error => {
             console.log(error);

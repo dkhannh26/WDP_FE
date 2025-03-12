@@ -15,6 +15,7 @@ import Register from "../pages/Register";
 import ResetPassword from "../pages/ResetPassword";
 import SuccessRegister from "../pages/SuccessRegister";
 import User from "../pages/User";
+import WishList from "../pages/WishList";
 import Home from "../pages/intro/Home";
 
 export const CustomerRoutes = (
@@ -39,6 +40,7 @@ export const CustomerRoutes = (
       <Route path='contact' element={<Contact />}></Route>
       <Route path="product/:id" element={<ProductDetail />}></Route>
       <Route path="product" element={<ProductCustomer />}></Route>
+      <Route path="wishlist" element={<WishList />}></Route>
       <Route path="" element={<Home />}></Route>
     </Route>
     <Route

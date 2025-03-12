@@ -34,6 +34,7 @@ export const API_PATH = {
   hotBrand: baseURL + "order/hotBrand",
   sms: baseURL + 'sms/send-email',
   payOS: baseURL + 'payOS/create-payment-link',
+  wishlist: baseURL + 'wishlist'
 }
 export const PATH = {
   user: baseURL + "users",

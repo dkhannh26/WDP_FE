@@ -45,11 +45,25 @@
     background: #323232;
 }
 
-.item1 { grid-area: item1; }
-.item2 { grid-area: item2; }
-.item3 { grid-area: item3; }
-.item4 { grid-area: item4; }
-.item5 { grid-area: item5; }
+.item1 {
+    grid-area: item1;
+}
+
+.item2 {
+    grid-area: item2;
+}
+
+.item3 {
+    grid-area: item3;
+}
+
+.item4 {
+    grid-area: item4;
+}
+
+.item5 {
+    grid-area: item5;
+}
 
 
 .grid-container {
@@ -67,7 +81,7 @@
     width: 90%;
 }
 
-.grid-container > div {
+.grid-container>div {
     background-color: rgba(255, 255, 255, 0.8);
     text-align: center;
     font-size: 30px;
@@ -89,18 +103,27 @@
 
 /* Định dạng phần track (phần nền của scrollbar) */
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #F5F5F5;
     border-radius: 10px;
-  }
+}
 
 /* Định dạng phần thumb (thanh kéo) */
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #a0a0a0, #505050); /* Gradient xám */
+    background: linear-gradient(180deg, #a0a0a0, #505050);
+    /* Gradient xám */
     border-radius: 5px;
 }
 
 /* Hover hiệu ứng */
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, #b0b0b0, #606060);
+}
+
+.heart-filled {
+    font-size: 28px;
+    color: #f51c1c;
+    position: absolute;
+    bottom: 35px;
+    right: 35px;
 }

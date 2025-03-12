@@ -80,3 +80,8 @@ export const BRAND_URL = {
   CREATE: "/admin/brand/create",
   EDIT: "/admin/brand/create",
 };
+export const WISHLIST_URL = {
+  INDEX: '/customer/wishlist',
+  CREATE: '/customer/wishlist/create',
+  EDIT: '/customer/wishlist/create'
+}

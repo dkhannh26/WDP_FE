@@ -1,13 +1,13 @@
 import axios from "axios";
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { PATH } from "../config/api.config";
 
-import { Button, Carousel, Form, Input, List, notification } from "antd";
+import { GoogleLogin } from "@react-oauth/google";
+import { Button, Carousel, notification } from "antd";
 import { useNavigate } from "react-router-dom";
+import { googleAuth } from "../services/auth.service";
 import { useAuth } from "./context/AuthContext";
 import ForgotPassword from "./forgotPassword";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-import { googleAuth } from "../services/auth.service";
 const LoginPopover = () => {
   const navigate = useNavigate();
   const [username, setUsernameState] = useState("");
