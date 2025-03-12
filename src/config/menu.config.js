@@ -105,6 +105,12 @@ export const menu = [
     key: "/brand",
     role: "admin",
   },
+  {
+    icon: SignatureOutlined,
+    title: "Permission",
+    key: "/permission",
+    role: "admin",
+  },
 ].map((item, index) => {
   if (item.role === "") {
     return {
