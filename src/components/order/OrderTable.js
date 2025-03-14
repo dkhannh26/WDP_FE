@@ -97,7 +97,7 @@ const OrderTable = () => {
 
                         {record.status === 'pending' && (
                             <>
-                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi, getListOrder, setOrders)}></Button>
+                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails)}></Button>
                                 <Button
                                     shape="round"
                                     icon={<CheckOutlined style={{ color: 'green' }} />}
@@ -110,7 +110,7 @@ const OrderTable = () => {
                                 ></Button>
                             </>
                         )}
-                        <Button danger shape="round" icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(_id, messageApi, getListOrder, setOrders, API_PATH.order)}></Button>
+                        <Button danger shape="round" icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(_id, messageApi, getListOrder, setOrders, API_PATH.order, setFilteredOrders)}></Button>
                     </Space>
                 )
             },

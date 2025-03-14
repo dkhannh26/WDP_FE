@@ -37,6 +37,35 @@ export const showDeleteConfirm = (id, messageApi, getList, setList, URL, typePro
   });
 };
 
+export const showDeleteConfirmFilter = (id, messageApi, getList, setList, URL, typeProduct, setListFilter) => {
+  confirm({
+    title: 'Are you sure delete?',
+    icon: <ExclamationCircleFilled />,
+    okText: 'Yes',
+    okType: 'danger',
+    cancelText: 'No',
+    onOk() {
+      axios.delete(URL + `/${id}`)
+        .then((response) => {
+          success('Deleted Succesfully', messageApi)
+        })
+        .then(() => {
+          getList(setList, typeProduct, setListFilter)
+        })
+        .catch((error) => {
+          if (error.response) {
+            const { message } = error.response.data;
+            errorMsg(message, messageApi);
+          }
+          console.error(error);
+        })
+    },
+    onCancel() {
+      console.log('Cancel');
+    },
+  });
+};
+
 export const success = (message, messageApi) => {
   messageApi.open({
     type: "success",

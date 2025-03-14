@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { Button, Col, Image, InputNumber, Modal, Row, Space, Table, Tag, message, Typography, Input } from 'antd';
 import { DeleteOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { getListWishlist } from '../services/wishlist.service';
-import { useAuth } from '../components/context/AuthContext';
-import axios from 'axios';
-import { API_PATH, PATH } from '../config/api.config';
-import { showDeleteConfirm } from '../utils/helper';
+import { Button, Col, Image, Input, InputNumber, message, Modal, Row, Space, Table, Tag } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { getProductDetailCustomer } from '../services/product/product.service';
-import { AddCartDupWishlist, createCartWishlist, getListCart } from '../services/cart.service';
-import { useRefresh } from '../context/RefreshContext';
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
+import { useParams } from "react-router-dom";
+import { useAuth } from '../components/context/AuthContext';
+import { API_PATH, PATH } from '../config/api.config';
+import { useRefresh } from '../context/RefreshContext';
+import { AddCartDupWishlist, createCartWishlist, getListCart } from '../services/cart.service';
+import { getProductDetailCustomer } from '../services/product/product.service';
+import { getListWishlist } from '../services/wishlist.service';
+import { showDeleteConfirm } from '../utils/helper';
 
 const WishList = () => {
     const [wishlist, setWishlist] = useState([]);
@@ -35,11 +35,13 @@ const WishList = () => {
         setCount(1);
     };
     const [count, setCount] = useState(1);
-    const navigate = useNavigate();
     const { toggleRefresh } = useRefresh();
-
     const handleIncrement = () => {
-        if (count < sizeNumber) setCount(count + 1);
+        setCount(count + 1);
+        if (count + 1 > sizeNumber) {
+            alert(`This product of ours is only left ${sizeNumber} product`)
+            setCount(count);
+        }
     };
 
     const handleDecrement = () => {
@@ -292,39 +294,6 @@ const WishList = () => {
                 });
             }
 
-            if (!product || !product.size) {
-                await getProductDetailCustomer(selectedProduct.record.product_id, setProduct, setImages, setCanvas, selectSize);
-            }
-
-            if (product) {
-                const matchingCartItem = cart.find(item => item.product_size_id === detailId);
-                const selectedSize = product.size.find(item => item.product_size_id === detailId);
-                const availableQuantity = selectedSize ? selectedSize.quantity : 0;
-
-                if (matchingCartItem) {
-                    const updatedQuantity = matchingCartItem.cartQuantity + count;
-
-                    if (updatedQuantity > matchingCartItem.quantity || matchingCartItem.quantity < 0) {
-                        alert('sold out');
-                    } else {
-                        AddCartDupWishlist(matchingCartItem._id, { quantity: updatedQuantity });
-                    }
-                } else {
-                    if (availableQuantity > 0) {
-                        const newCart = {
-                            account_id: initialValues.userId,
-                            product_size_id: detailId,
-                            quantity: count
-                        };
-                        createCartWishlist(newCart);
-                    }
-                    else {
-                        alert('sold out');
-                    }
-                }
-                toggleRefresh();
-            }
-
             setIsModalVisible(false);
             const button = e.currentTarget;
             const cartIcon = document.querySelector('.anticon-shopping');
@@ -369,6 +338,36 @@ const WishList = () => {
             messageApi.error('Failed to add to cart');
         }
     };
+    useEffect(() => {
+        if (product) {
+            const matchingCartItem = cart.find(item => item.product_size_id === detailId);
+            const selectedSize = product.size.find(item => item.product_size_id === detailId);
+            const availableQuantity = selectedSize ? selectedSize.quantity : 0;
+            console.log("matchingCartItem", matchingCartItem);
+            if (matchingCartItem) {
+                const updatedQuantity = matchingCartItem.cartQuantity + count;
+
+                if (updatedQuantity > matchingCartItem.quantity || matchingCartItem.quantity < 0) {
+                    alert('sold out');
+                } else {
+                    AddCartDupWishlist(matchingCartItem._id, { quantity: updatedQuantity });
+                }
+            } else {
+                if (availableQuantity > 0) {
+                    const newCart = {
+                        account_id: initialValues.userId,
+                        product_size_id: detailId,
+                        quantity: count
+                    };
+                    createCartWishlist(newCart);
+                }
+                else {
+                    alert('sold out');
+                }
+            }
+        }
+        toggleRefresh();
+    }, [cart],)
 
 
     return (

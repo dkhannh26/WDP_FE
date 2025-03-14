@@ -91,10 +91,8 @@ export const confirmOrder = (id, messageApi, getListOrder, setOrders, setFiltere
 export const cancelOrder = (id, messageApi, getListOrder, setOrders, setFilteredOrders) => {
     axios.put(API_PATH.cancelOrder + `/${id}`)
         .then(() => {
-            success('Cancel Succesfully', messageApi)
-        })
-        .then(() => {
-            getListOrder(setOrders, setFilteredOrders)
+            success('Confirm Successfully', messageApi);
+            return getListOrder(setOrders, setFilteredOrders);
         })
         .catch(error => console.error(error))
 }
