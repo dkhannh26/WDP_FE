@@ -35,7 +35,16 @@ export const API_PATH = {
   sms: baseURL + 'sms/send-email',
   payOS: baseURL + 'payOS/create-payment-link',
   wishlist: baseURL + 'wishlist',
-  allDetail: baseURL + 'order/allDetails'
+  allDetail: baseURL + 'order/allDetails',
+  transitOrder: baseURL + 'order/transit',
+  allOrderCustomer: baseURL + 'order/all',
+  returnOrder: baseURL + 'order/reason',
+  refundOrder: baseURL + 'order/refund',
+  confirmRefund: baseURL + "order/confirmRefund",
+  rejectRefund: baseURL + "order/refundReject",
+  allRefund: baseURL + 'order/allRefund',
+  paidOrder: baseURL + 'order/paid',
+
 }
 export const PATH = {
   user: baseURL + "users",

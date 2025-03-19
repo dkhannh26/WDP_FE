@@ -9,6 +9,7 @@ import {
   UsergroupDeleteOutlined,
   UserOutlined,
   SignatureOutlined,
+  MoneyCollectOutlined,
 } from "@ant-design/icons";
 import React from "react";
 
@@ -110,6 +111,12 @@ export const menu = [
     title: "Permission",
     key: "/permission",
     role: "admin",
+  },
+  {
+    icon: MoneyCollectOutlined,
+    title: "Refund",
+    key: "/refund",
+    role: "staff",
   },
 ].map((item, index) => {
   if (item.role === "") {

@@ -432,13 +432,13 @@ const Header = () => {
             </Badge>
             <p style={{ marginLeft: 10 }}>Giỏ hàng</p>
           </Popover>
-          <span
+          {user && (<span
             style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
             onClick={() => navigate(WISHLIST_URL.INDEX)}
           >
             <HeartOutlined style={{ fontSize: "24px" }} />
             <span>Wish List</span>
-          </span>
+          </span>)}
         </Col>
       </Row>
       <Row className="container header-menu">
