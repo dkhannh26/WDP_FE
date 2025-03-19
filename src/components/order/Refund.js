@@ -1,16 +1,15 @@
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EyeInvisibleOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
-import { Button, Col, Flex, Input, Modal, Radio, Row, Select, Space, Table, message } from 'antd';
+import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import { Button, Col, Flex, Image, Input, Modal, Row, Space, Table, message } from 'antd';
+import Search from 'antd/es/transfer/search';
 import Title from 'antd/es/typography/Title';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { API_PATH, PATH } from "../../config/api.config";
+import { PATH } from "../../config/api.config";
 import { MESSAGE } from '../../config/message.config';
-import { cancelOrder, confirmOrder, getListOrder, getOrderDetails, updateOrder } from '../../services/order.service';
-import { showDeleteConfirm, success } from '../../utils/helper';
-import Search from 'antd/es/transfer/search';
-import { checkPermission } from '../../utils/permission';
+import { confirmRefund, getListRefund, getOrderDetails, refundReject, updateOrder } from '../../services/order.service';
+import { success } from '../../utils/helper';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([])
@@ -23,9 +22,7 @@ const OrderTable = () => {
     const { state } = location;
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState(null);
-    const [fileList, setFileList] = useState([]);
-    const [cancelReason, setCancelReason] = useState('');
-    const [otherCancelReason, setOtherCancelReason] = useState('');
+    const [reason, setReason] = useState('');
     const onChange = (e) => {
         const value = e.target.value.toLowerCase();
 
@@ -40,61 +37,45 @@ const OrderTable = () => {
         setFilteredOrders(filtered);
     };
 
-    const handleFilterChange = (value) => {
-        let filtered = [];
-        if (value === "All") {
-            filtered = orders;
-        } else {
-            filtered = orders.filter((order) => order.status === value);
-        }
-        setFilteredOrders(filtered);
-    };
 
-
-    const cancelReasons = [
-        { label: 'Đơn hàng bị lỗi', value: 'Đơn hàng bị lỗi' },
-        { label: 'Đơn hàng không đủ điều kiện giao', value: 'Đơn hàng không đủ điều kiện giao' },
-        { label: 'Khác', value: 'other' },
-    ];
     const showModal = (orderId) => {
         setSelectedOrderId(orderId);
         setIsModalVisible(true);
     };
+
     const handleOk = () => {
-        const selectedOrder = orders.find(order => order._id === selectedOrderId);
-        const createdAt = new Date(selectedOrder?.createdAt);
-        const currentDate = new Date();
-        const diffInDays = (currentDate - createdAt) / (1000 * 60 * 60 * 24)
-        if (!cancelReason) {
-            messageApi.error('Vui lòng chọn lý do huỷ hàng!');
-            return;
-        }
-        if (diffInDays > 7) {
-            messageApi.error('Đơn hàng chỉ có thể hủy trong vòng 7 ngày kể từ khi tạo!');
-            setIsModalVisible(false);
+        if (!reason) {
+            messageApi.error('Vui lòng nhập lý do từ chối!!!');
             return;
         }
 
-
-        const finalCancelReason = cancelReason === 'other' ? otherCancelReason : cancelReason;
+        const finalReason = 'Lý do từ chối: ' + reason;
         const order = {
-            cancel_reason: finalCancelReason
+            reject_reason: finalReason,
         };
-        if (selectedOrderId && order.cancel_reason) {
-            updateOrder(selectedOrderId, order, fileList);
-            cancelOrder
-                (selectedOrderId, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails, initialValues.userId)
-                ;
+        if (selectedOrderId) {
+            updateOrder(selectedOrderId, order);
+            refundReject(
+                selectedOrderId,
+                messageApi,
+                () => getListRefund(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                }),
+                setOrders,
+                setFilteredOrders,
+                finalReason
+            );
         }
 
         setIsModalVisible(false);
-        setCancelReason('');
+        setReason('');
         setSelectedOrderId(null);
     };
 
     const handleCancel = () => {
         setIsModalVisible(false);
-        setCancelReason('');
+        setReason('');
         setSelectedOrderId(null);
     };
     const columns = [
@@ -126,7 +107,7 @@ const OrderTable = () => {
             }
         },
         {
-            title: 'Confirm Staff',
+            title: 'Confirm User',
             width: '10%',
             render: (text, record) => {
                 return record.confirm_user_id?.username
@@ -192,9 +173,19 @@ const OrderTable = () => {
             },
         },
         {
+            title: 'Refund Reason',
+            dataIndex: 'refund_reason',
+            width: '20%',
+        },
+        {
             title: 'Cancel Reason',
             dataIndex: 'cancel_reason',
             width: '20%',
+        },
+        {
+            title: 'Bank',
+            dataIndex: 'bank',
+            width: '5%',
         },
         {
             title: 'Action',
@@ -203,31 +194,25 @@ const OrderTable = () => {
                 return (
                     <Space>
 
-                        {record.status === 'Pending' && (
+                        {record.status === 'Pending Approval' && (
                             <>
-                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => showModal(_id)}></Button>
-                                <Button
+                                {record.status === 'Pending Approval' && record.refund_reason !== '' && (
+
+                                    <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => showModal(_id)}>
+                                    </Button>
+                                )}  <Button
                                     shape="round"
                                     icon={<CheckOutlined style={{ color: 'green' }} />}
                                     onClick={() => {
                                         getOrderDetails(_id, setOrderDetails)
                                             .then(orderDetails => {
-                                                confirmOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails, initialValues.userId);
-                                            })
-                                            .catch((err) => {
-                                                messageApi.error(err.message);
+                                                confirmRefund(_id, messageApi, getListRefund, setOrders, setFilteredOrders, orderDetails, initialValues.userId);
                                             });
                                     }}
                                 ></Button>
                             </>
                         )}
-                        {
-                            checkPermission('deleteOrder') ?
-                                <Button danger shape="round" icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(_id, messageApi, getListOrder, setOrders, API_PATH.order, setFilteredOrders)}></Button>
-                                :
-                                ''
-                        }
-                    </Space >
+                    </Space>
                 )
             },
             width: '10%',
@@ -257,19 +242,21 @@ const OrderTable = () => {
                         <p><b>Name:</b> {detail?.product_name}</p>
                         <p><b>Price:</b> <del>{detail?.price.toLocaleString()}đ</del> <span style={{ color: 'red' }}>{((detail.price - (detail.price * (detail.discount / 100))) * detail.cartQuantity).toLocaleString()}đ</span></p>
                         <p><b>Quantity:</b> {detail.cartQuantity}</p>
-                        <p><b>Size:</b> {detail.product_size_name}</p>
+                        <p><b>Images of RETURN/REFUND order:</b></p>
+                        {detail.order_images.map((img) => (
+                            <Image
+                                width={100}
+                                height={100}
+                                src={`http://localhost:3000/images/order/${detail.order_id}/${img}`}
+                                alt='hinh refund'
+                            />
+                        ))}
                     </div>
                 ))}
             </div>
         );
     };
 
-    // useEffect(() => {
-    //     getListOrder((data) => {
-    //         setOrders(data);
-    //         setFilteredOrders(data);
-    //     });
-    // }, []);
     const {
         isAuthenticated,
         user,
@@ -289,6 +276,10 @@ const OrderTable = () => {
                     const res = await axios.get(`${PATH.profile}/${user.username}`);
                     setInitialValues({
                         userId: res.data.user._id,
+                        username: res?.data?.user?.username,
+                        email: res?.data?.user?.email,
+                        phone: res?.data?.user?.phone,
+                        address: res?.data?.user?.address,
                     });
                 } catch (error) {
                     console.error("Error fetching data:", error);
@@ -299,12 +290,10 @@ const OrderTable = () => {
         fetchData();
     }, [isAuthenticated]);
 
+
     useEffect(() => {
-        getListOrder((data) => {
-            setOrders(data);
-            setFilteredOrders(data);
-        })
-    }, []);
+        getListRefund(setOrders, setFilteredOrders)
+    }, [reason]);
 
     useEffect(() => {
         if (state?.message === MESSAGE.CREATE_SUCCESS) {
@@ -322,7 +311,7 @@ const OrderTable = () => {
             <Flex gap="middle" align="center" justify='space-between'>
                 {contextHolder}
                 <Col>
-                    <Title level={2}>Order Management</Title>
+                    <Title level={2}>Return/Refund Management</Title>
                 </Col>
             </Flex>
             <Row style={{ marginLeft: 0 }}>
@@ -340,29 +329,6 @@ const OrderTable = () => {
                             marginBottom: "10px",
                         }}
                     />
-                </Col>
-                <Col span={6}>
-                    <div style={{ fontWeight: 600, fontSize: 20 }}>
-                        <FilterOutlined /> Filter
-                        <Select
-                            defaultValue="All"
-                            style={{
-                                marginLeft: 20,
-                                width: 150,
-                            }}
-                            onChange={handleFilterChange}
-                        >
-                            <Select.Option value="All">All</Select.Option>
-                            <Select.Option value="Pending">Pending</Select.Option>
-                            <Select.Option value="In Transit">In Transit</Select.Option>
-                            <Select.Option value="Completed">Completed</Select.Option>
-                            <Select.Option value="Cancelled">Cancelled</Select.Option>
-                            <Select.Option value="Paid">Paid</Select.Option>
-                            <Select.Option value="Pending Approval">Pending Approval</Select.Option>
-                            <Select.Option value="Return Approved">Return Approved</Select.Option>
-                            <Select.Option value="Reject">Reject</Select.Option>
-                        </Select>
-                    </div>
                 </Col>
             </Row>
             <Table
@@ -386,31 +352,20 @@ const OrderTable = () => {
 
             />
             <Modal
+                title="Lý do trả hàng"
                 open={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 okText="Xác nhận"
                 cancelText="Hủy"
             >
-                <Title level={3}>Lý do huỷ hàng:</Title>
-                <Title level={4}>Vui lòng chọn lý do huỷ hàng:</Title>
-                <Radio.Group onChange={(e) => setCancelReason(e.target.value)} value={cancelReason}>
-                    <Space direction="vertical">
-                        {cancelReasons.map((item) => (
-                            <Radio key={item.value} value={item.value}>
-                                {item.label}
-                            </Radio>
-                        ))}
-                    </Space>
-                </Radio.Group>
-                {cancelReason === 'other' && (
-                    <Input
-                        placeholder="Nhập lý do cụ thể"
-                        value={otherCancelReason}
-                        onChange={(e) => setOtherCancelReason(e.target.value)}
-                        style={{ marginTop: 10 }}
-                    />
-                )}
+                <Title level={4}>Vui lòng nhập lý do từ chối</Title>
+                <Input
+                    placeholder="Nhập lý do cụ thể"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    style={{ marginTop: 10 }}
+                />
             </Modal>
         </>
     )

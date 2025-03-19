@@ -8,7 +8,8 @@ import {
   UsergroupDeleteOutlined,
   UserOutlined,
   SignatureOutlined,
-  AuditOutlined
+  AuditOutlined,
+  MoneyCollectOutlined
 } from "@ant-design/icons";
 import React from "react";
 import { checkPermission } from "../utils/permission";
@@ -105,6 +106,12 @@ export const menu = [
       },
     ],
     role: "admin",
+  },
+  {
+    icon: MoneyCollectOutlined,
+    title: "Refund",
+    key: "/refund",
+    role: "staff",
   },
 ].map((item, index) => {
   if (item.key === '/statistic' && checkPermission("viewStatistic")) {

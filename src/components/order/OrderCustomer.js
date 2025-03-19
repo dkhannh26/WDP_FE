@@ -1,16 +1,19 @@
-import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined, TruckOutlined } from "@ant-design/icons";
-import { Button, Image, List, Space, Table, Typography, message } from "antd";
-import { useEffect, useState } from "react";
-import { cancelOrder, getListDoneOrder, getListOrder, getListOrderDetail, getListPendingOrder, getOrderDetails, shippedOrder } from "../../services/order.service";
-import { useAuth } from "../context/AuthContext";
-import axios from "axios";
-import { API_PATH, PATH } from "../../config/api.config";
+import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined, TruckOutlined, RedoOutlined } from "@ant-design/icons";
+import { Button, Image, Input, List, Menu, Modal, Radio, Row, Space, Table, Typography, message } from "antd";
 import Search from "antd/es/input/Search";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { API_PATH, PATH } from "../../config/api.config";
+import { cancelOrder, getAllOrder, getListCancelOrder, getListDoneOrder, getListOrderDetail, getListPendingOrder, getListRefundOrder, getListTransOrder, getOrderDetails, refundOrder, shippedOrder, updateOrder } from "../../services/order.service";
+import UploadImg from '../common/UploadImg';
+import { useAuth } from "../context/AuthContext";
+import { success } from '../../utils/helper';
+import { MESSAGE } from "../../config/message.config";
 const { Text, Title } = Typography;
 
 const OrderCustomer = () => {
-    const [status, setStatus] = useState("pending");
+    const [status, setStatus] = useState("All");
     const [orders, setOrders] = useState([]);
     const [orderDetails, setOrderDetails] = useState([]);
     const [allOrderDetails, setAllOrderDetails] = useState([]);
@@ -18,8 +21,20 @@ const OrderCustomer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [messageApi, contextHolder] = message.useMessage()
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedOrderId, setSelectedOrderId] = useState(null);
+    const [fileList, setFileList] = useState([]);
+    const [refundReason, setRefundReason] = useState('');
+    const [cancelReason, setCancelReason] = useState('');
+    const [bank, setBank] = useState('');
+    const [otherRefundReason, setOtherRefundReason] = useState('');
+    const [otherCancelReason, setOtherCancelReason] = useState('');
+    const location = useLocation();
+    const { state } = location;
     const navigate = useNavigate();
-
+    const handleFileListChange = (newFileList) => {
+        setFileList(newFileList);
+    };
 
     const onChange = (e) => {
         const value = e.target.value.toLowerCase();
@@ -32,15 +47,123 @@ const OrderCustomer = () => {
                 detail.product_name.toLowerCase().includes(value)
             );
         });
-        console.log('1', allItems);
-        console.log('2', orders);
         setFilteredOrders(filtered);
+    };
+    const returnReasons = [
+        { label: 'Hàng bị lỗi', value: 'Hàng bị lỗi' },
+        { label: 'Không thích sản phẩm', value: 'Không thích sản phẩm' },
+        { label: 'Đổi ý', value: 'Đổi ý' },
+        { label: 'Khác', value: 'other' },
+    ];
+    const cancelReasons = [
+        { label: 'Không thích sản phẩm', value: 'Không thích sản phẩm' },
+        { label: 'Đổi ý', value: 'Đổi ý' },
+        { label: 'Khác', value: 'other' },
+    ];
+
+    const showModal = (orderId) => {
+        setSelectedOrderId(orderId);
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        const selectedOrder = orders.find(order => order._id === selectedOrderId);
+        const createdAt = new Date(selectedOrder?.createdAt);
+        const currentDate = new Date();
+        const diffInDays = (currentDate - createdAt) / (1000 * 60 * 60 * 24)
+        if (status === 'Completed') {
+            if (!refundReason) {
+                messageApi.error('Vui lòng chọn lý do trả hàng!');
+                return;
+            }
+            if (!bank) {
+                messageApi.error('Vui lòng nhập số tài khoản và ngân hàng');
+                return;
+            }
+            if (diffInDays > 7) {
+                messageApi.error('Đơn hàng chỉ có thể hủy trong vòng 7 ngày kể từ khi tạo!');
+                setIsModalVisible(false);
+                return;
+            }
+        } else if (status === 'Paid') {
+            if (!cancelReason) {
+                messageApi.error('Vui lòng chọn lý do huỷ hàng!');
+                return;
+            }
+            if (!bank) {
+                messageApi.error('Vui lòng nhập số tài khoản và ngân hàng');
+                return;
+            }
+            if (diffInDays > 7) {
+                messageApi.error('Đơn hàng chỉ có thể hủy trong vòng 7 ngày kể từ khi tạo!');
+                setIsModalVisible(false);
+                return;
+            }
+        } else if (status === 'Pending') {
+            if (!cancelReason) {
+                messageApi.error('Vui lòng chọn lý do huỷ hàng!');
+                return;
+            }
+            if (diffInDays > 7) {
+                messageApi.error('Đơn hàng chỉ có thể hủy trong vòng 7 ngày kể từ khi tạo!');
+                setIsModalVisible(false);
+                return;
+            }
+        }
+
+
+        const finalRefundReason = refundReason === 'other' ? otherRefundReason : refundReason;
+        const finalCancelReason = cancelReason === 'other' ? otherCancelReason : cancelReason;
+        const order = {
+            refund_reason: finalRefundReason,
+            bank: bank,
+            cancel_reason: finalCancelReason
+        };
+        if (selectedOrderId && order.bank) {
+            updateOrder(selectedOrderId, order, fileList);
+            refundOrder(
+                selectedOrderId,
+                messageApi,
+                () => getListPendingOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                }),
+                setOrders,
+                setFilteredOrders,
+            );
+        } else if (selectedOrderId && order.cancel_reason) {
+            updateOrder(selectedOrderId, order, fileList);
+            cancelOrder(
+                selectedOrderId,
+                messageApi,
+                () => getListPendingOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                }),
+                setOrders,
+                setFilteredOrders,
+            );
+        }
+
+        setIsModalVisible(false);
+        setRefundReason('');
+        setCancelReason('');
+        setBank('');
+        setSelectedOrderId(null);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        setRefundReason('');
+        setCancelReason('');
+        setBank('');
+        setSelectedOrderId(null);
     };
     const columns = [
         {
             title: 'No.',
             render: (text, record, index) => index + 1,
-            width: '5%',
+            width: '2%',
         },
         {
             title: 'Day',
@@ -50,21 +173,21 @@ const OrderCustomer = () => {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                // hour: '2-digit',
+                // minute: '2-digit',
+                // second: '2-digit'
             }),
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
-            width: '20%',
+            width: '10%',
         },
         {
             title: 'Address',
             dataIndex: 'address',
-            width: '20%',
+            width: '30%',
         },
         {
             title: 'Total',
@@ -79,31 +202,83 @@ const OrderCustomer = () => {
             sorter: (a, b) => {
                 if (a.status === 'pending' && b.status !== 'pending') return -1;
             },
+            render: (status) => {
+                let color;
+                switch (status) {
+                    case 'Pending':
+                        color = '#faad14';
+                        break;
+                    case 'Pending Approval':
+                        color = 'orange';
+                        break;
+                    case 'Paid':
+                        color = '#52c41a';
+                        break;
+                    case 'In Transit':
+                        color = '#1890ff';
+                        break;
+                    case 'Completed':
+                        color = '#52c41a';
+                        break;
+                    case 'Return Approved':
+                        color = '#52c41a';
+                        break;
+                    case 'Cancelled':
+                        color = '#f5222d';
+                        break;
+                    case 'Return Refund':
+                        color = '#faad14';
+                        break;
+                    case 'Reject':
+                        color = '#f5222d';
+                        break;
+                    default:
+                        color = '#000000';
+                }
+                return <span style={{ color }}>{status}</span>;
+            },
         },
+        ...(status === 'Return Refund' ? [{
+            title: 'Reject Reason',
+            dataIndex: 'reject_reason',
+            width: '20%',
+        }] : []),
+        ...(status === 'Cancelled' ? [{
+            title: 'Cancel Reason',
+            dataIndex: 'cancel_reason',
+            width: '20%',
+        }] : []),
         {
             title: 'Action',
             dataIndex: '_id',
             render: (_id, record) => {
                 return (
-                    <Space>
-                        {record.status === 'delivered' && (
-                            <>
-                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi,
-                                    () => getListDoneOrder(initialValues.userId, (data) => {
-                                        setOrders(data);
-                                        setFilteredOrders(data);
-                                    }),
-                                    setOrders, setFilteredOrders)}>
-                                </Button>
-                                <Button shape="round" icon={<CheckOutlined style={{ color: 'green' }} />} onClick={() => shippedOrder(_id, messageApi,
-                                    () => getListDoneOrder(initialValues.userId, (data) => {
-                                        setOrders(data);
-                                        setFilteredOrders(data);
-                                    }),
-                                    setOrders, setFilteredOrders)}></Button>
-                            </>
+                    <>
+                        {status !== 'All' && (
+                            <Space>
+                                {record.status === 'Completed' && (
+
+                                    <Button shape="round" icon={<RedoOutlined style={{ color: 'red' }} />} onClick={() => showModal(_id)}>
+                                    </Button>
+                                )}
+                                {record.status === 'Pending' && (
+                                    <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => showModal(_id)}></Button>
+                                )}
+                                {record.status === 'Paid' && (
+                                    <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => { setStatus('Paid'); showModal(_id); }}></Button>
+                                )}
+
+                                {record.status === 'In Transit' && (
+                                    <Button shape="round" icon={<CheckOutlined style={{ color: 'green' }} />} onClick={() => shippedOrder(_id, messageApi,
+                                        () => getListTransOrder(initialValues.userId, (data) => {
+                                            setOrders(data);
+                                            setFilteredOrders(data);
+                                        }),
+                                        setOrders, setFilteredOrders)}></Button>
+                                )}
+                            </Space >
                         )}
-                    </Space>
+                    </>
                 )
             },
             width: '10%',
@@ -134,7 +309,8 @@ const OrderCustomer = () => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 20 }}>
                             <div style={{ textAlign: 'right', fontSize: 20, color: 'gray' }}>
                                 <TruckOutlined style={{ marginRight: 10 }} />
-                                {status === "pending" ? "Pending" : "Successful delivery"}
+                                {/* {status === "pending" ? "Pending" : "Successful delivery"} */}
+                                Detail Order Infomation
                             </div>
                         </div>
                     }
@@ -210,13 +386,34 @@ const OrderCustomer = () => {
         if (!initialValues.userId) return;
         getListOrderDetail(initialValues.userId, setAllOrderDetails);
         const fetchOrders = async () => {
-            if (status === "pending") {
+            if (status === "All") {
+                getAllOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                });
+            } else if (status === "Pending") {
                 getListPendingOrder(initialValues.userId, (data) => {
                     setOrders(data);
                     setFilteredOrders(data);
                 });
-            } else if (status === "done") {
+            }
+            else if (status === "In Transit") {
+                getListTransOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                });
+            } else if (status === "Completed") {
                 getListDoneOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                });
+            } else if (status === "Cancelled") {
+                getListCancelOrder(initialValues.userId, (data) => {
+                    setOrders(data);
+                    setFilteredOrders(data);
+                });
+            } else if (status === "Return Refund") {
+                getListRefundOrder(initialValues.userId, (data) => {
                     setOrders(data);
                     setFilteredOrders(data);
                 });
@@ -224,22 +421,66 @@ const OrderCustomer = () => {
         };
         fetchOrders();
     }, [status, initialValues.userId]);
-    console.log('details', allOrderDetails);
+    useEffect(() => {
+        if (state?.message === MESSAGE.CREATE_SUCCESS) {
+            success(state.message, messageApi);
+            navigate(location.pathname, { replace: true }); //xóa state sau khi sử dụng
+        } else if (state?.message === MESSAGE.UPDATE_SUCCESS) {
+            success(state.message, messageApi);
+            navigate(location.pathname, { replace: true });
+        }
+
+    }, [state, navigate, messageApi, location.pathname])
+    const items = [
+        {
+            label: "All",
+            key: "ALL",
+            onClick: () => setStatus("All"),
+        },
+        {
+            label: "To Pay",
+            key: "TO_PAY",
+            onClick: () => setStatus("Pending"),
+        },
+        {
+            label: "To Ship",
+            key: "TO_SHIP",
+            onClick: () => setStatus("In Transit"),
+        },
+        {
+            label: "Completed",
+            key: "COMPLETED",
+            onClick: () => setStatus("Completed"),
+        },
+        {
+            label: "Cancelled",
+            key: "CANCELLED",
+            onClick: () => setStatus("Cancelled"),
+        },
+        {
+            label: "Return Refund",
+            key: "RETURN_REFUND",
+            onClick: () => setStatus("Return Refund"),
+        },
+    ];
 
     if (isLoading) return <div>Loading...</div>;
 
     return (
         <>
+            {contextHolder}
             <div style={{ justifyContent: 'center', display: 'flex', margin: '1%' }}>
-                <Button onClick={() => setStatus("pending")} type={status === "pending" ? "primary" : "default"} style={{ marginRight: '1%' }}>
-                    Pending
-                </Button>
-                <Button onClick={() => setStatus("done")} type={status === "done" ? "primary" : "default"}>
-                    Done
-                </Button>
+                <Row className="container header-menu">
+                    <Menu
+                        mode="horizontal"
+                        items={items}
+                        style={{ gap: '3%', fontSize: '16px', justifyContent: 'center', width: '100%' }}
+                    />
+                </Row>
             </div>
+
             <Search
-                placeholder="Enter something to search"
+                placeholder="Enter name of product to search"
                 allowClear
                 enterButton
                 size="large"
@@ -249,31 +490,138 @@ const OrderCustomer = () => {
                     display: "flex",
                     justifyContent: "flex-start",
                     marginBottom: "10px",
-                    marginLeft: "16%"
+                    marginLeft: "19%"
                 }}
             />
-            <Table
-                columns={columns}
-                dataSource={filteredOrders}
-                rowKey="_id"
-                expandable={{
-                    expandIcon: ({ onExpand, expanded, record }) => (
-                        <Button
-                            shape="round"
-                            icon={expanded ? <EyeOutlined style={{ color: 'blue' }} /> : <EyeInvisibleOutlined />}
-                            onClick={() => {
-                                onExpand(record);
-                            }}
+
+            <div style={{ justifyContent: 'center', display: 'flex', margin: '1%' }}>
+                <Row className="container">
+                    <Table
+                        columns={columns}
+                        dataSource={filteredOrders}
+                        rowKey="_id"
+                        expandable={{
+                            expandIcon: ({ onExpand, expanded, record }) => (
+                                <Button
+                                    shape="round"
+                                    icon={expanded ? <EyeOutlined style={{ color: 'blue' }} /> : <EyeInvisibleOutlined />}
+                                    onClick={() => {
+                                        onExpand(record);
+                                    }}
+                                />
+                            ),
+                            expandedRowRender: expandedRowRender,
+                            expandedRowKeys: expandedRowKeys,
+                            onExpand: (expanded, record) => toggleExpand(record._id),
+                        }}
+                        style={{ width: '100%' }}
+                    />
+                </Row>
+                {status === 'Completed' && (
+                    <Modal
+                        open={isModalVisible}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                        okText="Xác nhận"
+                        cancelText="Hủy"
+                    >
+                        <Title level={3}>Lý do trả hàng:</Title>
+                        <Title level={4}>Vui lòng chọn lý do trả hàng:</Title>
+                        <Radio.Group onChange={(e) => setRefundReason(e.target.value)} value={refundReason}>
+                            <Space direction="vertical">
+                                {returnReasons.map((item) => (
+                                    <Radio key={item.value} value={item.value}>
+                                        {item.label}
+                                    </Radio>
+                                ))}
+                            </Space>
+                        </Radio.Group>
+                        {refundReason === 'other' && (
+                            <Input
+                                placeholder="Nhập lý do cụ thể"
+                                value={otherRefundReason}
+                                onChange={(e) => setOtherRefundReason(e.target.value)}
+                                style={{ marginTop: 10 }}
+                            />
+                        )}
+                        <Title level={4} style={{ marginTop: 10 }}>Vui lòng nhập đúng số tài khoản và ngân hàng:</Title>
+                        <Input
+                            placeholder="Nhập đúng số tài khoản và ngân hàng"
+                            value={bank}
+                            onChange={(e) => setBank(e.target.value)}
+                            style={{ marginTop: 10, marginBottom: 10 }}
                         />
-                    ),
-                    expandedRowRender: expandedRowRender,
-                    expandedRowKeys: expandedRowKeys,
-                    onExpand: (expanded, record) => toggleExpand(record._id),
-                }}
-
-            />
+                        <Title level={4} style={{ marginTop: 10 }}>Thêm hình ảnh về sản phẩm:</Title>
+                        <UploadImg onFileListChange={handleFileListChange} filesApi={fileList}></UploadImg>
+                    </Modal>
+                )}
+                {status === 'Paid' && (
+                    <Modal
+                        open={isModalVisible}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                        okText="Xác nhận"
+                        cancelText="Hủy"
+                    >
+                        <Title level={3}>Lý do huỷ hàng:</Title>
+                        <Title level={4}>Vui lòng chọn lý do huỷ hàng:</Title>
+                        <Radio.Group onChange={(e) => setCancelReason(e.target.value)} value={cancelReason}>
+                            <Space direction="vertical">
+                                {cancelReasons.map((item) => (
+                                    <Radio key={item.value} value={item.value}>
+                                        {item.label}
+                                    </Radio>
+                                ))}
+                            </Space>
+                        </Radio.Group>
+                        {cancelReason === 'other' && (
+                            <Input
+                                placeholder="Nhập lý do cụ thể"
+                                value={otherCancelReason}
+                                onChange={(e) => setOtherCancelReason(e.target.value)}
+                                style={{ marginTop: 10 }}
+                            />
+                        )}
+                        <Title level={4} style={{ marginTop: 10 }}>Vui lòng nhập đúng số tài khoản và ngân hàng:</Title>
+                        <Input
+                            placeholder="Nhập đúng số tài khoản và ngân hàng"
+                            value={bank}
+                            onChange={(e) => setBank(e.target.value)}
+                            style={{ marginTop: 10, marginBottom: 10 }}
+                        />
+                    </Modal>
+                )}
+                {status === 'Pending' && (
+                    <Modal
+                        open={isModalVisible}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                        okText="Xác nhận"
+                        cancelText="Hủy"
+                    >
+                        <Title level={3}>Lý do huỷ hàng:</Title>
+                        <Title level={4}>Vui lòng chọn lý do huỷ hàng:</Title>
+                        <Radio.Group onChange={(e) => setCancelReason(e.target.value)} value={cancelReason}>
+                            <Space direction="vertical">
+                                {cancelReasons.map((item) => (
+                                    <Radio key={item.value} value={item.value}>
+                                        {item.label}
+                                    </Radio>
+                                ))}
+                            </Space>
+                        </Radio.Group>
+                        {cancelReason === 'other' && (
+                            <Input
+                                placeholder="Nhập lý do cụ thể"
+                                value={otherCancelReason}
+                                onChange={(e) => setOtherCancelReason(e.target.value)}
+                                style={{ marginTop: 10 }}
+                            />
+                        )}
+                    </Modal>
+                )}
+            </div>
         </>
-
     )
 }
 

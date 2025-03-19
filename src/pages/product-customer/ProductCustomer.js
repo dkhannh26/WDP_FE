@@ -68,7 +68,11 @@ const ProductCustomer = () => {
 
     fetchData();
   }, [isAuthenticated]);
-
+  useEffect(() => {
+    if (initialValues.userId) {
+      getListWishlist(initialValues.userId, setWishlist)
+    }
+  }, [initialValues.userId]);
   const handleFiterChange = (value) => {
     if (value === "increase") {
       const sortedAscending = sortProductsByPrice(products, 'asc');
@@ -105,7 +109,10 @@ const ProductCustomer = () => {
     const isLiked = likedProducts[productId] || false;
     try {
       if (isLiked) {
-        await showDeleteConfirm(productId, messageApi, () => getListWishlist(initialValues.userId, setWishlist), setWishlist, API_PATH.wishlist);
+        const wishlistItem = wishlist.find(item => item.product_id === productId);
+        const wishlistId = wishlistItem?._id;
+        console.log('wishlishId', wishlist);
+        await axios.delete(API_PATH.wishlist + `/${wishlistId}`)
         setLikedProducts(prev => ({
           ...prev,
           [productId]: false,

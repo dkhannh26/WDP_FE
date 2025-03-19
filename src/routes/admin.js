@@ -39,6 +39,7 @@ import Permission from "../pages/admin-management/Permission";
 import StaffPermission from "../components/permission/StaffPermission";
 import CustomerPermision from "../components/permission/CustomerPermision";
 import RatingDetail from "../pages/admin-management/RatingDetail";
+import Refund from "../components/order/Refund";
 
 export const AdminRoutes = (
     <>
@@ -121,6 +122,9 @@ export const AdminRoutes = (
                 <Route index element={<BrandTable />} />
                 <Route path="create" element={<BrandModel type="create" />} />
                 <Route path="edit/:id" element={<BrandModel type="edit" />} />
+            </Route>
+            <Route path="refund" element={<Voucher />}>
+                <Route index element={<Refund />} />
             </Route>
         </Route>
     </>

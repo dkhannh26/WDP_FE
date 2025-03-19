@@ -473,13 +473,13 @@ const Header = () => {
             </Badge>
             <p style={{ marginLeft: 10 }}> {t('header.cart')}</p>
           </Popover>
-          <span
+          {Object.keys(user).length !== 0 && (<span
             style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
             onClick={() => navigate(WISHLIST_URL.INDEX)}
           >
             <HeartOutlined style={{ fontSize: "24px" }} />
             <span>Wishlist</span>
-          </span>
+          </span>)}
         </Col>
         <Col span={2} style={{
           display: 'flex',

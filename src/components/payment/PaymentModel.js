@@ -1,16 +1,15 @@
 import { MoneyCollectTwoTone } from '@ant-design/icons';
 import { Button, Card, Checkbox, Col, Form, Image, Input, List, Row, Typography, message } from 'antd';
 import Title from 'antd/es/typography/Title';
-import React, { useEffect, useState } from 'react';
-import { deleteCart, getListCart } from '../../services/cart.service';
-import LocationSelector from './LocationSelector';
-import { useLocation, useNavigate } from 'react-router';
-import { createOrder } from '../../services/order.service';
-import { createPayOS, createPayment } from '../../services/payment.service';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { API_PATH, PATH } from '../../config/api.config';
-import { layout } from '../../config/style.config';
+import { deleteCart, getListCart } from '../../services/cart.service';
+import { createOrder, paidOrder } from '../../services/order.service';
+import { createPayOS, createPayment } from '../../services/payment.service';
+import { useAuth } from '../context/AuthContext';
+import LocationSelector from './LocationSelector';
 
 const { Text } = Typography;
 
@@ -207,7 +206,7 @@ const PaymentModel = () => {
                 phone: values.phone,
                 email: initialValues.email,
                 address: values.address,
-                total_price: values.voucherTotal,
+                total_price: values.voucherTotal / 100,
                 orderItems: values.cartItems.map(item => ({
                     product_size_id: item.product_size_id,
                     quantity: item.quantity,
@@ -215,7 +214,7 @@ const PaymentModel = () => {
                 })),
             };
             deleteCart(initialValues.userId);
-            createOrder(order, navigate);
+            paidOrder(order, navigate);
         }
     }, [isLoading, carts]);
     console.log(selectedCity + ' ' + selectedDistrict + ' ' + selectedWard);
