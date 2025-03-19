@@ -351,3 +351,44 @@ input:focus {
   margin: 0; /* Khoảng cách trên/dưới */
   width: 100%; /* Đảm bảo container rộng toàn màn hình */
 }
+
+.ant-menu-item {
+  color: #fff !important;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Hover */
+.ant-menu-item:hover {
+  background: rgba(255, 87, 34, 0.2) !important;
+  transition: all 0.3s ease;
+}
+
+/* Selected */
+.ant-menu-item-selected {
+  background: rgba(255, 87, 34, 0.3) !important;
+}
+
+/* Loại bỏ viền dưới cho selected */
+.ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after,
+.ant-menu-light.ant-menu-horizontal > .ant-menu-submenu-selected::after {
+  border-bottom: none !important;
+}
+
+/* Loại bỏ viền dưới cho hover */
+.ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover::after {
+  border-bottom: none !important;
+}
+
+/* Loại bỏ viền dưới cho active */
+.ant-menu-light.ant-menu-horizontal > .ant-menu-item-active::after {
+  border-bottom: none !important;
+}
+
+/* Loại bỏ viền dưới cho tất cả trạng thái (nếu cần) */
+.ant-menu-light.ant-menu-horizontal > .ant-menu-item::after {
+  border-bottom: none !important;
+}
+
+
+

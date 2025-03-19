@@ -5,6 +5,10 @@
     transition: .3s ease-in-out;
 }
 
+.bg-red{
+    background: rgb(200 46 50)
+}
+
 .service-icon {
     font-size: 40px;
 }
@@ -25,24 +29,40 @@
 
 .home-item-title {
     text-align: center;
+    color: rgb(200 46 50);
     font-size: 30px;
-    font-weight: 400;
+    font-weight: 500;
     margin-top: 25px;
     padding-bottom: 15px;
     position: relative;
 }
 
-.home-item-title:before {
+.home-item-title::before {
     position: absolute;
     content: "";
     display: block;
-    width: 55px;
-    height: 1px;
+    width: 13%;
+    height: 4px;
     bottom: 0px;
     left: 0;
     right: 0;
     margin: 0 auto;
-    background: #323232;
+    background: #d9d9d9;
+    border-radius: 2px;
+}
+
+.home-item-title::after {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 55px;
+    height: 4px;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background: rgb(200 46 50);
+    border-radius: 2px;
 }
 
 .item1 {
@@ -126,4 +146,22 @@
     position: absolute;
     bottom: 35px;
     right: 35px;
+}
+
+/* ======= HOT PRODUCT ======= */
+.hot-product .ant-row .ant-col {
+    cursor: pointer;
+    padding: 12px 0 12px 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.hot-product .ant-col:nth-child(5) {
+    border-right: none;
+}
+
+.hot-product .ant-row .ant-col h4 {
+    margin: 0;
+    transition: 0.3s ease;
 }

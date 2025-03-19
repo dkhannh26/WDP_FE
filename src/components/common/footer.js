@@ -6,8 +6,8 @@ import { EnvironmentFilled, PhoneFilled, MailFilled, FacebookFilled, InstagramFi
 
 const Footer = () => {
     return (
-        <div className='footer'>
-            <Row className='container'>
+        <div className='footer '>
+            <Row className='container '>
                 {/* <Col span={6} className='footer-content'>
                     <div className='footer-item--title'>
                         ABOUT US

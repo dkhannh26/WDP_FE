@@ -94,27 +94,28 @@ const Home = () => {
             </div> */}
             <div className='container'>
                 <h2 className='home-item-title'>Hot Product</h2>
-                <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }}>
+                <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }} className='hot-product'>
                     <div style={{
-                        padding: "2%",
+                        paddingTop:"2%",
+                        paddingBottom:"2%",
                         border: "1px solid rgba(0, 0, 0, 0.2)",
                         borderBottom: "none"
                     }}>
                         <Row>
-                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "all" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("all")}>Tất cả</Title>
+                            <Col span={5} onClick={() => setSelectedCategory("all")} style={{ backgroundColor: selectedCategory === "all" ? "rgb(200 46 50)" : "transparent" }}>
+                                <Title level={4} style={{color: selectedCategory === "all" ? "white" : "black"}}>Tất cả</Title>
                             </Col>
-                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Vợt cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Vợt cầu lông")}>Vợt cầu lông</Title>
+                            <Col span={5} onClick={() => setSelectedCategory("Vợt cầu lông")} style={{ backgroundColor: selectedCategory === "Vợt cầu lông" ? "rgb(200 46 50)" : "transparent", color: selectedCategory === "Vợt cầu lông" ? "white" : "black" }}>
+                                <Title level={4} style={{color: selectedCategory === "Vợt cầu lông" ? "white" : "black"}}>Vợt cầu lông</Title>
                             </Col>
-                            <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Giày cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Giày cầu lông")}>Giày cầu lông</Title>
+                            <Col span={5} onClick={() => setSelectedCategory("Giày cầu lông")} style={{ backgroundColor: selectedCategory === "Giày cầu lông" ? "rgb(200 46 50)" : "transparent", color: selectedCategory === "Giày cầu lông" ? "white" : "black" }}>
+                                <Title level={4} style={{color: selectedCategory === "Giày cầu lông" ? "white" : "black"}}>Giày cầu lông</Title>
                             </Col>
-                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Áo cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Áo cầu lông")}>Áo cầu lông</Title>
+                            <Col span={5} onClick={() => setSelectedCategory("Áo cầu lông")} style={{ backgroundColor: selectedCategory === "Áo cầu lông" ? "rgb(200 46 50)" : "transparent", color: selectedCategory === "Áo cầu lông" ? "white" : "black" }}>
+                                <Title level={4} style={{color: selectedCategory === "Áo cầu lông" ? "white" : "black"}}>Áo cầu lông</Title>
                             </Col>
-                            <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedCategory === "Quần cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Quần cầu lông")}>Quần cầu lông</Title>
+                            <Col span={4} onClick={() => setSelectedCategory("Quần cầu lông")} style={{ backgroundColor: selectedCategory === "Quần cầu lông" ? "rgb(200 46 50)" : "transparent", color: selectedCategory === "Quần cầu lông" ? "white" : "black" }}>
+                                <Title level={4} style={{color: selectedCategory === "Quần cầu lông" ? "white" : "black"}}>Quần cầu lông</Title>
                             </Col>
                         </Row>
                     </div>
@@ -146,8 +147,7 @@ const Home = () => {
                         ))}
                     </Carousel>
 
-
-                    <div
+                    {/* <div
                         style={{
                             position: "absolute",
                             top: "50%",
@@ -168,7 +168,8 @@ const Home = () => {
                         }}
                     >
                         <RightOutlined onClick={nextSlide} style={{ fontSize: "24px", cursor: "pointer" }} />
-                    </div>
+                    </div> */}
+                    
                 </div>
                 <h2 className='home-item-title'>Hot Brands</h2>
                 <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }}>

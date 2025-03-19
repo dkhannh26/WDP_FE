@@ -291,12 +291,12 @@ const Header = () => {
 
   return (
     <div className="header">
-      <Row className="top-bar">
+      {/* <Row className="top-bar">
         <p className="container">
           Miễn phí vận chuyển với đơn hàng trên 500K. Hàng pre-order còn được
           giảm thêm 5%.
         </p>
-      </Row>
+      </Row> */}
       <Row className="container header-middle flex-center">
         <Col span={4}>
           <img src={Logo2} alt="logo" className="logo" />
@@ -441,11 +441,11 @@ const Header = () => {
           </span>
         </Col>
       </Row>
-      <Row className="container header-menu">
-        <Menu mode="horizontal" items={items} />
+      <Row className="header-menu bg-red">
+        <Menu mode="horizontal" items={items} className="container" style={{ background: 'transparent'}}	 />
       </Row>
     </div>
-  );
+  );  
 };
 
 export default Header;

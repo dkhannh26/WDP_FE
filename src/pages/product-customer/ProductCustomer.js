@@ -138,8 +138,8 @@ const ProductCustomer = () => {
   };
 
   return (
-    <Row>
-      <Col offset={1} span={21}>
+    <Row className="container">
+      <Col span={24}>
         {/* <Title level={2} style={{ marginTop: "20px" }}>
           {state?.typeLink === "tshirt" && "T-shirt"}
           {state?.typeLink === "pant" && "Pant"}
