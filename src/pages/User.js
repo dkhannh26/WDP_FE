@@ -16,6 +16,7 @@ import axios from "axios";
 import { PATH } from "../config/api.config";
 import { options } from "./ProvinceData";
 import { TruckOutlined } from "@ant-design/icons";
+import { checkPermission } from "../utils/permission";
 
 const User = () => {
   const location = useLocation();
@@ -152,57 +153,6 @@ const User = () => {
     },
   ];
 
-  const data = [
-    {
-      avatar:
-        "	https://product.hstatic.net/1000344185/product/img_4125_4feb7a360b3b4f00bd2465a85ef2d9e3_small.jpg",
-      title: "Ant Design Title 1",
-      quantity: 2,
-      price: (
-        <p>
-          <del>440,000₫</del>400,000₫
-        </p>
-      ),
-      size: "M",
-    },
-    {
-      avatar:
-        "	https://product.hstatic.net/1000344185/product/img_4125_4feb7a360b3b4f00bd2465a85ef2d9e3_small.jpg",
-      title: "Ant Design Title 2",
-      quantity: 2,
-      price: (
-        <p>
-          <del>440,000₫</del>400,000₫
-        </p>
-      ),
-      size: "M",
-    },
-    {
-      avatar:
-        "	https://product.hstatic.net/1000344185/product/img_4125_4feb7a360b3b4f00bd2465a85ef2d9e3_small.jpg",
-      title: "Ant Design Title 3",
-      quantity: 2,
-      price: (
-        <p>
-          <del>440,000₫</del>400,000₫
-        </p>
-      ),
-      size: "M",
-    },
-    {
-      avatar:
-        "	https://product.hstatic.net/1000344185/product/img_4125_4feb7a360b3b4f00bd2465a85ef2d9e3_small.jpg",
-      title: "Ant Design Title 4",
-      quantity: 2,
-      price: (
-        <p>
-          <del>440,000₫</del>400,000₫
-        </p>
-      ),
-      size: "M",
-    },
-  ];
-
   return (
     <div className="container profile">
       <h1 className="profile-title">My Profile</h1>
@@ -225,17 +175,20 @@ const User = () => {
                 </Button>
               </li>
 
-              <li>
-                <Button
-                  style={{ border: "none", marginBottom: 5, fontSize: "15px" }}
-                  onClick={() => {
-                    // navigate("/customer/profile");
-                    setView("changePassword");
-                  }}
-                >
-                  Change password
-                </Button>
-              </li>
+              {
+                checkPermission('changePassword') && <li>
+                  <Button
+                    style={{ border: "none", marginBottom: 5, fontSize: "15px" }}
+                    onClick={() => {
+                      // navigate("/customer/profile");
+                      setView("changePassword");
+                    }}
+                  >
+                    Change password
+                  </Button>
+                </li>
+
+              }
 
               <li>
                 <Button
@@ -301,7 +254,7 @@ const User = () => {
                     { type: "email", message: "Please enter a valid email!" },
                   ]}
                 >
-                  <Input placeholder="Email" className="register-input" />
+                  <Input disabled={!checkPermission('editProfile')} placeholder="Email" className="register-input" />
                 </Form.Item>
 
                 <Form.Item
@@ -318,7 +271,7 @@ const User = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="Phone" className="register-input" />
+                  <Input disabled={!checkPermission('editProfile')} placeholder="Phone" className="register-input" />
                 </Form.Item>
                 <Form.Item
                   name="address"
@@ -330,33 +283,35 @@ const User = () => {
                     },
                   ]}
                 >
-                  <Select placeholder="Address" options={options} />
+                  <Select disabled={!checkPermission('editProfile')} placeholder="Address" options={options} />
                 </Form.Item>
-
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    style={{
-                      marginRight: "1%",
-                      height: "auto",
-                      fontSize: "16px",
-                    }}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    color="default"
-                    variant="solid"
-                    type="default"
-                    onClick={() => {
-                      form.setFieldsValue(initialValues);
-                    }}
-                    style={{ height: "auto", fontSize: "16px" }}
-                  >
-                    Cancel
-                  </Button>
-                </Form.Item>
+                {
+                  checkPermission('editProfile') &&
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      style={{
+                        marginRight: "1%",
+                        height: "auto",
+                        fontSize: "16px",
+                      }}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      color="default"
+                      variant="solid"
+                      type="default"
+                      onClick={() => {
+                        form.setFieldsValue(initialValues);
+                      }}
+                      style={{ height: "auto", fontSize: "16px" }}
+                    >
+                      Cancel
+                    </Button>
+                  </Form.Item>
+                }
               </Form>
             </>
           ) : (

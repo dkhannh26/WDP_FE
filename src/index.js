@@ -4,6 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import router from "./routes";
+import '../src/utils/i18n';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 const clientId = process.env.REACT_APP_GG_CLIENT_ID;
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -1,0 +1,17 @@
+{
+  "username": "Tên tài khoản",
+  "password": "Mật khấu",
+  "header": {
+    "home": "TRANG CHỦ",
+    "product": "SẢN PHẨM",
+    "contact": "LIÊN LẠC",
+    "about": "GIỚI THIỆU",
+    "exchange_policy": "CHÍNH SÁCH ĐỔI TRẢ",
+    "sign_in": "Đăng nhập",
+    "sign_up": "Đăng ký",
+    "my_account": "Tài khoản của tôi",
+    "cart": "Giỏ hàng",
+    "account_of": "Tài khoản của ",
+    "search_placeholder": "Tìm kiếm sản phẩm"
+  }
+}

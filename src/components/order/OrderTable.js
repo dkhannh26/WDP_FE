@@ -8,6 +8,7 @@ import { MESSAGE } from '../../config/message.config';
 import { cancelOrder, confirmOrder, getListOrder, getOrderDetails } from '../../services/order.service';
 import { showDeleteConfirm, success } from '../../utils/helper';
 import Search from 'antd/es/transfer/search';
+import { checkPermission } from '../../utils/permission';
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([])
@@ -18,6 +19,7 @@ const OrderTable = () => {
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const location = useLocation();
     const { state } = location;
+
     const onChange = (e) => {
         const value = e.target.value.toLowerCase();
 
@@ -31,8 +33,6 @@ const OrderTable = () => {
         );
         setFilteredOrders(filtered);
     };
-
-    console.log('dequy');
 
 
 
@@ -94,23 +94,36 @@ const OrderTable = () => {
             render: (_id, record) => {
                 return (
                     <Space>
-
                         {record.status === 'pending' && (
                             <>
-                                <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails)}></Button>
-                                <Button
-                                    shape="round"
-                                    icon={<CheckOutlined style={{ color: 'green' }} />}
-                                    onClick={() => {
-                                        getOrderDetails(_id, setOrderDetails)
-                                            .then(orderDetails => {
-                                                confirmOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails);
-                                            });
-                                    }}
-                                ></Button>
+                                {
+                                    checkPermission('cancelOrder') ?
+                                        <Button shape="round" icon={<CloseOutlined style={{ color: 'red' }} />} onClick={() => cancelOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails)}></Button>
+                                        : ''
+                                }
+                                {
+                                    checkPermission('confirmOrder') ?
+                                        <Button
+                                            shape="round"
+                                            icon={<CheckOutlined style={{ color: 'green' }} />}
+                                            onClick={() => {
+                                                getOrderDetails(_id, setOrderDetails)
+                                                    .then(orderDetails => {
+                                                        confirmOrder(_id, messageApi, getListOrder, setOrders, setFilteredOrders, orderDetails);
+                                                    });
+                                            }}
+                                        ></Button>
+                                        : ''
+                                }
+
                             </>
                         )}
-                        <Button danger shape="round" icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(_id, messageApi, getListOrder, setOrders, API_PATH.order, setFilteredOrders)}></Button>
+                        {
+                            checkPermission('deleteOrder') ?
+                                <Button danger shape="round" icon={<DeleteOutlined />} onClick={() => showDeleteConfirm(_id, messageApi, getListOrder, setOrders, API_PATH.order, setFilteredOrders)}></Button>
+                                :
+                                ''
+                        }
                     </Space>
                 )
             },

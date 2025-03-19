@@ -9,6 +9,7 @@ import { AddCartDup, AddOver, createCart, getListCart } from '../../services/car
 import { PATH } from '../../config/api.config';
 import { getProductDetailCustomer } from '../../services/product/product.service';
 import CustomerFeedback from '../../components/feedback/CustomerFeedback';
+import { checkPermission } from '../../utils/permission'
 const { Text } = Typography;
 
 const ProductDetail = () => {
@@ -205,8 +206,6 @@ const ProductDetail = () => {
                             </Row> : ''
                         }
 
-
-
                         {
                             product?.discount?.percent ?
                                 <>
@@ -292,7 +291,11 @@ const ProductDetail = () => {
                 </Col>
             </Row>
             <Row>
-                <CustomerFeedback product_id={id} userId={initialValues.userId} />
+                {
+
+                    checkPermission('viewFeedbacks') ? <CustomerFeedback product_id={id} userId={initialValues.userId} />
+                        : ''
+                }
             </Row>
         </>
     );

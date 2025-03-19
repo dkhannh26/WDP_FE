@@ -1,5 +1,9 @@
 // export default Header;
 import React, { useEffect } from "react";
+import { Switch } from 'antd';
+import styled from 'styled-components';
+import engFlag from '../../assets/images/eng.png'
+import VietFlag from '../../assets/images/VietFlag.svg.webp'
 
 import {
   DownOutlined,
@@ -31,9 +35,18 @@ import { useAuth } from "../context/AuthContext";
 import { useRefresh } from '../../context/RefreshContext';
 import Logo2 from "../../assets/images/logo2.jpeg";
 import { getListBrand } from "../../services/brand.service";
+import { useTranslation } from "react-i18next";
+
 const { Text } = Typography;
 
 const Header = () => {
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (checked) => {
+    const newLanguage = checked ? 'vi' : 'en';
+    i18n.changeLanguage(newLanguage);
+  };
+
   const [searchFocus, setSearchForcus] = useState(false);
   const [searchList, setSearchList] = useState([]);
 
@@ -85,6 +98,33 @@ const Header = () => {
     }
   }, [totalAmount, initialValues.userId, refresh]);
 
+  const CustomSwitch = styled(Switch)`
+  &.ant-switch {
+    background-color:#092C70;
+    &:hover {
+      background-color: #092C70; 
+    }
+  }
+  &.ant-switch-checked {
+    background-color:rgb(205, 49, 25); 
+    &:hover {
+      background-color: rgb(205, 49, 25) !important;
+    }
+  }
+  .ant-switch-handle {  
+    width: 18px;
+    height: 18px; 
+    top: 50%; 
+    transform: translateY(-52%); 
+    left: 2px; 
+  }
+  .ant-switch-handle::before {
+    background-color: #fff;
+    top: '50%';
+    left: '50%';
+    ${'' /* transform: 'translate(-50%, -50%)'; */}
+  }
+`;
   const cartPopover = (
     <div className="cart-pop">
       <div className="card-pop-title text">
@@ -263,26 +303,26 @@ const Header = () => {
   );
   const items = [
     {
-      label: <Link to="/customer">HOME</Link>,
+      label: <Link to="/customer">{t('header.home')}</Link>,
       key: "HOME",
     },
     {
       // label: (<Link to="/customer/product">PRODUCT <DownOutlined /></Link>),
       label: <Popover content={content} >
-        PRODUCT
+        {t('header.product')}
       </Popover>,
       key: "PRODUCT",
     },
     {
-      label: <Link to="/customer/about">ABOUT</Link>,
+      label: <Link to="/customer/about">{t('header.about')}</Link>,
       key: "ABOUT",
     },
     {
-      label: <Link to="/customer/exchange-policy">EXCHANGE POLICY</Link>,
+      label: <Link to="/customer/exchange-policy">{t('header.exchange_policy')}</Link>,
       key: "EXCHANGE POLICY",
     },
     {
-      label: <Link to="/customer/contact">CONTACT</Link>,
+      label: <Link to="/customer/contact">{t('header.contact')}</Link>,
       key: "CONTACT",
     },
   ];
@@ -291,12 +331,12 @@ const Header = () => {
 
   return (
     <div className="header">
-      <Row className="top-bar">
+      {/* <Row className="top-bar">
         <p className="container">
           Miễn phí vận chuyển với đơn hàng trên 500K. Hàng pre-order còn được
           giảm thêm 5%.
         </p>
-      </Row>
+      </Row> */}
       <Row className="container header-middle flex-center">
         <Col span={4}>
           <img src={Logo2} alt="logo" className="logo" />
@@ -323,7 +363,7 @@ const Header = () => {
               }}
               pattern="^[^\s].*"
               name="search"
-              placeholder="Tìm kiếm sản phẩm..."
+              placeholder={t('header.search_placeholder')}
               className="search-input"
               autocomplete="off"
             />
@@ -383,6 +423,7 @@ const Header = () => {
             ""
           )}
         </Col>
+
         <Col span={8} className="login-cart flex-center">
           {isAuthenticated ? (
             <Popover
@@ -394,7 +435,7 @@ const Header = () => {
                 <UserOutlined className="icon" />
               </div>
               <div className="login">
-                <p style={{ color: "#333333" }}>Tài khoản của</p>
+                <p style={{ color: "#333333" }}> {t('header.account_of')}</p>
                 <p style={{ fontWeight: 500 }}>
                   {username} <DownOutlined />
                 </p>
@@ -410,9 +451,9 @@ const Header = () => {
                 <UserOutlined className="icon" />
               </div>
               <div className="login">
-                <p style={{ color: "#333333" }}>Đăng nhập / Đăng ký</p>
+                <p style={{ color: "#333333" }}> {t('header.sign_in')} /  {t('header.sign_up')}</p>
                 <p style={{ fontWeight: 500 }}>
-                  Tài khoản của tôi <DownOutlined />
+                  {t('header.my_account')}<DownOutlined />
                 </p>
               </div>
             </Popover>
@@ -430,15 +471,41 @@ const Header = () => {
             >
               <ShoppingOutlined className="icon" />
             </Badge>
-            <p style={{ marginLeft: 10 }}>Giỏ hàng</p>
+            <p style={{ marginLeft: 10 }}> {t('header.cart')}</p>
           </Popover>
           <span
             style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
             onClick={() => navigate(WISHLIST_URL.INDEX)}
           >
             <HeartOutlined style={{ fontSize: "24px" }} />
-            <span>Wish List</span>
+            <span>Wishlist</span>
           </span>
+        </Col>
+        <Col span={2} style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+        }}>
+          <CustomSwitch
+            defaultChecked={i18n.language === 'vi'}
+            onChange={handleLanguageChange}
+            style={{ height: 26 }}
+            padding='10px 0'
+            checkedChildren={
+              <Image
+                position='absolute'
+                width={30}
+
+                src={VietFlag}
+              />}
+            unCheckedChildren={
+              <Image
+                position='absolute'
+                width={30}
+                src={engFlag}
+              />}
+          />
         </Col>
       </Row>
       <Row className="container header-menu">

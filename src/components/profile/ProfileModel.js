@@ -18,10 +18,12 @@ import { PATH } from "../../config/api.config";
 import { options } from "../../utils/ProvinceData";
 
 import "../../assets/css/profile.css";
+import { checkPermission } from "../../utils/permission";
 const ProfileTable = () => {
   const navigate = useNavigate();
   const [view, setView] = useState("profile");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
     useAuth();
 
@@ -131,6 +133,7 @@ const ProfileTable = () => {
             <Col>
               <Button
                 style={{
+                  visibility: checkPermission('changePassword') ? '' : 'hidden',
                   border: "none",
                   marginBottom: 5,
                   fontSize: "15px",
@@ -239,31 +242,32 @@ const ProfileTable = () => {
                 style={{ height: 64, textAlign: "center" }}
               />
             </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{
-                  marginRight: "1%",
-                  height: "auto",
-                  fontSize: "16px",
-                }}
-              >
-                Save
-              </Button>
-              <Button
-                color="default"
-                variant="solid"
-                type="default"
-                onClick={() => {
-                  form.setFieldsValue(initialValues);
-                }}
-                style={{ height: "auto", fontSize: "16px" }}
-              >
-                Cancel
-              </Button>
-            </Form.Item>
+            {checkPermission('deleteProfile') &&
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    marginRight: "1%",
+                    height: "auto",
+                    fontSize: "16px",
+                  }}
+                >
+                  Save
+                </Button>
+                <Button
+                  color="default"
+                  variant="solid"
+                  type="default"
+                  onClick={() => {
+                    form.setFieldsValue(initialValues);
+                  }}
+                  style={{ height: "auto", fontSize: "16px" }}
+                >
+                  Cancel
+                </Button>
+              </Form.Item>
+            }
           </Form>
         ) : (
           <>

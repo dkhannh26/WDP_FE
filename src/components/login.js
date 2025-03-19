@@ -29,6 +29,8 @@ const LoginPopover = () => {
           if (res && res.data.EC === 0) {
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("token", res.data.token);
+            localStorage.setItem("permissions", JSON.stringify(res.data.permissions));
+
 
             setIsAuthenticated(true);
             // setUsername(res);

@@ -37,6 +37,7 @@ import {
 import { showDeleteConfirm } from "../../utils/helper";
 import { useAuth } from "../context/AuthContext";
 import UploadImg from "../common/UploadImg";
+import { checkPermission } from "../../utils/permission";
 
 const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const [feedback, setFeedback] = useState([]);
@@ -270,23 +271,28 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
           </div>
         </Col>
       </Row>
-      <Row style={{ justifyContent: "center", fontSize: 16, marginBottom: 10 }}>
-        <p>Bạn đánh giá sao sản phẩm này?</p>
-      </Row>
-      <Row style={{ justifyContent: "center" }}>
-        <Button
-          style={{
-            backgroundColor: "black",
-            borderRadius: 0,
-            width: "30%",
-            borderRadius: "16px",
-          }}
-          type="primary"
-          onClick={() => showModal("add-new")}
-        >
-          Write Feedback
-        </Button>
-      </Row>
+      {
+        checkPermission('createFeedback') &&
+        <>
+          <Row style={{ justifyContent: "center", fontSize: 16, marginBottom: 10 }}>
+            <p>Bạn đánh giá sao sản phẩm này?</p>
+          </Row>
+          <Row style={{ justifyContent: "center" }}>
+            <Button
+              style={{
+                backgroundColor: "black",
+                borderRadius: 0,
+                width: "30%",
+                borderRadius: "16px",
+              }}
+              type="primary"
+              onClick={() => showModal("add-new")}
+            >
+              Write Feedback
+            </Button>
+          </Row>
+        </>
+      }
 
       <Modal
         title="Đánh giá & nhận xét sản phẩm"
@@ -388,8 +394,14 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         renderItem={(item, index) => {
           const menu = (
             <Menu onClick={handleMenuClick(item, item._id)}>
-              <Menu.Item key="edit">Edit</Menu.Item>
-              <Menu.Item key="delete">Remove</Menu.Item>
+              {
+                checkPermission('editFeedback') &&
+                <Menu.Item key="edit">Edit</Menu.Item>
+              }
+              {
+                checkPermission('deleteFeedback') &&
+                <Menu.Item key="delete">Remove</Menu.Item>
+              }
             </Menu>
           );
           return (
@@ -407,14 +419,25 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                     }}
                   >
                     <p>{new Date(item.createdAt).toDateString()}</p>
-                    {userId === item.account_id._id && (
-                      <Dropdown overlay={menu} trigger={["click"]}>
-                        <Button
-                          style={{ borderColor: "white" }}
-                          icon={<MoreOutlined />}
-                        />
-                      </Dropdown>
-                    )}
+                    {
+                      (
+
+                        checkPermission('editFeedback')
+                        ||
+
+                        checkPermission('deleteFeedback')
+                      ) &&
+                      <>
+                        {userId === item.account_id._id && (
+                          <Dropdown overlay={menu} trigger={["click"]}>
+                            <Button
+                              style={{ borderColor: "white" }}
+                              icon={<MoreOutlined />}
+                            />
+                          </Dropdown>
+                        )}
+                      </>
+                    }
                   </div>
                 </Col>
               </Row>
@@ -452,15 +475,15 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
               <Row className="feedback-image-container">
                 {item?.imageUrls && item.imageUrls.length > 0
                   ? item.imageUrls.map((url, index) => (
-                      <Image
-                        key={index}
-                        preview={true}
-                        className="feedback-image"
-                        width={100}
-                        height={100}
-                        src={`http://localhost:3000${url}`}
-                      />
-                    ))
+                    <Image
+                      key={index}
+                      preview={true}
+                      className="feedback-image"
+                      width={100}
+                      height={100}
+                      src={`http://localhost:3000${url}`}
+                    />
+                  ))
                   : ""}
               </Row>
               <Row>
@@ -470,7 +493,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                     borderColor: "white",
                   }}
                   icon={
-                    feedbackLikeArr.includes(item._id) ? (
+                    feedbackLikeArr?.includes(item._id) ? (
                       <LikeFilled />
                     ) : (
                       <LikeOutlined />

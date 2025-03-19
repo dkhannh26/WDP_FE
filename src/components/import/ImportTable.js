@@ -11,6 +11,7 @@ import {
   getListImport,
 } from "../../services/import.service";
 import { showDeleteImportConfirm, success } from "../../utils/helper";
+import { checkPermission } from "../../utils/permission";
 
 const ImportTable = () => {
   const [imports, setImports] = useState([]);
@@ -21,7 +22,6 @@ const ImportTable = () => {
   const { state } = location;
   const [isModalVisible, setIsModalVisible] = useState(false);
   let role = localStorage.getItem("role");
-  console.log(role);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -52,11 +52,9 @@ const ImportTable = () => {
 
       width: "15%",
     },
-
     {
       title: "Status",
       dataIndex: "status",
-
       width: "20%",
     },
     {
@@ -64,34 +62,42 @@ const ImportTable = () => {
       dataIndex: "_id",
       render: (_id, record) => {
         return (
-          <Space>
-            {record.confirm === undefined ? (
-              role === "staff" ? (
-                <Button
-                  shape="round"
-                  icon={<CheckOutlined />}
-                  onClick={() => {
-                    confirmImport(_id, navigate);
-                  }}
-                ></Button>
+          <div>
+            {record.confirm === undefined ?
+              (
+                role === "staff" ? (
+                  <Button
+                    style={{
+                      marginRight: 5,
+                      display: checkPermission('confirmImport') ? '' : 'none',
+                    }}
+                    shape="round"
+                    icon={<CheckOutlined />}
+                    onClick={() => {
+                      confirmImport(_id, navigate);
+                    }}
+                  ></Button>
+                ) : (
+                  <Button
+                    danger
+                    style={{
+                      marginRight: 5
+                    }}
+                    shape="round"
+                    icon={<DeleteOutlined />}
+                    onClick={() =>
+                      showDeleteImportConfirm(
+                        _id,
+                        messageApi,
+                        getListImport,
+                        setImports
+                      )
+                    }
+                  ></Button>
+                )
               ) : (
-                <Button
-                  danger
-                  shape="round"
-                  icon={<DeleteOutlined />}
-                  onClick={() =>
-                    showDeleteImportConfirm(
-                      _id,
-                      messageApi,
-                      getListImport,
-                      setImports
-                    )
-                  }
-                ></Button>
-              )
-            ) : (
-              ""
-            )}
+                ""
+              )}
 
             <Button
               shape="round"
@@ -101,7 +107,7 @@ const ImportTable = () => {
                 showModal();
               }}
             ></Button>
-          </Space>
+          </div>
         );
       },
       width: "10%",

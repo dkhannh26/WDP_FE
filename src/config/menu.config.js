@@ -1,7 +1,6 @@
 import {
   AreaChartOutlined,
   CodepenOutlined,
-  CompressOutlined,
   DollarOutlined,
   FileDoneOutlined,
   ProductOutlined,
@@ -9,8 +8,10 @@ import {
   UsergroupDeleteOutlined,
   UserOutlined,
   SignatureOutlined,
+  AuditOutlined
 } from "@ant-design/icons";
 import React from "react";
+import { checkPermission } from "../utils/permission";
 
 let role = localStorage.getItem("role");
 export const menu = [
@@ -78,22 +79,6 @@ export const menu = [
     ],
   },
   {
-    icon: CompressOutlined,
-    title: "Size",
-    key: "/size",
-    role: "admin",
-    children: [
-      {
-        key: "/admin/pantTshirtSize",
-        label: "Pant T-shirt Size",
-      },
-      {
-        key: "/admin/shoesSize",
-        label: "Shoes Size",
-      },
-    ],
-  },
-  {
     icon: FileDoneOutlined,
     title: "Order",
     key: "/order",
@@ -106,13 +91,30 @@ export const menu = [
     role: "admin",
   },
   {
-    icon: SignatureOutlined,
+    icon: AuditOutlined,
     title: "Permission",
     key: "/permission",
+    children: [
+      {
+        key: "permission/staff",
+        label: "Staff",
+      },
+      {
+        key: "permission/customer",
+        label: "Customer",
+      },
+    ],
     role: "admin",
   },
 ].map((item, index) => {
-  if (item.role === "") {
+  if (item.key === '/statistic' && checkPermission("viewStatistic")) {
+    return {
+      key: "/admin" + item.key,
+      icon: React.createElement(item.icon),
+      label: item.title,
+      children: item.children,
+    };
+  } else if (item.role === "" && item.key !== '/statistic') {
     return {
       key: "/admin" + item.key,
       icon: React.createElement(item.icon),
@@ -129,3 +131,21 @@ export const menu = [
   }
   return null
 });
+
+
+// {
+//   icon: CompressOutlined,
+//   title: "Size",
+//   key: "/size",
+//   role: "admin",
+//   children: [
+//     {
+//       key: "/admin/pantTshirtSize",
+//       label: "Pant T-shirt Size",
+//     },
+//     {
+//       key: "/admin/shoesSize",
+//       label: "Shoes Size",
+//     },
+//   ],
+// },

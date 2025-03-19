@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
 import axios from "axios";
-import { API_PATH, PATH } from "../config/api.config";
+import React from "react";
+import { API_PATH } from "../config/api.config";
 
-import { Button, Checkbox, Form, Input, notification } from "antd";
-import { useAuth } from "../components/context/AuthContext";
+import { Button, Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/context/AuthContext";
+
 const LoginAdmin = () => {
   const navigate = useNavigate();
 
@@ -23,6 +24,8 @@ const LoginAdmin = () => {
           if (res && res.data.EC === 0) {
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("role", res.data.role);
+            localStorage.setItem("permissions", JSON.stringify(res.data.permissions));
+
             setIsAuthenticated(true);
             notification.success({
               message: res.data.message,

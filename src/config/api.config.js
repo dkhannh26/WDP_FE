@@ -35,7 +35,8 @@ export const API_PATH = {
   sms: baseURL + 'sms/send-email',
   payOS: baseURL + 'payOS/create-payment-link',
   wishlist: baseURL + 'wishlist',
-  allDetail: baseURL + 'order/allDetails'
+  allDetail: baseURL + 'order/allDetails',
+  permission: baseURL + 'permission',
 }
 export const PATH = {
   user: baseURL + "users",

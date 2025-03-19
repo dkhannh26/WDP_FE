@@ -1,0 +1,17 @@
+{
+  "username": "Username",
+  "password": "Password",
+  "header": {
+    "home": "HOME",
+    "product": "PRODUCT",
+    "contact": "CONTACT",
+    "about": "ABOUT",
+    "exchange_policy": "EXCHANGE POLICY",
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "my_account": "My Account",
+    "cart": "Cart",
+    "account_of": "Account Of ",
+    "search_placeholder": "Search Product"
+  }
+}
