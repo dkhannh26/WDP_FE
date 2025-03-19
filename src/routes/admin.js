@@ -38,6 +38,7 @@ import BrandTable from "../components/brand/BrandTable";
 import Permission from "../pages/admin-management/Permission";
 import StaffPermission from "../components/permission/StaffPermission";
 import CustomerPermision from "../components/permission/CustomerPermision";
+import RatingDetail from "../pages/admin-management/RatingDetail";
 
 export const AdminRoutes = (
     <>
@@ -112,6 +113,7 @@ export const AdminRoutes = (
                 <Route path="customer" element={<CustomerPermision />} />
             </Route>
             <Route path="statistic" element={<Statistic />}></Route>
+            <Route path="rating-detail" element={<RatingDetail />}></Route>
             <Route path="profile" element={<Profile />}>
                 <Route index element={<ProfileTable />} />
             </Route>

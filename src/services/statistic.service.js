@@ -103,3 +103,14 @@ export const exportExcel = (statistic, ordersByMonth, numberOfCategory, imports,
       saveAs(blob, "statistic_data.xlsx");
     });
 };
+
+export const getRatingDetail = async (setRatingDetail, year) => {
+  try {
+    axios.get(API_PATH.statistic + `/rating-detail/${year}`)
+      .then(res => {
+        setRatingDetail(res.data)
+      })
+  } catch (error) {
+    console.error(error)
+  }
+}

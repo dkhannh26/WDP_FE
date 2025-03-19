@@ -25,6 +25,7 @@ import {
 } from "recharts";
 
 import { exportExcel, getStatistic } from "../../services/statistic.service";
+import { useNavigate } from "react-router-dom";
 
 const Statistic = () => {
   const [year, setYear] = useState(2025);
@@ -32,7 +33,7 @@ const Statistic = () => {
   const [ordersByMonth, setOrderByMonth] = useState([]);
   const [numberOfCategory, setNumberOfCategory] = useState([]);
   const [ratingOfCategory, setRatingOfCategory] = useState([])
-
+  const navigate = useNavigate()
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     setYear(value);
@@ -41,6 +42,8 @@ const Statistic = () => {
   useEffect(() => {
     getStatistic(year, setStatistic, setOrderByMonth, setNumberOfCategory, setRatingOfCategory);
   }, [year]);
+
+  console.log('rating', ratingOfCategory);
 
 
   return (
@@ -269,7 +272,7 @@ const Statistic = () => {
                 <p style={{ fontSize: '14px', color: '#666', margin: '0 auto' }}>
                   The chart displays the average rating of product categories (maximum 5 stars).
                 </p>
-                <p style={{ fontSize: '14px', color: '#8884D8', position: 'absolute', right: 40 }}> <u>See details</u></p>
+                <p onClick={() => navigate('/admin/rating-detail')} style={{ cursor: 'pointer', fontSize: '14px', color: '#8884D8', position: 'absolute', right: 40 }}> <u>See details</u></p>
               </div>
             </ResponsiveContainer>
           </div>
