@@ -108,6 +108,7 @@ export const getRatingDetail = async (setRatingDetail, year) => {
   try {
     axios.get(API_PATH.statistic + `/rating-detail/${year}`)
       .then(res => {
+        // console.log('data nè', res.data);
         setRatingDetail(res.data)
       })
   } catch (error) {

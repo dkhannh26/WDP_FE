@@ -1,9 +1,15 @@
 import React from "react";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Image, Layout, Menu, theme } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import { menu } from "../../config/menu.config";
 import { useAuth } from "../../components/context/AuthContext";
 import Title from "antd/es/typography/Title";
+import { Switch } from 'antd';
+import styled from 'styled-components';
+import engFlag from '../../assets/images/eng.png'
+import VietFlag from '../../assets/images/VietFlag.svg.webp'
+import { useTranslation } from "react-i18next";
+
 const { Header, Content, Footer, Sider } = Layout;
 
 const siderStyle = {
@@ -19,6 +25,13 @@ const siderStyle = {
 const Dashboard = () => {
   const { setIsAuthenticated, setUsername, user, setUser } =
     useAuth();
+
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (checked) => {
+    const newLanguage = checked ? 'vi' : 'en';
+    i18n.changeLanguage(newLanguage);
+  };
   console.log(user.username);
 
   const {
@@ -31,6 +44,33 @@ const Dashboard = () => {
     navigate(menuItem.key);
   };
 
+  const CustomSwitch = styled(Switch)`
+  &.ant-switch {
+    background-color:#092C70;
+    &:hover {
+      background-color: #092C70; 
+    }
+  }
+  &.ant-switch-checked {
+    background-color:rgb(205, 49, 25); 
+    &:hover {
+      background-color: rgb(205, 49, 25) !important;
+    }
+  }
+  .ant-switch-handle {  
+    width: 18px;
+    height: 18px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    left: 2px; 
+  }
+  .ant-switch-handle::before {
+    background-color: #fff;
+    top: '50%';
+    left: '50%';
+    ${'' /* transform: 'translate(-50%, -50%)'; */}
+  }
+`;
   return (
     <Layout hasSider>
       <Sider style={siderStyle}>
@@ -50,29 +90,62 @@ const Dashboard = () => {
       >
         <Header
           style={{
-            padding: 0,
+            padding: '0 30px',
             background: colorBgContainer,
             display: "flex",
-            justifyContent: "flex-end",
+            alignItems: 'center',
+            justifyContent: "space-between",
             paddingTop: 15,
             paddingRight: 15,
           }}
         >
-          <Title style={{ fontSize: 20, padding: 5 }}>
-            Hello {user.username}
-          </Title>
-          <Button
-            onClick={() => {
-              localStorage.clear("token");
-              localStorage.clear("role");
-              setIsAuthenticated(false);
-              setUsername("");
-              setUser("");
-              navigate("/admin/login");
+          <div style={{ display: 'flex' }}>
+            <Title style={{ fontSize: 17, paddingRight: 10 }}>
+              Ngôn ngữ:
+            </Title>
+            {'  '}
+            <CustomSwitch
+              defaultChecked={i18n.language === 'vi'}
+              onChange={handleLanguageChange}
+              style={{ height: 26 }}
+              padding='10px 0'
+              checkedChildren={
+                <Image
+                  position='absolute'
+                  width={30}
+
+                  src={VietFlag}
+                />}
+              unCheckedChildren={
+                <Image
+                  position='absolute'
+                  width={30}
+                  src={engFlag}
+                />}
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex'
             }}
           >
-            Logout
-          </Button>
+            <Title style={{ fontSize: 20, padding: 5 }}>
+              Hello {user.username}
+            </Title>
+            <Button
+              onClick={() => {
+                localStorage.clear("token");
+                localStorage.clear("role");
+                setIsAuthenticated(false);
+                setUsername("");
+                setUser("");
+                navigate("/admin/login");
+              }}
+            >
+              Logout
+            </Button>
+          </div>
         </Header>
         <Content
           style={{

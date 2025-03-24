@@ -5,7 +5,7 @@ import { getPermissionsByRole, updatePermission } from '../../services/permissio
 const profileOptions = [
     { name: 'Edit Profile', value: 'editProfile' },
     { name: 'Change Password', value: 'changePassword' },
-    { name: 'Forgot Password', value: 'forgotPassword' },
+    // { name: 'Forgot Password', value: 'forgotPassword' },
 ];
 
 const feedbackOptions = [

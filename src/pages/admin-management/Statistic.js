@@ -272,7 +272,7 @@ const Statistic = () => {
                 <p style={{ fontSize: '14px', color: '#666', margin: '0 auto' }}>
                   The chart displays the average rating of product categories (maximum 5 stars).
                 </p>
-                <p onClick={() => navigate('/admin/rating-detail')} style={{ cursor: 'pointer', fontSize: '14px', color: '#8884D8', position: 'absolute', right: 40 }}> <u>See details</u></p>
+                <p onClick={() => navigate(`/admin/rating-detail?year=${year}`)} style={{ cursor: 'pointer', fontSize: '14px', color: '#8884D8', position: 'absolute', right: 40 }}> <u>See details</u></p>
               </div>
             </ResponsiveContainer>
           </div>

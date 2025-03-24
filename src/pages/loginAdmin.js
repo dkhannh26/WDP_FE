@@ -1,54 +1,46 @@
 import axios from "axios";
 import React from "react";
 import { API_PATH } from "../config/api.config";
-
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/context/AuthContext";
+import { notification } from "antd";
 
 const LoginAdmin = () => {
   const navigate = useNavigate();
+  const { setIsAuthenticated, setUsername, setUser } = useAuth();
 
-  const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
-    useAuth(); // Get authentication state and functions
   const onFinish = (values) => {
-    const { username, password } = values;
-    try {
-      let res = axios
-        .post(`${API_PATH.admin}/login`, {
-          username,
-          password,
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res && res.data.EC === 0) {
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("role", res.data.role);
-            localStorage.setItem("permissions", JSON.stringify(res.data.permissions));
+    const { email, password } = values;
+    axios
+      .post(`${API_PATH.admin}/login`, { username: email, password })
+      .then((res) => {
+        if (res && res.data.EC === 0) {
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("role", res.data.role);
+          localStorage.setItem("permissions", JSON.stringify(res.data.permissions));
 
-            setIsAuthenticated(true);
-            notification.success({
-              message: res.data.message,
-              description: "success",
-            });
+          setIsAuthenticated(true);
+          notification.success({
+            message: "Login Successful",
+            description: "Welcome to Admin Dashboard",
+          });
 
-            setTimeout(() => {
-              navigate("/admin/profile");
-              window.location.reload();
-            }, 1000);
-          }
-        })
-        .catch((err) => {
-          if (err.response.status === 403) {
-            notification.error({
-              message: "Username or password is incorrect",
-              description: "error",
-            });
-          }
+          setTimeout(() => {
+            navigate("/admin/profile");
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Login Failed",
+          description:
+            err.response?.status === 403
+              ? "Invalid email or password"
+              : "An error occurred",
         });
-    } catch (error) {
-      console.log(error);
-    }
+      });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -58,74 +50,163 @@ const LoginAdmin = () => {
   return (
     <div
       style={{
+        minHeight: "100vh",
+        background: "#f5f7fa",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        backgroundColor: "#f0f2f5",
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <Form
-        className="login-admin"
-        name="basic"
-        labelCol={{
-          span: 8,
-        }}
-        wrapperCol={{
-          span: 16,
-        }}
+      {/* Decorative Circles */}
+      <div
         style={{
-          textAlign: "left",
-          padding: "30px 30px 6px 30px",
+          position: "absolute",
+          width: "300px",
+          height: "300px",
+          background: "linear-gradient(45deg, #ff6b6b, #ff8787)",
+          borderRadius: "50%",
+          top: "-100px",
+          left: "-100px",
+          opacity: 0.8,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "200px",
+          height: "200px",
+          background: "linear-gradient(45deg, #ffd700, #ffeb3b)",
+          borderRadius: "50%",
+          top: "-50px",
+          left: "150px",
+          opacity: 0.8,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "250px",
+          height: "250px",
+          background: "linear-gradient(45deg, #00c4cc, #40e0d0)",
+          borderRadius: "50%",
+          bottom: "-50px",
+          left: "50%",
+          opacity: 0.8,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "350px",
+          height: "350px",
+          background: "linear-gradient(45deg, #a855f7, #d8b4fe)",
+          borderRadius: "50%",
+          bottom: "-100px",
+          right: "-100px",
+          opacity: 0.8,
+        }}
+      />
+
+      {/* Login Form */}
+      <div
+        style={{
           background: "#fff",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          transform: "scale(1.5)",
+          borderRadius: "12px",
+          padding: "40px 30px",
+          width: "100%",
+          maxWidth: "400px",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+          zIndex: 1,
         }}
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
       >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: "Please input your username!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your password!",
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16,
+        <h2
+          style={{
+            fontSize: "24px",
+            fontWeight: "bold",
+            marginBottom: "30px",
+            color: "#333",
           }}
         >
-          <Button type="primary" htmlType="submit">
-            Sign in
-          </Button>
-        </Form.Item>
-      </Form>
+          LOGIN
+        </h2>
+
+        <Form
+          name="login_form"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          layout="vertical"
+          autoComplete="off"
+        >
+          <Form.Item
+            name="email"
+            rules={[{ required: true, message: "Please input your email!" }]}
+          >
+            <Input
+              placeholder="EMAIL"
+              size="large"
+              style={{
+                border: "none",
+                borderBottom: "1px solid #d9d9d9",
+                borderRadius: 0,
+                padding: "10px 0",
+                fontSize: "16px",
+                boxShadow: "none",
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Please input your password!" }]}
+            style={{ marginTop: "20px" }}
+          >
+            <Input.Password
+              placeholder="PASSWORD"
+              size="large"
+              style={{
+                border: "none",
+                borderBottom: "1px solid #d9d9d9",
+                borderRadius: "0",
+                padding: "10px 0",
+                fontSize: "16px",
+                boxShadow: "none",
+              }}
+            />
+          </Form.Item>
+
+          <div style={{ textAlign: "right", margin: "15px 0" }}>
+
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: "30px",
+            }}
+          >
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{
+                background: "#1a3c5e",
+                border: "none",
+                borderRadius: "8px",
+                padding: "10px 30px",
+                fontSize: "16px",
+                height: "auto",
+                width: '100%'
+              }}
+            >
+              SIGN IN
+            </Button>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 };
