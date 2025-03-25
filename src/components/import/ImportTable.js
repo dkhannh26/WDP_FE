@@ -12,7 +12,8 @@ import {
 } from "../../services/import.service";
 import { showDeleteImportConfirm, success } from "../../utils/helper";
 import { checkPermission } from "../../utils/permission";
-
+ import { useTranslation } from "react-i18next";
+ 
 const ImportTable = () => {
   const [imports, setImports] = useState([]);
   const [importDetail, setImportDetail] = useState([]);
@@ -21,6 +22,8 @@ const ImportTable = () => {
   const location = useLocation();
   const { state } = location;
   const [isModalVisible, setIsModalVisible] = useState(false);
+    const { t, i18n } = useTranslation();
+  
   let role = localStorage.getItem("role");
 
   const showModal = () => {
@@ -41,24 +44,24 @@ const ImportTable = () => {
       width: "10%",
     },
     {
-      title: "Staff Confirmed",
+      title: t('table.staff_confirmed'),
       dataIndex: "confirm",
 
       width: "15%",
     },
     {
-      title: "Quantity",
+      title: t('table.quantity'),
       dataIndex: "quantity",
 
       width: "15%",
     },
     {
-      title: "Status",
+      title: t('table.status'),
       dataIndex: "status",
       width: "20%",
     },
     {
-      title: "Action",
+      title: t('table.action'),
       dataIndex: "_id",
       render: (_id, record) => {
         return (
@@ -138,7 +141,7 @@ const ImportTable = () => {
     },
 
     {
-      title: "Quantity",
+      title: t('table.quantity'),
       dataIndex: "quantity",
       width: "10%",
     },
@@ -164,7 +167,7 @@ const ImportTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>Import Management</Title>
+          <Title level={2}>{t('dashboard.import_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -176,7 +179,7 @@ const ImportTable = () => {
           }}
         >
           {role === "admin" ? (
-            <Button onClick={() => navigate(IMPORT_URL.CREATE)}>Insert</Button>
+            <Button onClick={() => navigate(IMPORT_URL.CREATE)}>{t('button.insert')}</Button>
           ) : (
             ""
           )}

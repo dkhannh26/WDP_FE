@@ -8,12 +8,13 @@ import {
   editBrand,
   getBrand,
 } from "../../services/brand.service";
+import { useTranslation } from "react-i18next";
 
 const BrandModel = ({ type }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const {t} = useTranslation();
   const onFinish = (values) => {
     const brand = {
       name: values.name,
@@ -34,7 +35,7 @@ const BrandModel = ({ type }) => {
     <>
       <Row>
         <Title level={3}>
-          {type === "create" ? "New Brand" : "Edit Brand"}
+          {type === "create" ? t('dashboard.new_brand') : t('dashboard.edit_brand')}
         </Title>
       </Row>
       <Row>
@@ -50,7 +51,7 @@ const BrandModel = ({ type }) => {
           >
             <Form.Item
               name="name"
-              label="Brand Name"
+              label={t('table.brand_name')}
               rules={[
                 {
                   max: 20,
@@ -63,10 +64,10 @@ const BrandModel = ({ type }) => {
             <Form.Item {...tailLayout}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  {type === "create" ? "Insert" : "Edit"}
+                  {type === "create" ? t('button.insert') : t('button.edit')}
                 </Button>
                 <Button htmlType="button" onClick={() => navigate(-1)}>
-                  Cancel
+                {t('button.cancel')}
                 </Button>
               </Space>
             </Form.Item>

@@ -10,9 +10,13 @@ import { PATH } from '../../config/api.config';
 import { getProductDetailCustomer } from '../../services/product/product.service';
 import CustomerFeedback from '../../components/feedback/CustomerFeedback';
 import { checkPermission } from '../../utils/permission'
+import { useTranslation } from "react-i18next";
 const { Text } = Typography;
 
+
 const ProductDetail = () => {
+    const { t, i18n } = useTranslation();
+
     const [canvas, setCanvas] = useState('https://top10hoabinh.com/wp-content/uploads/2022/10/anh-dang-load-2.jpg')
     const { id } = useParams();
 
@@ -250,9 +254,9 @@ const ProductDetail = () => {
                         <Col span={6}>
                             {
                                 sizeNumber !== 0 ?
-                                    `${sizeNumber} sản phẩm có sẵn`
+                                    `${sizeNumber} ${t('product.available')}` 
                                     :
-                                    `Tạm hết hàng`
+                                    `${t('product.out_of_stock')}`
                             }
                         </Col>
                     </Row>
@@ -274,7 +278,7 @@ const ProductDetail = () => {
                         sizeNumber !== 0 ? <Row style={{ marginTop: 30 }}>
                             <div class="box-1" onClick={onFinish}>
                                 <div class="btn btn-one">
-                                    <span>THÊM VÀO GIỎ HÀNG</span>
+                                    <span className='uppercase'>{t('product.add_to_cart')}</span>
                                 </div>
                             </div>
                         </Row>

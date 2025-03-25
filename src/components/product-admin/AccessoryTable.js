@@ -8,7 +8,8 @@ import { ACCESSORY_URL } from "../../config/url.config";
 import { showDeleteConfirm, success } from "../../utils/helper";
 import Highlighter from 'react-highlight-words';
 import { getProductList } from "../../services/product/product.service";
-import { API_PATH } from "../../config/api.config";
+import { API_PATH } from "../../config/api.config"; 
+import { useTranslation } from "react-i18next";
 
 const AccessoryTable = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +18,7 @@ const AccessoryTable = () => {
   const location = useLocation();
   const { state } = location;
   const role = localStorage.getItem("role");
+  const { t } = useTranslation();
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -125,7 +127,7 @@ const AccessoryTable = () => {
 
     },
     {
-      title: "Image",
+      title: t('table.img'),
       dataIndex: "productImg",
       render: (imgUrl) => {
         return (
@@ -135,21 +137,21 @@ const AccessoryTable = () => {
       width: "20%",
     },
     {
-      title: "Name",
+      title: t('table.name'),
       dataIndex: "productName",
       filterSearch: true,
       width: "20%",
       ...getColumnSearchProps('productName'),
     },
     {
-      title: "Price(VND)",
+      title: t('price') + " (VND)",
       dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
       sorter: (a, b) => a.productPrice - b.productPrice,
     },
     {
-      title: "Discount percent",
+      title: t('table.discount_percent'),
       dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
@@ -159,7 +161,7 @@ const AccessoryTable = () => {
       sorter: (a, b) => a.productDiscountPercent - b.productDiscountPercent,
     },
     {
-      title: "Action",
+      title: t('table.action'),
       dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
@@ -223,7 +225,7 @@ const AccessoryTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>Accessory Management</Title>
+          <Title level={2}>{t('dashboard.accessories_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -235,7 +237,7 @@ const AccessoryTable = () => {
           }}
         >
           {role === "admin" ? (
-            <Button onClick={() => navigate(ACCESSORY_URL.CREATE)}>Insert</Button>
+            <Button onClick={() => navigate(ACCESSORY_URL.CREATE)}>{t('button.insert')}</Button>
           ) : (
             ""
           )}

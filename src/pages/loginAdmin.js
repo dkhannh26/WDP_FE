@@ -5,10 +5,12 @@ import { API_PATH } from "../config/api.config";
 import { Button, Form, Input, notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/context/AuthContext";
+import { useTranslation } from "react-i18next";
+
 
 const LoginAdmin = () => {
   const navigate = useNavigate();
-
+const { t, i18n } = useTranslation();
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
     useAuth(); // Get authentication state and functions
   const onFinish = (values) => {

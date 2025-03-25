@@ -8,6 +8,7 @@ import { MESSAGE } from '../../config/message.config';
 import { DISCOUNT_URL } from '../../config/url.config';
 import { getListDiscount } from '../../services/discount.service';
 import { formatDate, showDeleteConfirm, success } from '../../utils/helper';
+import { useTranslation } from 'react-i18next';
 
 const DiscountTable = () => {
     const [discounts, setDiscounts] = useState([])
@@ -15,7 +16,7 @@ const DiscountTable = () => {
     const [messageApi, contextHolder] = message.useMessage()
     const location = useLocation();
     const { state } = location;
-
+    const { t, i18n } = useTranslation();
     const columns = [
         {
             title: 'No.',
@@ -23,13 +24,13 @@ const DiscountTable = () => {
             width: '10%',
         },
         {
-            title: 'Percent',
+            title: (t('table.percent')),
             dataIndex: 'percent',
             sorter: (a, b) => a.percent - b.percent,
             width: '15%',
         },
         {
-            title: 'Expiry',
+            title: (t('table.expiry')),
             dataIndex: 'expired_at',
             render: (date) => {
                 return formatDate(date)
@@ -39,7 +40,7 @@ const DiscountTable = () => {
             width: '20%',
         },
         {
-            title: 'Action',
+            title: (t('table.action')),
             dataIndex: '_id',
             render: (_id) => {
                 return (
@@ -72,10 +73,10 @@ const DiscountTable = () => {
             <Flex gap="middle" align="center" justify='space-between'>
                 {contextHolder}
                 <Col>
-                    <Title level={2}>Discount Management</Title>
+                    <Title level={2}>{t('dashboard.discount_mng')}</Title>
                 </Col>
                 <Col className="gutter-row" style={{ display: 'flex', justifyContent: 'flex-end  !important', alignItems: 'center !important', height: '100%' }}>
-                    <Button onClick={() => navigate(DISCOUNT_URL.CREATE)}>Insert</Button>
+                    <Button onClick={() => navigate(DISCOUNT_URL.CREATE)}>{t('button.insert')}</Button>
                 </Col>
             </Flex>
             <Table columns={columns} dataSource={discounts} />

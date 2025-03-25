@@ -7,6 +7,8 @@ import axios from "axios";
 import { API_PATH, PATH } from "../../config/api.config";
 import Search from "antd/es/input/Search";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 const { Text, Title } = Typography;
 
 const OrderCustomer = () => {
@@ -19,6 +21,8 @@ const OrderCustomer = () => {
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [messageApi, contextHolder] = message.useMessage()
     const navigate = useNavigate();
+
+    const { t, i18n } = useTranslation();
 
 
     const onChange = (e) => {
@@ -43,7 +47,7 @@ const OrderCustomer = () => {
             width: '5%',
         },
         {
-            title: 'Day',
+            title: t('table.day'),
             dataIndex: 'createdAt',
             width: '10%',
             render: (text) => new Date(text).toLocaleString('vi-VN', {
@@ -57,23 +61,23 @@ const OrderCustomer = () => {
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
-            title: 'Phone',
+            title: t('table.phone'),
             dataIndex: 'phone',
             width: '20%',
         },
         {
-            title: 'Address',
+            title: t('table.address'),
             dataIndex: 'address',
             width: '20%',
         },
         {
-            title: 'Total',
+            title: t('table.total'),
             dataIndex: 'total_price',
             sorter: (a, b) => a.total_price - b.total_price,
             width: '10%',
         },
         {
-            title: 'Status',
+            title: t('table.status'),
             dataIndex: 'status',
             width: '10%',
             sorter: (a, b) => {
@@ -81,7 +85,7 @@ const OrderCustomer = () => {
             },
         },
         {
-            title: 'Action',
+            title: t('table.action'),
             dataIndex: '_id',
             render: (_id, record) => {
                 return (
@@ -232,14 +236,14 @@ const OrderCustomer = () => {
         <>
             <div style={{ justifyContent: 'center', display: 'flex', margin: '1%' }}>
                 <Button onClick={() => setStatus("pending")} type={status === "pending" ? "primary" : "default"} style={{ marginRight: '1%' }}>
-                    Pending
+                    {t('button.pending')}
                 </Button>
                 <Button onClick={() => setStatus("done")} type={status === "done" ? "primary" : "default"}>
-                    Done
+                {t('button.done')}
                 </Button>
             </div>
             <Search
-                placeholder="Enter something to search"
+                placeholder={t('search.order')}
                 allowClear
                 enterButton
                 size="large"

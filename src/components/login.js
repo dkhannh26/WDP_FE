@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { googleAuth } from "../services/auth.service";
 import { useAuth } from "./context/AuthContext";
 import ForgotPassword from "./forgotPassword";
+import { t } from "i18next";
 const LoginPopover = () => {
   const navigate = useNavigate();
   const [username, setUsernameState] = useState("");
@@ -96,9 +97,9 @@ const LoginPopover = () => {
         <Carousel ref={carouselRef} dots={false} style={{ width: 350 }}>
           <form className="login-pop" onSubmit={onSubmit}>
             <div className="login-pop-title">
-              <p className="login-pop-title__1">Đăng nhập tài khoản</p>
+              <p className="login-pop-title__1">{t('header.login_account')}</p>
               <p className="login-pop-title__2 text">
-                Nhập email và mật khẩu của bạn:
+                {t('header.enter_email_password')}
               </p>
             </div>
             <div className="login-pop-input">
@@ -108,7 +109,7 @@ const LoginPopover = () => {
                 onChange={(e) => setUsernameState(e.target.value)}
                 required
               />
-              <label className="text">Username</label>
+              <label className="text">{t('username')}</label>
             </div>
             <div className="login-pop-input">
               <input
@@ -118,7 +119,7 @@ const LoginPopover = () => {
                 required
                 type="password"
               />
-              <label className="text">Password</label>
+              <label className="text">{t('password')}</label>
             </div>
             <div className="login-pop-recaptcha">
               This site is protected by reCAPTCHA and the Google
@@ -141,11 +142,11 @@ const LoginPopover = () => {
               </a>
               apply.
             </div>
-            <button type="submit" className="login-pop-btn">
-              ĐĂNG NHẬP
+            <button type="submit" className="login-pop-btn uppercase">
+              {t('header.sign_in')}
             </button>
-            <div className="or-divider">
-              <span>Hoặc</span>
+            <div className="or-divider uppercase">
+              <span>{t('header.or')}</span>
             </div>
 
             {/* <button className="login-pop-btn">ĐĂNG NHẬP VỚI GOOGLE</button> */}
@@ -163,11 +164,11 @@ const LoginPopover = () => {
             </div>
             <div className="login-pop-navigate text">
               <p>
-                Khách hàng mới?
-                <a href="/customer/register"> Tạo tài khoản</a>
+              {t('header.new_customer')}?
+                <a href="/customer/register"> {t('header.sign_up')}</a>
               </p>
               <p>
-                Quên mật khẩu?
+              {t('header.forget_password')}?
                 <a
                   href="#"
                   onClick={(e) => {
@@ -176,7 +177,7 @@ const LoginPopover = () => {
                   }}
                 >
                   {" "}
-                  Khôi phục mật khẩu
+                  {t('header.reset_password')}
                 </a>
               </p>
             </div>
@@ -199,7 +200,7 @@ const LoginPopover = () => {
               navigate("/customer/profile", { state: { view: "profile" } });
             }}
           >
-            My Profile
+            {t('header.my_account')}
           </Button>
           <Button
             className="pop-list-item"
@@ -208,7 +209,7 @@ const LoginPopover = () => {
               navigate("/customer/profile", { state: { view: "change" } });
             }}
           >
-            Change Password
+            {t('profile.change_pass')}
           </Button>
           <Button
             className="pop-list-item"
@@ -221,7 +222,7 @@ const LoginPopover = () => {
               navigate("/customer");
             }}
           >
-            Logout
+            {t('profile.log_out')}
           </Button>
         </div>
       )}

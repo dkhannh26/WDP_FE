@@ -1,20 +1,7 @@
 import { Checkbox, Col, Row, Space, Typography, Divider, Button } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { getPermissionsByRole, updatePermission } from '../../services/permission.service';
-
-const profileOptions = [
-    { name: 'Edit Profile', value: 'editProfile' },
-    { name: 'Change Password', value: 'changePassword' },
-    { name: 'Forgot Password', value: 'forgotPassword' },
-];
-
-const feedbackOptions = [
-    { name: 'View Feedbacks', value: 'viewFeedbacks' },
-    { name: 'Create Feedback', value: 'createFeedback' },
-    { name: 'Edit Feedback', value: 'editFeedback' },
-    { name: 'Delete Feedback', value: 'deleteFeedback' },
-];
-
+import { useTranslation } from 'react-i18next';
 
 const CustomerPermission = () => {
     const [profileCheckedList, setProfileCheckedList] = useState([]);
@@ -27,6 +14,7 @@ const CustomerPermission = () => {
         setProfileCheckedList(profileChecked);
         setFeedbackCheckedList(feedbackChecked);
     };
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchPermissions = async () => {
@@ -100,13 +88,26 @@ const CustomerPermission = () => {
         }
     };
 
+    const profileOptions = [
+        { name: t('dashboard.edit_account'), value: 'editProfile' },
+        { name: t('profile.change_pass'), value: 'changePassword' },
+        { name: t('header.forget_password'), value: 'forgotPassword' },
+    ];
+    
+    const feedbackOptions = [
+        { name: t('feedback.view'), value: 'viewFeedbacks' },
+        { name: t('feedback.write'), value: 'createFeedback' },
+        { name: t('feedback.edit'), value: 'editFeedback' },
+        { name: t('feedback.delete'), value: 'deleteFeedback' },
+    ];
+
     return (
         <div style={{ padding: '10px 60px', height: '60vh' }}>
-            <Typography.Title>Customer Permission</Typography.Title>
+            <Typography.Title>{t('permission.customer')}</Typography.Title>
             <Row>
                 <Col span={12} style={{ textAlign: 'left' }}>
                     <CheckboxSection
-                        title="Profile"
+                        title={t('table.account')}
                         options={profileOptions}
                         checkedList={profileCheckedList}
                         setCheckedList={setProfileCheckedList}
@@ -125,7 +126,7 @@ const CustomerPermission = () => {
             </Row>
             <Divider />
             <Row justify={'center'}>
-                <Button type="primary" onClick={handleUpdate}>Update</Button>
+                <Button type="primary" onClick={handleUpdate}>{t('button.update')}</Button>
             </Row>
         </div>
     );

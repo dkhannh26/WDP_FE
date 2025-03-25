@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import React from "react";
 import { checkPermission } from "../utils/permission";
+import { useTranslation } from "react-i18next";
 
 let role = localStorage.getItem("role");
 export const menu = [

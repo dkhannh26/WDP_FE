@@ -8,6 +8,7 @@ import { MESSAGE } from "../../config/message.config";
 import { VOUCHER_URL } from "../../config/url.config";
 import { getListVoucher } from "../../services/voucher.service";
 import { showDeleteConfirm, success } from "../../utils/helper";
+import { useTranslation } from "react-i18next";
 
 const VoucherTable = () => {
   const [vouchers, setVouchers] = useState([]);
@@ -15,6 +16,7 @@ const VoucherTable = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
   const { state } = location;
+  const { t, i18n } = useTranslation();
 
   const columns = [
     {
@@ -23,19 +25,19 @@ const VoucherTable = () => {
       width: "10%",
     },
     {
-      title: "Sale off (VND)",
+      title: t('table.sale_off') + " (VND)",
       dataIndex: "percent",
       sorter: (a, b) => a.percent - b.percent,
       width: "15%",
     },
     {
-      title: "Condition",
+      title: (t('table.condition')),
       dataIndex: "condition",
       sorter: (a, b) => a.condition - b.condition,
       width: "20%",
     },
     {
-      title: "Action",
+      title: (t('table.action')),
       dataIndex: "_id",
       render: (_id) => {
         return (
@@ -85,7 +87,7 @@ const VoucherTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>Voucher Management</Title>
+          <Title level={2}>{t('dashboard.voucher_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -96,7 +98,7 @@ const VoucherTable = () => {
             height: "100%",
           }}
         >
-          <Button onClick={() => navigate(VOUCHER_URL.CREATE)}>Insert</Button>
+          <Button onClick={() => navigate(VOUCHER_URL.CREATE)}>{t('button.insert')}</Button>
         </Col>
       </Flex>
       <Table columns={columns} dataSource={vouchers} />

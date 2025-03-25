@@ -8,10 +8,12 @@ import { SHOES_URL } from "../../config/url.config";
 import { showDeleteConfirm, success } from "../../utils/helper";
 import Highlighter from 'react-highlight-words';
 import { getProductList } from "../../services/product/product.service";
-import { API_PATH } from "../../config/api.config";
+import { API_PATH } from "../../config/api.config"; 
+import { useTranslation } from "react-i18next";
 
 const ShoesTable = () => {
   const [products, setProducts] = useState([]);
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -126,7 +128,7 @@ const ShoesTable = () => {
 
     },
     {
-      title: "Image",
+      title: t('table.img'),
       dataIndex: "productImg",
       render: (imgUrl) => {
         return (
@@ -136,21 +138,21 @@ const ShoesTable = () => {
       width: "20%",
     },
     {
-      title: "Name",
+      title: t('table.name'),
       dataIndex: "productName",
       filterSearch: true,
       width: "20%",
       ...getColumnSearchProps('productName'),
     },
     {
-      title: "Price(VND)",
+      title: t('price') + " (VND)",
       dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
       sorter: (a, b) => a.productPrice - b.productPrice,
     },
     {
-      title: "Discount percent",
+      title: t('table.discount_percent'),
       dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
@@ -160,7 +162,7 @@ const ShoesTable = () => {
       sorter: (a, b) => a.productDiscountPercent - b.productDiscountPercent,
     },
     {
-      title: "Action",
+      title: t('table.action'),
       dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
@@ -224,7 +226,7 @@ const ShoesTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>Shoes Management</Title>
+          <Title level={2}>{t('dashboard.shoes_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -236,7 +238,7 @@ const ShoesTable = () => {
           }}
         >
           {role === "admin" ? (
-            <Button onClick={() => navigate(SHOES_URL.CREATE)}>Insert</Button>
+            <Button onClick={() => navigate(SHOES_URL.CREATE)}>{t('button.insert')}</Button>
           ) : (
             ""
           )}

@@ -9,6 +9,7 @@ import { cancelOrder, confirmOrder, getListOrder, getOrderDetails } from '../../
 import { showDeleteConfirm, success } from '../../utils/helper';
 import Search from 'antd/es/transfer/search';
 import { checkPermission } from '../../utils/permission';
+import { useTranslation } from "react-i18next";
 
 const OrderTable = () => {
     const [orders, setOrders] = useState([])
@@ -19,6 +20,8 @@ const OrderTable = () => {
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const location = useLocation();
     const { state } = location;
+
+    const { t, i18n } = useTranslation();
 
     const onChange = (e) => {
         const value = e.target.value.toLowerCase();
@@ -43,7 +46,7 @@ const OrderTable = () => {
             width: '5%',
         },
         {
-            title: 'Day',
+            title: t('table.day'),
             dataIndex: 'createdAt',
             width: '10%',
             render: (text) => new Date(text).toLocaleString('vi-VN', {
@@ -57,7 +60,7 @@ const OrderTable = () => {
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
-            title: 'Account',
+            title: t('table.account'),
             // dataIndex: 'account_id',
             width: '15%',
             render: (text, record) => {
@@ -65,23 +68,23 @@ const OrderTable = () => {
             }
         },
         {
-            title: 'Phone',
+            title: t('table.phone'),
             dataIndex: 'phone',
             width: '20%',
         },
         {
-            title: 'Address',
+            title: t('table.address'),
             dataIndex: 'address',
             width: '20%',
         },
         {
-            title: 'Total',
+            title: t('table.total'),
             dataIndex: 'total_price',
             sorter: (a, b) => a.total_price - b.total_price,
             width: '10%',
         },
         {
-            title: 'Status',
+            title: t('table.status'),
             dataIndex: 'status',
             width: '10%',
             sorter: (a, b) => {
@@ -89,7 +92,7 @@ const OrderTable = () => {
             },
         },
         {
-            title: 'Action',
+            title: t('table.action'),
             dataIndex: '_id',
             render: (_id, record) => {
                 return (

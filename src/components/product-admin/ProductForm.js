@@ -9,6 +9,8 @@ import RacketSize from '../size/RacketSize.js';
 import ShoesSize from '../size/ShoesSize.js';
 import TshirtSize from '../size/TshirtSize.js';
 import UploadImg from '../common/UploadImg';
+import { useTranslation } from "react-i18next";
+
 const { Text } = Typography;
 const { Option } = Select;
 
@@ -23,6 +25,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
   const [fileList, setFileList] = useState([]);
   const [error, setError] = useState(null)
   const [brandError, setBrandError] = useState('')
+  const { t, i18n } = useTranslation();
 
   const currentDate = new Date();
   const handleFileListChange = (newFileList) => {
@@ -81,12 +84,12 @@ const ProductForm = ({ typeAction, typeProduct }) => {
     <>
       <Row>
         <Title level={3}>
-          {typeAction === "create" ? "Create " : "Edit "}
+          {typeAction === "create" ? t('button.create')+" ": t('button.edit')+" "}
           {typeProduct === "tshirt" ? 'T-shirt' : ''}
-          {typeProduct === "pant" ? 'Pants' : ''}
-          {typeProduct === "shoes" ? 'Shoes' : ''}
-          {typeProduct === "accessory" ? 'Accessory' : ''}
-          {typeProduct === "racket" ? 'Racket' : ''}
+          {typeProduct === "pant" ? t('pants')   : ''}
+          {typeProduct === "shoes" ? t('shoes')   : ''}
+          {typeProduct === "accessory" ? t('accessory')  : ''}
+          {typeProduct === "racket" ? t('racket')  : ''}
         </Title>
       </Row>
       <Row >
@@ -102,7 +105,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
           >
             <Form.Item
               name="name"
-              label="Name"
+              label={t('table.name')}
               validateStatus={error ? 'error' : ''}
               help={error ? error : null}
               rules={[
@@ -115,7 +118,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             </Form.Item>
             <Form.Item
               name="brand"
-              label="Brand"
+              label={t('table.brand')}
               rules={[
                 {
                   required: true,
@@ -135,7 +138,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             </Form.Item>
             <Form.Item
               name="price"
-              label="Price"
+              label={t('price')}
               rules={[
                 {
                   required: true,
@@ -148,7 +151,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             </Form.Item>
             <Form.Item
               name="discount"
-              label="Discount"
+              label={t('table.discount')}
 
             >
               <Select
@@ -185,7 +188,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             {(typeAction === 'create' && typeProduct === 'accessory') &&
               <Form.Item
                 name={"ONE SIZE"}
-                label={`Quantity of size ONE SIZE`}
+                label={`${t('table.quantity_of_size')} ONE SIZE`}
                 rules={[
                   {
                     required: true,
@@ -202,7 +205,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
               sizes?.map(item => {
                 return <Form.Item
                   name={item.size_name}
-                  label={`Quantity of size ${item.size_name}`}
+                  label={`${t('table.quantity_of_size')} ${item.size_name}`}
                   rules={[
                     {
                       required: true,
@@ -217,7 +220,7 @@ const ProductForm = ({ typeAction, typeProduct }) => {
             }
             <Form.Item
               name="image"
-              label="Upload image"
+              label={t('table.upload_img')}
               valuePropName="fileList"
             // getValueFromEvent={normFile}
             // extra="longgggggggggggggggggggggggggggggggggg"
@@ -231,10 +234,10 @@ const ProductForm = ({ typeAction, typeProduct }) => {
               </Row>
               <Space>
                 <Button type="primary" htmlType="submit" >
-                  {typeAction === 'create' ? 'Insert' : 'Edit'}
+                  {typeAction === 'create' ? t('button.insert') : t('button.edit')}
                 </Button>
                 <Button htmlType="button" onClick={() => navigate(-1)}>
-                  Cancel
+                {t('button.cancel')}
                 </Button>
               </Space>
             </Form.Item>

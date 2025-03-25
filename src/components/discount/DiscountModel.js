@@ -9,12 +9,14 @@ import {
   editDiscount,
   getDiscount,
 } from "../../services/discount.service";
+import { useTranslation } from "react-i18next";
 
 const DiscountModel = ({ type }) => {
   const [date, setDate] = useState();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t, i18n } = useTranslation();
 
   const onFinish = (values) => {
     const discount = {
@@ -37,7 +39,7 @@ const DiscountModel = ({ type }) => {
     <>
       <Row>
         <Title level={3}>
-          {type === "create" ? "New Discount" : "Edit Discount"}
+          {type === "create" ? t('dashboard.new_discount') : t('dashboard.edit_discount')}
         </Title>
       </Row>
       <Row>
@@ -53,7 +55,7 @@ const DiscountModel = ({ type }) => {
           >
             <Form.Item
               name="percent"
-              label="Percent"
+              label={t('table.percent')} 
               rules={[
                 {
                   required: true,
@@ -67,13 +69,13 @@ const DiscountModel = ({ type }) => {
             </Form.Item>
             <Form.Item
               name="date"
-              label="Expire At"
+              label={t('dashboard.expire_at')}
               rules={[
                 {
                   required: true,
                 },
               ]}
-            >
+            > 
               <DatePicker
                 onChange={(dateString) => setDate(dateString)}
                 style={{ width: "100%" }}
@@ -82,10 +84,10 @@ const DiscountModel = ({ type }) => {
             <Form.Item {...tailLayout}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  {type === "create" ? "Insert" : "Edit"}
+                  {type === "create" ? t('button.insert') : t('button.edit')}
                 </Button>
                 <Button htmlType="button" onClick={() => navigate(-1)}>
-                  Cancel
+                {t('button.cancel')}
                 </Button>
               </Space>
             </Form.Item>

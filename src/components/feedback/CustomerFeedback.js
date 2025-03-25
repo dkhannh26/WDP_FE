@@ -38,6 +38,8 @@ import { showDeleteConfirm } from "../../utils/helper";
 import { useAuth } from "../context/AuthContext";
 import UploadImg from "../common/UploadImg";
 import { checkPermission } from "../../utils/permission";
+import { useTranslation } from "react-i18next";
+
 
 const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const [feedback, setFeedback] = useState([]);
@@ -61,6 +63,9 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     1: 0,
   });
   const [fileList, setFileList] = useState([]);
+  
+  const { t, i18n } = useTranslation();
+  
 
   const totalReviews = feedback.length;
   const handleFileListChange = (newFileList) => {
@@ -226,7 +231,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
           borderBottom: "1px solid gray",
         }}
       >
-        <p style={{ fontSize: 25, fontWeight: "bold" }}>Feedback</p>
+        <p style={{ fontSize: 25, fontWeight: "bold" }}>{t('feedback.label')}</p>
       </Row>
       <Row className="rating-summary">
         <Col span={10}>
@@ -238,7 +243,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
               allowHalf
               style={{ fontSize: "16px", color: "#ff8c00" }}
             />
-            <p className="review-count">{totalReviews} đánh giá và nhận xét</p>
+            <p className="review-count">{totalReviews} {t('feedback.fb_and_rating')}</p>
           </div>
         </Col>
         <Col span={1} style={{ borderLeft: "2px solid #d9d9d9" }}></Col>
@@ -264,7 +269,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                   style={{ width: "200px" }}
                 />
                 <span className="rating-count">
-                  {ratingDistribution[star]} đánh giá
+                  {ratingDistribution[star]} {t('feedback.label')}
                 </span>
               </div>
             ))}
@@ -275,7 +280,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         checkPermission('createFeedback') &&
         <>
           <Row style={{ justifyContent: "center", fontSize: 16, marginBottom: 10 }}>
-            <p>Bạn đánh giá sao sản phẩm này?</p>
+            <p>{t('feedback.question')}?</p>
           </Row>
           <Row style={{ justifyContent: "center" }}>
             <Button
@@ -288,7 +293,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
               type="primary"
               onClick={() => showModal("add-new")}
             >
-              Write Feedback
+              {t('feedback.write')}
             </Button>
           </Row>
         </>
@@ -366,21 +371,22 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         <div style={{ fontWeight: 600, fontSize: 20, marginTop: 20 }}>
           <FilterOutlined />
           <Select
-            defaultValue="Date"
+            defaultValue={t('feedback.date')}
             style={{
               marginLeft: 20,
+              width: 110,
             }}
             onChange={handleFilterChange}
           >
-            <Select.OptGroup label="Like">
-              <Select.Option value="like_increase">Increase</Select.Option>
-              <Select.Option value="like_decrease">Decrease</Select.Option>
+            <Select.OptGroup label={t('feedback.like')}>
+              <Select.Option value="like_increase">{t('increase')}</Select.Option>
+              <Select.Option value="like_decrease">{t('decrease')}</Select.Option>
             </Select.OptGroup>
-            <Select.OptGroup label="Date">
-              <Select.Option value="date_increase">Increase</Select.Option>
-              <Select.Option value="date_decrease">Decrease</Select.Option>
+            <Select.OptGroup label={t('feedback.date')}>
+              <Select.Option value="date_increase">{t('increase')}</Select.Option>
+              <Select.Option value="date_decrease">{t('decrease')}</Select.Option>
             </Select.OptGroup>
-          </Select>
+          </Select> 
         </div>
       </Col>
       <List

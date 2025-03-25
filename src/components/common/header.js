@@ -47,6 +47,8 @@ const Header = () => {
     i18n.changeLanguage(newLanguage);
   };
 
+  const language = i18n.language;
+
   const [searchFocus, setSearchForcus] = useState(false);
   const [searchList, setSearchList] = useState([]);
 
@@ -127,8 +129,8 @@ const Header = () => {
 `;
   const cartPopover = (
     <div className="cart-pop">
-      <div className="card-pop-title text">
-        <p>GIỎ HÀNG</p>
+      <div className="card-pop-title text uppercase">
+        <p>{t('header.cart')}</p>
       </div>
       <List
         itemLayout="horizontal"
@@ -185,7 +187,7 @@ const Header = () => {
                     </Text>
                     <br />
                     <Text style={{ color: "#888" }}>
-                      Kích thước:{" "}
+                      {t('header.size')}:{" "}
                       {item.product_size_name
                         ? item.product_size_name
                         : "Không có kích thước"}
@@ -225,25 +227,25 @@ const Header = () => {
         }}
       />
       <div className="flex-space-between">
-        <p className="text">TỔNG TIỀN:</p>
+        <p className="text uppercase">{t('header.total')}:</p>
         <p style={{ color: "red", fontWeight: "600", fontSize: 16 }}>
           {total.toLocaleString()}0đ
         </p>
       </div>
       <div className="flex-space-between cart-pop-navigate">
         <button
-          className="login-pop-btn"
+          className="login-pop-btn uppercase"
           onClick={() => navigate(CART_URL.INDEX)}
         >
-          <span>XEM GIỎ HÀNG</span>
+          <span>{t('header.view_cart')}</span>
         </button>
         <button
-          className="login-pop-btn"
+          className="login-pop-btn uppercase"
           onClick={() =>
             navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
           }
         >
-          <span>THANH TOÁN</span>
+          <span>{t('header.payment')}</span>
         </button>
       </div>
     </div>
@@ -271,11 +273,11 @@ const Header = () => {
   //   </div>
   // );
   const categories = [
-    { title: 'Racket', path: '/customer/racket', typeLink: 'racket', query: 'Racket' },
-    { title: 'Shoes', path: '/customer/shoes', typeLink: 'shoes', query: 'Shoes' },
-    { title: 'Shirt', path: '/customer/tshirt', typeLink: 'tshirt', query: 'tshirt' },
-    { title: 'Pants', path: '/customer/pant', typeLink: 'pant', query: 'pants' },
-    { title: 'Accessories', path: '/customer/accessory', typeLink: 'accessory', query: 'Accessories' },
+    { title: t('racket'), path: '/customer/racket', typeLink: 'racket', query: 'Racket' },
+    { title: t('shoes'), path: '/customer/shoes', typeLink: 'shoes', query: 'Shoes' },
+    { title: t('shirt'), path: '/customer/tshirt', typeLink: 'tshirt', query: 'tshirt' },
+    { title: t('pants'), path: '/customer/pant', typeLink: 'pant', query: 'pants' },
+    { title: t('accessories'), path: '/customer/accessory', typeLink: 'accessory', query: 'Accessories' },
   ];
   const content = (
     <div style={{ width: '100vw' }}>
@@ -291,7 +293,9 @@ const Header = () => {
               {brands.map(brand => (
                 <li key={`${category.query.toLowerCase()}-${brand._id}`}>
                   <Link to={`/customer/product?category=${category.query}&brand=${brand.name}`}>
-                    {brand.name} {category.title}
+                    {language === "vi"
+                      ? `${category.title} ${brand.name}`
+                      : `${brand.name} ${category.title}`}
                   </Link>
                 </li>
               ))}
@@ -363,7 +367,7 @@ const Header = () => {
               }}
               pattern="^[^\s].*"
               name="search"
-              placeholder={t('header.search_placeholder')}
+              placeholder={t('search.product')}
               className="search-input"
               autocomplete="off"
             />
@@ -478,7 +482,7 @@ const Header = () => {
             onClick={() => navigate(WISHLIST_URL.INDEX)}
           >
             <HeartOutlined style={{ fontSize: "24px" }} />
-            <span>Wishlist</span>
+            <span>{t('header.wishlist')}</span>
           </span>
         </Col>
         <Col span={2} style={{

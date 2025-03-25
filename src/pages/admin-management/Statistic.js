@@ -23,6 +23,7 @@ import {
   Rectangle,
   LabelList,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 
 import { exportExcel, getStatistic } from "../../services/statistic.service";
 
@@ -32,6 +33,9 @@ const Statistic = () => {
   const [ordersByMonth, setOrderByMonth] = useState([]);
   const [numberOfCategory, setNumberOfCategory] = useState([]);
   const [ratingOfCategory, setRatingOfCategory] = useState([])
+
+  const { t, i18n } = useTranslation();
+
 
   const handleChange = (value) => {
     console.log(`selected ${value}`);
@@ -82,7 +86,7 @@ const Statistic = () => {
                 exportExcel(statistic, ordersByMonth, numberOfCategory, statistic?.imports, statistic.numberOfRating);
               }}
             >
-              Download
+              {t('button.download')}
             </Button>
           </Tooltip>
         </Space>

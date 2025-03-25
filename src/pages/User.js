@@ -17,10 +17,14 @@ import { PATH } from "../config/api.config";
 import { options } from "./ProvinceData";
 import { TruckOutlined } from "@ant-design/icons";
 import { checkPermission } from "../utils/permission";
+import { useTranslation } from "react-i18next";
 
 const User = () => {
   const location = useLocation();
 
+
+  const { t, i18n } = useTranslation();
+  
   const navigate = useNavigate();
   const [view, setView] = useState("profile");
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
@@ -155,11 +159,11 @@ const User = () => {
 
   return (
     <div className="container profile">
-      <h1 className="profile-title">My Profile</h1>
+      <h1 className="profile-title">{t('header.my_account')}</h1>
       <Row className="profile-content">
         <Col span={6} className="profile-item">
           <div>
-            <h3 className="account-title">Account</h3>
+            <h3 className="account-title">{t('profile.label')}</h3>
           </div>
           <div>
             <ul style={{ listStyleType: "circle" }}>
@@ -171,7 +175,7 @@ const User = () => {
                     setView("profile");
                   }}
                 >
-                  Account information
+                  {t('profile.information')}
                 </Button>
               </li>
 
@@ -184,7 +188,7 @@ const User = () => {
                       setView("changePassword");
                     }}
                   >
-                    Change password
+                    {t('profile.change_pass')}
                   </Button>
                 </li>
 
@@ -197,7 +201,7 @@ const User = () => {
                     navigate("/customer/order");
                   }}
                 >
-                  Order
+                  {t('profile.order')}
                 </Button>
               </li>
 
@@ -211,7 +215,7 @@ const User = () => {
                     navigate("/customer");
                   }}
                 >
-                  Logout
+                  {t('profile.log_out')}
                 </Button>
               </li>
             </ul>
@@ -220,7 +224,7 @@ const User = () => {
         <Col span={18} className="profile-item">
           {view === "profile" ? (
             <>
-              <h3 className="account-title">Account information</h3>
+              <h3 className="account-title">{t('profile.information')}</h3>
               <Form
                 onFinish={onFinish}
                 // variant={componentVariant}
@@ -229,17 +233,17 @@ const User = () => {
               >
                 <Form.Item
                   name="username"
-                  label="Username"
+                  label={t('profile.username')}
                   rules={[
                     {
                       required: true,
-                      message: "Please input your username!",
+                      message: t('validate.username'),
                     },
                   ]}
                 >
                   <Input
                     disabled={true}
-                    placeholder="Username"
+                    placeholder={t('profile.username')}
                     className="register-input"
                   />
                 </Form.Item>
@@ -249,7 +253,7 @@ const User = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your email!",
+                      message: t('validate.email'),
                     },
                     { type: "email", message: "Please enter a valid email!" },
                   ]}
@@ -259,11 +263,11 @@ const User = () => {
 
                 <Form.Item
                   name="phone"
-                  label="Phone number"
+                  label={t('profile.phone_number')}
                   rules={[
                     {
                       required: true,
-                      message: "Please input your phone number!",
+                      message: t('validate.phone_number'),
                     },
                     {
                       pattern: /^[0-9]{10}$/,
@@ -275,11 +279,11 @@ const User = () => {
                 </Form.Item>
                 <Form.Item
                   name="address"
-                  label="Address"
+                  label={t('profile.address')}
                   rules={[
                     {
                       required: true,
-                      message: "Please select your address!",
+                      message: t('validate.address'), 
                     },
                   ]}
                 >
@@ -297,7 +301,7 @@ const User = () => {
                         fontSize: "16px",
                       }}
                     >
-                      Save
+                      {t('button.save')}
                     </Button>
                     <Button
                       color="default"
@@ -308,7 +312,7 @@ const User = () => {
                       }}
                       style={{ height: "auto", fontSize: "16px" }}
                     >
-                      Cancel
+                      {t('button.cancel')}
                     </Button>
                   </Form.Item>
                 }
@@ -316,7 +320,7 @@ const User = () => {
             </>
           ) : (
             <>
-              <h3 className="account-title">Change Password</h3>
+              <h3 className="account-title">{t('profile.change_pass')}</h3>
               <Form
                 onFinish={onChangePassword}
                 // variant={componentVariant}
@@ -326,11 +330,11 @@ const User = () => {
                 {initialValues.password != null ? (
                   <Form.Item
                     name="oldPassword"
-                    label="Old password"
+                    label={t('profile.old_pass')}
                     rules={[
                       {
                         required: true,
-                        message: "Please input your old password!",
+                        message: t('validate.old_pass'),
                       },
                     ]}
                   >
@@ -344,11 +348,11 @@ const User = () => {
                 )}
                 <Form.Item
                   name="newPassword"
-                  label="New password"
+                  label={t('profile.new_pass')}
                   rules={[
                     {
                       required: true,
-                      message: "Please input your new password!",
+                      message: t('validate.new_pass'),
                     },
                   ]}
                 >
@@ -359,14 +363,14 @@ const User = () => {
                 </Form.Item>
 
                 <Form.Item
-                  label="Confirm password"
+                  label={t('profile.confirm_pass')}
                   name="confirmPassword"
                   dependencies={["newPassword"]}
                   hasFeedback
                   rules={[
                     {
                       required: true,
-                      message: "Please confirm your password!",
+                      message: t('validate.confirm_pass'),
                     },
                     {},
                     ({ getFieldValue }) => ({
@@ -399,7 +403,7 @@ const User = () => {
                       fontSize: "16px",
                     }}
                   >
-                    Save
+                    {t('button.save')}
                   </Button>
                   <Button
                     color="default"
@@ -410,7 +414,7 @@ const User = () => {
                     }}
                     style={{ height: "auto", fontSize: "16px" }}
                   >
-                    Cancel
+                    {t('button.cancel')}
                   </Button>
                 </Form.Item>
               </Form>

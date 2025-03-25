@@ -4,11 +4,13 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { layout, tailLayout } from '../../config/style.config';
 import { createVoucher, editVoucher, getVoucher } from '../../services/voucher.service';
+import { useTranslation } from "react-i18next";
 
 const VoucherModel = ({ type }) => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const { id } = useParams();
+  const { t, i18n } = useTranslation();
 
     const onFinish = (values) => {
         const voucher = {
@@ -32,7 +34,7 @@ const VoucherModel = ({ type }) => {
         <>
             <Row>
                 <Title level={3}>
-                    {type === 'create' ? 'New Voucher' : 'Edit Voucher'}
+                    {type === 'create' ? t('dashboard.new_voucher') : t('dashboard.edit_voucher')}
                 </Title>
             </Row>
             <Row >
@@ -41,7 +43,7 @@ const VoucherModel = ({ type }) => {
                         {...layout}
                         form={form}
                         name="control-hooks"
-                        onFinish={onFinish}
+                        onFinish={onFinish} 
                         style={{
                             maxWidth: 600,
                         }}
@@ -62,7 +64,7 @@ const VoucherModel = ({ type }) => {
                         </Form.Item>
                         <Form.Item
                             name="condition"
-                            label="Condition"
+                            label={t('table.condition')}
                             rules={[
                                 {
                                     required: true,
@@ -75,10 +77,10 @@ const VoucherModel = ({ type }) => {
                         <Form.Item {...tailLayout}>
                             <Space>
                                 <Button type="primary" htmlType="submit" >
-                                    {type === 'create' ? 'Insert' : 'Edit'}
+                                    {type === 'create' ? t('button.insert') : t('button.edit')}
                                 </Button>
                                 <Button htmlType="button" onClick={() => navigate(-1)}>
-                                    Cancel
+                                {t('button.cancel')}
                                 </Button>
                             </Space>
                         </Form.Item>
