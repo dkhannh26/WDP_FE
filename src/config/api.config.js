@@ -45,6 +45,7 @@ export const API_PATH = {
   rejectRefund: baseURL + "order/refundReject",
   allRefund: baseURL + 'order/allRefund',
   paidOrder: baseURL + 'order/paid',
+  inventory: baseURL + "inventory",
 
 }
 export const PATH = {

@@ -4,8 +4,8 @@ import AccountModel from "../components/account/AccountModel";
 import AccountTable from "../components/account/AccountTable";
 import DiscountModel from "../components/discount/DiscountModel";
 import DiscountTable from "../components/discount/DiscountTable";
-import ImportModel from "../components/import/ImportModel";
-import ImportTable from "../components/import/ImportTable";
+import ImportModel from "../components/inventory/import/ImportModel";
+import ImportTable from "../components/inventory/import/ImportTable";
 import OrderTable from "../components/order/OrderTable";
 import AccessoryTable from "../components/product-admin/AccessoryTable";
 import PantTable from "../components/product-admin/PantTable";
@@ -40,6 +40,9 @@ import StaffPermission from "../components/permission/StaffPermission";
 import CustomerPermision from "../components/permission/CustomerPermision";
 import RatingDetail from "../pages/admin-management/RatingDetail";
 import Refund from "../components/order/Refund";
+import Inventory from "../pages/admin-management/Repository";
+import RepositoryTable from "../components/inventory/repository/RepositoryTable";
+import Repository from "../pages/admin-management/Repository";
 
 export const AdminRoutes = (
     <>
@@ -105,6 +108,11 @@ export const AdminRoutes = (
                 <Route index element={<ImportTable />} />
                 <Route path="create" element={<ImportModel type="create" />} />
                 <Route path="edit/:id" element={<ImportModel type="edit" />} />
+            </Route>
+            <Route path="repository" element={<Repository />}>
+                <Route index element={<RepositoryTable />} />
+                {/* <Route path="create" element={<ImportModel type="create" />} />
+                <Route path="edit/:id" element={<ImportModel type="edit" />} /> */}
             </Route>
             <Route path="order" element={<Voucher />}>
                 <Route index element={<OrderTable />} />

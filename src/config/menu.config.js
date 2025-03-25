@@ -48,10 +48,27 @@ export const menu = [
   },
   {
     icon: CodepenOutlined,
-    title: "Import",
-    role: "",
-    key: "/import",
+    title: "Inventory",
+    role: "admin",
+    key: "/inventory",
+    children: [
+      {
+        key: "repository",
+        label: "Repository",
+      },
+      {
+        key: "import",
+        label: "Import",
+      },
+    ],
   },
+  // {
+  //   icon: CodepenOutlined,
+  //   title: "Import",
+  //   role: "",
+  //   key: "/import",
+  // },
+
   {
     icon: ProductOutlined,
     role: "",
@@ -113,6 +130,7 @@ export const menu = [
     key: "/refund",
     role: "staff",
   },
+
 ].map((item, index) => {
   if (item.key === '/statistic' && checkPermission("viewStatistic")) {
     return {

@@ -3,15 +3,15 @@ import { Button, Col, Flex, message, Modal, Space, Table } from "antd";
 import Title from "antd/es/typography/Title";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MESSAGE } from "../../config/message.config";
-import { IMPORT_URL } from "../../config/url.config";
+import { MESSAGE } from "../../../config/message.config";
+import { IMPORT_URL } from "../../../config/url.config";
 import {
   confirmImport,
   getDetailImport,
   getListImport,
-} from "../../services/import.service";
-import { showDeleteImportConfirm, success } from "../../utils/helper";
-import { checkPermission } from "../../utils/permission";
+} from "../../../services/import.service";
+import { showDeleteImportConfirm, success } from "../../../utils/helper";
+import { checkPermission } from "../../../utils/permission";
 
 const ImportTable = () => {
   const [imports, setImports] = useState([]);
