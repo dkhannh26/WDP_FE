@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:3000/";
+export const baseURL = "http://localhost:3000/";
 
 export const API_PATH = {
   user: baseURL + "users",
@@ -32,11 +32,12 @@ export const API_PATH = {
   admin: baseURL + "admin",
   hotProduct: baseURL + "order/hotProduct",
   hotBrand: baseURL + "order/hotBrand",
-  sms: baseURL + 'sms/send-email',
-  payOS: baseURL + 'payOS/create-payment-link',
-  wishlist: baseURL + 'wishlist',
-  allDetail: baseURL + 'order/allDetails'
-}
+  sms: baseURL + "sms/send-email",
+  payOS: baseURL + "payOS/create-payment-link",
+  wishlist: baseURL + "wishlist",
+  allDetail: baseURL + "order/allDetails",
+  notification: baseURL + "notification",
+};
 export const PATH = {
   user: baseURL + "users",
   discount: baseURL + "discount",

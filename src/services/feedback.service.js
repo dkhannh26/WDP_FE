@@ -6,7 +6,6 @@ export const getListFeedback = (id, setFeedback) => {
     .get(API_PATH.feedback + `/${id}`)
     .then((res) => {
       setFeedback(res.data);
-      console.log(res.data);
     })
     .catch((error) => console.error(error));
 };
@@ -14,8 +13,11 @@ export const getListFeedback = (id, setFeedback) => {
 export const createFeedback = async (feedback, fileList) => {
   try {
     const feedbackResponse = await axios.post(API_PATH.feedback, feedback);
-    const feedbackId = feedbackResponse.data;
+    const feedbackId = feedbackResponse.data._id;
 
+    await axios.post(
+      `${API_PATH.notification}/send-notification/${feedbackId}`
+    );
     // Upload file nếu có fileList
     if (fileList && fileList.length > 0) {
       const uploadResponse = await axios.post(
@@ -29,11 +31,11 @@ export const createFeedback = async (feedback, fileList) => {
       );
 
       const imageUrls = uploadResponse.data.imageUrls || [];
-      return { imageUrls };
+
+      return { feedbackId, imageUrls };
     }
 
-    // Nếu không có file upload thì trả về mảng rỗng
-    return { imageUrls: [] };
+    return { imageUrls: [], feedbackId };
   } catch (error) {
     console.log(error);
   }
@@ -60,7 +62,9 @@ export const updateFeedback = async (id, feedback, fileList) => {
     const updateRes = await axios.put(`${API_PATH.feedback}/${id}`, feedback);
     const feedbackId = updateRes.data;
     let imageUrls = [];
-
+    await axios.post(
+      `${API_PATH.notification}/send-notification/${feedbackId}`
+    );
     if (imgArrResult.length > 0) {
       const uploadRes = await axios.post(
         `${API_PATH.feedback}/upload/${feedbackId}`,
@@ -115,5 +119,28 @@ export const getFeedbackImg = async (id) => {
     return fileList;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const createReply = async (feedbackId, replyData) => {
+  try {
+    const res = await axios.post(
+      API_PATH.feedback + `/reply/${feedbackId}`,
+      replyData
+    );
+    return res.data; // Trả về dữ liệu từ API
+  } catch (error) {
+    console.error("Error creating reply:", error);
+    throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+  }
+};
+
+export const getReplies = async (feedbackId) => {
+  try {
+    const res = await axios.get(API_PATH.feedback + `/reply/${feedbackId}`);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching replies:", error);
+    throw error;
   }
 };
