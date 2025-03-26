@@ -1,28 +1,10 @@
 import { Checkbox, Col, Row, Space, Typography, Divider, Button } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { getPermissionsByRole, updatePermission } from '../../services/permission.service';
-
-const profileOptions = [
-    { name: 'Edit Profile', value: 'editProfile' },
-    { name: 'Delete Profile', value: 'deleteProfile' },
-    { name: 'Change Password', value: 'changePassword' },
-];
-
-const statisticOptions = [
-    { name: 'View Statistic', value: 'viewStatistic' },
-];
-
-const orderOptions = [
-    { name: 'Delete Order', value: 'deleteOrder' },
-    { name: 'Confirm Order', value: 'confirmOrder' },
-    { name: 'Cancel Order', value: 'cancelOrder' },
-];
-
-const importOptions = [
-    { name: 'Confirm Import', value: 'confirmImport' },
-];
+import { useTranslation } from 'react-i18next';
 
 const StaffPermission = () => {
+
     const [profileCheckedList, setProfileCheckedList] = useState([]);
     const [statisticCheckedList, setStatisticCheckedList] = useState([]);
     const [orderCheckedList, setOrderCheckedList] = useState([]);
@@ -39,7 +21,7 @@ const StaffPermission = () => {
         setOrderCheckedList(orderChecked);
         setImportCheckedList(importChecked);
     };
-
+    const { t } = useTranslation();
     useEffect(() => {
         const fetchPermissions = async () => {
             try {
@@ -113,19 +95,39 @@ const StaffPermission = () => {
         }
     };
 
+    const profileOptions = [
+        { name: t('dashboard.edit_account'), value: 'editProfile' },
+        { name: t('permission.delete_account'), value: 'deleteProfile' },
+        { name: t('profile.change_pass'), value: 'changePassword' },
+    ];
+    
+    const statisticOptions = [
+        { name: t('permission.view_statistic'), value: 'viewStatistic' },
+    ];
+    
+    const orderOptions = [
+        { name: t('permission.delete_order'), value: 'deleteOrder' },
+        { name: t('permission.confirm_order'), value: 'confirmOrder' },
+        { name: t('permission.cancel_order'), value: 'cancelOrder' },
+    ];
+    
+    const importOptions = [
+        { name: t('permission.confirm_import'), value: 'confirmImport' },
+    ];
+
     return (
         <div style={{ padding: '10px 60px', height: '60vh' }}>
-            <Typography.Title>Staff Permission</Typography.Title>
+            <Typography.Title>{t('permission.staff')}</Typography.Title>
             <Row>
                 <Col span={12} style={{ textAlign: 'left' }}>
                     <CheckboxSection
-                        title="Profile"
+                        title={t('table.account')}
                         options={profileOptions}
                         checkedList={profileCheckedList}
                         setCheckedList={setProfileCheckedList}
                     />
                     <CheckboxSection
-                        title="Statistic"
+                        title={t('permission.statistic')}
                         options={statisticOptions}
                         checkedList={statisticCheckedList}
                         setCheckedList={setStatisticCheckedList}
@@ -133,13 +135,13 @@ const StaffPermission = () => {
                 </Col>
                 <Col span={12} style={{ textAlign: 'left' }}>
                     <CheckboxSection
-                        title="Order"
+                        title={t('profile.order')}
                         options={orderOptions}
                         checkedList={orderCheckedList}
                         setCheckedList={setOrderCheckedList}
                     />
                     <CheckboxSection
-                        title="Import"
+                        title={t('permission.import')}
                         options={importOptions}
                         checkedList={importCheckedList}
                         setCheckedList={setImportCheckedList}
@@ -147,7 +149,7 @@ const StaffPermission = () => {
                 </Col>
             </Row>
             <Row justify={'center'}>
-                <Button type="primary" onClick={handleUpdate}>Update</Button>
+                <Button type="primary" onClick={handleUpdate}>{t('button.update')}</Button>
             </Row>
         </div>
     );

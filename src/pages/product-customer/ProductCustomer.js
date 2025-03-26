@@ -11,6 +11,7 @@ import axios from "axios";
 import { useAuth } from "../../components/context/AuthContext";
 import { API_PATH, PATH } from "../../config/api.config";
 import { showDeleteConfirm } from "../../utils/helper";
+import { useTranslation } from "react-i18next";
 const ProductCustomer = () => {
   const { state } = useLocation();
   const [products, setProducts] = useState([]);
@@ -23,6 +24,9 @@ const ProductCustomer = () => {
   const brand = searchParams.get('brand');
   const [likedProducts, setLikedProducts] = useState({});
   const [wishlist, setWishlist] = useState([]);
+
+  const { t, i18n } = useTranslation();
+
 
   useEffect(() => {
     let filterCategory
@@ -68,12 +72,8 @@ const ProductCustomer = () => {
 
     fetchData();
   }, [isAuthenticated]);
-  useEffect(() => {
-    if (initialValues.userId) {
-      getListWishlist(initialValues.userId, setWishlist)
-    }
-  }, [initialValues.userId]);
-  const handleFiterChange = (value) => {
+
+  const handleFilterChange = (value) => {
     if (value === "increase") {
       const sortedAscending = sortProductsByPrice(products, 'asc');
       setProducts(sortedAscending);
@@ -155,21 +155,22 @@ const ProductCustomer = () => {
         </Title> */}
         <Row style={{ margin: "20px", marginLeft: 0 }}>
           <div className="product-filter">
-            <FilterOutlined /> Filter
+            <FilterOutlined /> {t('filter')}
             <Select
-              defaultValue="Price"
+              defaultValue={t('price')}
               style={{
                 marginLeft: 20,
+                width: 110,
               }}
-              onChange={handleFiterChange}
+              onChange={handleFilterChange}
               options={[
                 {
-                  value: "increase",
-                  label: "Increase",
+                  value: 'increase',
+                  label: t('increase'),
                 },
                 {
-                  value: "decrease",
-                  label: "Decrease",
+                  value: 'decrease',
+                  label: t('decrease'),
                 },
               ]}
             />
@@ -197,11 +198,11 @@ const ProductCustomer = () => {
                     description={
                       <>
                         <p>
-                          Giá gốc: {item.productPrice.toLocaleString("vi-VN")}₫
+                          {t('home.origin_price')}: {item.productPrice.toLocaleString("vi-VN")}₫
                         </p>
                         {item.productDiscountPercent ? (
                           <p>
-                            Giá khuyến mãi:{" "}
+                            {t('home.promotional_price')}:{" "}
                             {(
                               item.productPrice -
                               (item.productPrice * item.productDiscountPercent) /
@@ -210,7 +211,7 @@ const ProductCustomer = () => {
                             ₫ (-{item.productDiscountPercent}%)
                           </p>
                         ) : (
-                          <p>Chưa có khuyến mãi</p>
+                          <p>{t('home.no_promotions')}</p>
                         )}
                       </>
                     }

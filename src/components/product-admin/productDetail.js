@@ -5,6 +5,7 @@ import Title from 'antd/es/typography/Title';
 import { getProductDetail } from '../../services/product/product.service';
 import { EditOutlined } from '@ant-design/icons';
 import { TSHIRT_URL } from '../../config/url.config';
+import { useTranslation } from "react-i18next";
 
 const { Text } = Typography;
 const ProductDetail = () => {
@@ -15,6 +16,7 @@ const ProductDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const editPath = location.pathname.replace('/detail/', '/edit/');
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         getProductDetail(id, setProduct, setImages, setCanvas)
@@ -66,7 +68,7 @@ const ProductDetail = () => {
                             marginBottom: 20,
                         }}
                     >
-                        <span><Text style={{ fontSize: 16, fontWeight: 600 }}>Thương hiệu:{' '}</Text>
+                        <span><Text style={{ fontSize: 16, fontWeight: 600 }}>{t('table.brand')}:{' '}</Text>
                             <Text style={{ fontSize: 16, fontWeight: 400 }}>{product?.brand?.name}</Text></span>
                     </Row>
                     <Row
@@ -138,9 +140,9 @@ const ProductDetail = () => {
                                 return (
                                     <div style={{ textAlign: "left" }}>
                                         <Space>
-                                            <Text style={{ fontSize: 18 }}>Kích thước: {item.size_name}</Text>
+                                            <Text style={{ fontSize: 18 }}>{t('header.size')}: {item.size_name}</Text>
                                             <Text style={{ fontSize: 18 }}>
-                                                Số lượng: {item.quantity}
+                                            {t('table.quantity')}: {item.quantity}
                                             </Text>
                                         </Space>
                                     </div>
@@ -158,10 +160,10 @@ const ProductDetail = () => {
                     >
                         <Space>
                             <Button icon={<EditOutlined />} size={30} onClick={() => navigate(editPath)}>
-                                Chỉnh sửa thông tin
+                            {t('button.edit')}
                             </Button>
                             <Button danger>
-                                Xóa sản phẩm
+                            {t('button.delete')}
                             </Button>
                         </Space>
                     </Row>

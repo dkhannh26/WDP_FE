@@ -16,6 +16,7 @@ import { useAuth } from "../../components/context/AuthContext";
 import axios from "axios";
 import { PATH } from "../../config/api.config";
 import { options } from "../../utils/ProvinceData";
+import { useTranslation } from "react-i18next";
 
 import "../../assets/css/profile.css";
 import { checkPermission } from "../../utils/permission";
@@ -23,6 +24,8 @@ const ProfileTable = () => {
   const navigate = useNavigate();
   const [view, setView] = useState("profile");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { t, i18n } = useTranslation();
 
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
     useAuth();
@@ -145,11 +148,11 @@ const ProfileTable = () => {
                   setView("changePassword");
                 }}
               >
-                Change password
+                {t('profile.change_pass')}
               </Button>
             </Col>
             <Col span={6} offset={6}>
-              <h3 className="account-title">Account information</h3>
+              <h3 className="account-title">{t('profile.information')}</h3>
             </Col>
           </>
         ) : (
@@ -173,7 +176,7 @@ const ProfileTable = () => {
               </Button>
             </Col>
             <Col span={6} offset={6}>
-              <h3 className="account-title">Change password</h3>
+              <h3 className="account-title">{t('profile.change_pass')}</h3>
             </Col>
           </>
         )}
@@ -183,17 +186,17 @@ const ProfileTable = () => {
           <Form onFinish={onFinish} form={form} layout="vertical">
             <Form.Item
               name="username"
-              label="Username"
+              label={t('profile.username')}
               rules={[
                 {
                   required: true,
-                  message: "Please input your username!",
+                  message: t('validate.username'),
                 },
               ]}
             >
               <Input
                 disabled={true}
-                placeholder="Username"
+                placeholder={t('profile.username')}
                 className="register-input"
               />
             </Form.Item>
@@ -203,7 +206,7 @@ const ProfileTable = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: t('validate.email'),
                 },
                 { type: "email", message: "Please enter a valid email!" },
               ]}
@@ -212,11 +215,11 @@ const ProfileTable = () => {
             </Form.Item>
             <Form.Item
               name="phone"
-              label="Phone number"
+              label={t('profile.phone_number')}
               rules={[
                 {
                   required: true,
-                  message: "Please input your phone number!",
+                  message: t('validate.phone_number'),
                 },
                 {
                   pattern: /^[0-9]{10}$/,
@@ -228,11 +231,11 @@ const ProfileTable = () => {
             </Form.Item>
             <Form.Item
               name="address"
-              label="Address"
+              label={t('profile.address')}
               rules={[
                 {
                   required: true,
-                  message: "Please select your address!",
+                  message: t('validate.address'),
                 },
               ]}
             >
@@ -253,7 +256,7 @@ const ProfileTable = () => {
                     fontSize: "16px",
                   }}
                 >
-                  Save
+                  {t('button.save')}
                 </Button>
                 <Button
                   color="default"
@@ -264,7 +267,7 @@ const ProfileTable = () => {
                   }}
                   style={{ height: "auto", fontSize: "16px" }}
                 >
-                  Cancel
+                  {t('button.cancel')}
                 </Button>
               </Form.Item>
             }
@@ -278,30 +281,30 @@ const ProfileTable = () => {
               layout="vertical"
             >
               <Form.Item
-                name="oldPassword"
-                label="Old password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your old password!",
-                  },
-                ]}
-              >
+                                  name="oldPassword"
+                                  label={t('profile.old_pass')}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: t('validate.old_pass'),
+                                    },
+                                  ]}
+                                >
                 <Input.Password
                   placeholder="Old password"
                   className="register-input"
                 />
               </Form.Item>
               <Form.Item
-                name="newPassword"
-                label="New password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your new password!",
-                  },
-                ]}
-              >
+                                name="newPassword"
+                                label={t('profile.new_pass')}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: t('validate.new_pass'),
+                                  },
+                                ]}
+                              >
                 <Input.Password
                   placeholder="New Password"
                   className="register-input"
@@ -309,14 +312,14 @@ const ProfileTable = () => {
               </Form.Item>
 
               <Form.Item
-                label="Confirm password"
+                label={t('profile.confirm_pass')}
                 name="confirmPassword"
                 dependencies={["newPassword"]}
                 hasFeedback
                 rules={[
                   {
                     required: true,
-                    message: "Please confirm your password!",
+                    message: t('validate.confirm_pass'),
                   },
                   {},
                   ({ getFieldValue }) => ({
@@ -349,7 +352,7 @@ const ProfileTable = () => {
                     fontSize: "16px",
                   }}
                 >
-                  Save
+                  {t('button.save')}
                 </Button>
                 <Button
                   color="default"
@@ -360,7 +363,7 @@ const ProfileTable = () => {
                   }}
                   style={{ height: "auto", fontSize: "16px" }}
                 >
-                  Cancel
+                  {t('button.cancel')}
                 </Button>
               </Form.Item>
             </Form>

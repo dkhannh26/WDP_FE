@@ -9,10 +9,12 @@ import { showDeleteConfirm, success } from "../../utils/helper";
 import Highlighter from 'react-highlight-words';
 import { getProductList } from "../../services/product/product.service";
 import { API_PATH } from "../../config/api.config";
+import { useTranslation } from "react-i18next";
 
 const TshirtTable = () => {
   // const [tshirts, setTshirts] = useState([]);
   const [products, setProducts] = useState([]);
+  const { t, i18n } = useTranslation();
 
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -127,7 +129,7 @@ const TshirtTable = () => {
 
     },
     {
-      title: "Image",
+      title: t('table.img'),
       dataIndex: "productImg",
       render: (imgUrl) => {
         return (
@@ -137,21 +139,21 @@ const TshirtTable = () => {
       width: "20%",
     },
     {
-      title: "Name",
+      title: t('table.name'),
       dataIndex: "productName",
       filterSearch: true,
       width: "20%",
       ...getColumnSearchProps('productName'),
     },
     {
-      title: "Price(VND)",
+      title: t('price') + " (VND)",
       dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
       sorter: (a, b) => a.productPrice - b.productPrice,
     },
     {
-      title: "Discount percent",
+      title: t('table.discount_percent'),
       dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
@@ -161,7 +163,7 @@ const TshirtTable = () => {
       sorter: (a, b) => a.productDiscountPercent - b.productDiscountPercent,
     },
     {
-      title: "Action",
+      title: t('table.action'),
       dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
@@ -225,7 +227,7 @@ const TshirtTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>T-shirt Management</Title>
+          <Title level={2}>{t('dashboard.shirt_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -237,7 +239,7 @@ const TshirtTable = () => {
           }}
         >
           {role === "admin" ? (
-            <Button onClick={() => navigate(TSHIRT_URL.CREATE)}>Insert</Button>
+            <Button onClick={() => navigate(TSHIRT_URL.CREATE)}>{t('button.insert')}</Button>
           ) : (
             ""
           )}

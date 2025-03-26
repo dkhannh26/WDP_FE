@@ -22,11 +22,15 @@ import {
   getDiscount,
 } from "../../services/account.service";
 import { options } from "../../utils/ProvinceData";
+import { useTranslation } from "react-i18next";
+
 const AccountModel = ({ type }) => {
   const [date, setDate] = useState();
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t, i18n } = useTranslation();
+
 
   const onFinish = (values) => {
     const account = {
@@ -53,7 +57,7 @@ const AccountModel = ({ type }) => {
     <>
       <Row>
         <Title level={3}>
-          {type === "create" ? "New Staff Account" : "Edit Account"}
+          {type === "create" ? t('button.add_staff_account') : t('dashboard.edit_account')}
         </Title>
       </Row>
       <Row>
@@ -69,11 +73,11 @@ const AccountModel = ({ type }) => {
           >
             <Form.Item
               name="username"
-              label="Username"
+              label={t('profile.username')}
               rules={[
                 {
                   required: true,
-                  message: "Please input your username!",
+                  message: t('validate.username'),
                 },
                 {
                   pattern: /^[a-zA-Z0-9]{3,}$/,
@@ -88,14 +92,14 @@ const AccountModel = ({ type }) => {
             {type === "create" ? (
               <Form.Item
                 name="password"
-                label="Password"
+                label={t('password')}
                 rules={[
                   {
                     required: true,
                     message:
                       type === "create"
-                        ? "Please input your password!"
-                        : "Please input your new password!",
+                        ? t('validate.pass')
+                        : t('validate.new_password'),
                   },
                   {
                     min: 6,
@@ -115,7 +119,7 @@ const AccountModel = ({ type }) => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your email!",
+                  message: t('validate.email'),
                 },
                 { type: "email", message: "Please enter a valid email!" },
               ]}
@@ -125,11 +129,11 @@ const AccountModel = ({ type }) => {
 
             <Form.Item
               name="address"
-              label="Address"
+              label={t('profile.address')}
               rules={[
                 {
                   required: true,
-                  message: "Please select your address!",
+                  message: t('validate.address'),
                 },
               ]}
             >
@@ -137,11 +141,11 @@ const AccountModel = ({ type }) => {
             </Form.Item>
             <Form.Item
               name="phone"
-              label="Phone number"
+              label={t('profile.phone_number')}
               rules={[
                 {
                   required: true,
-                  message: "Please input your phone number!",
+                  message: t('validate.phone_number'),
                 },
                 {
                   pattern: /^[0-9]{10}$/,
@@ -155,10 +159,10 @@ const AccountModel = ({ type }) => {
             <Form.Item {...tailLayout}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  {type === "create" ? "Insert" : "Edit"}
+                  {type === "create" ? t('button.insert') : t('button.edit')}
                 </Button>
                 <Button htmlType="button" onClick={() => navigate(-1)}>
-                  Cancel
+                {t('button.cancel')}
                 </Button>
               </Space>
             </Form.Item>

@@ -12,7 +12,11 @@ import Carousel4 from '../../assets/images/carousel4.webp';
 import Carousel5 from '../../assets/images/carousel5.webp';
 import NoImage from '../../assets/images/no-image.jpg';
 import { getHotBrand, getTop10 } from '../../services/order.service';
+import { useTranslation } from "react-i18next";
 const Home = () => {
+
+    const { t, i18n } = useTranslation();
+
     const carouselRef = React.useRef(null);
 
     const nextSlide = () => {
@@ -60,23 +64,23 @@ const Home = () => {
             <Row className='container' style={{ margin: "15px auto", padding: "0 24px" }}>
                 <Col span={6} className='service-item'>
                     <TruckOutlined className='service-icon' />
-                    <h2 className='service-title'>Free shipping</h2>
-                    <p>With orders from 500k or more</p>
+                    <h2 className='service-title'>{t('home.free_shipping')}</h2>
+                    <p>{t('home.free_shipping2')}</p>
                 </Col>
                 <Col span={6} className='service-item'>
                     <CommentOutlined className='service-icon' />
-                    <h2 className='service-title'>24/7 support</h2>
-                    <p>Online / offline support 24/7</p>
+                    <h2 className='service-title'>{t('home.24/7_support')}</h2>
+                    <p>{t('home.24/7_support2')}</p>
                 </Col>
                 <Col span={6} className='service-item'>
                     <DropboxOutlined className='service-icon' />
-                    <h2 className='service-title'>Free returns</h2>
-                    <p>Within 7 days</p>
+                    <h2 className='service-title'>{t('home.free_returns')}</h2>
+                    <p>{t('home.free_returns2')}</p>
                 </Col>
                 <Col span={6} className='service-item'>
                     <CreditCardOutlined className='service-icon' />
-                    <h2 className='service-title'>Order online</h2>
-                    <p>Hotline: 0357 420 420</p>
+                    <h2 className='service-title'>{t('home.order_online')}</h2>
+                    <p>{t('home.order_online2')}: 0292 7301 988</p>
                 </Col>
             </Row>
             {/* <div className='container'>
@@ -93,7 +97,7 @@ const Home = () => {
                 </Row>
             </div> */}
             <div className='container'>
-                <h2 className='home-item-title'>Hot Product</h2>
+                <h2 className='home-item-title'>{t('home.hot_products')}</h2>
                 <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }}>
                     <div style={{
                         padding: "2%",
@@ -102,19 +106,19 @@ const Home = () => {
                     }}>
                         <Row>
                             <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "all" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("all")}>Tất cả</Title>
+                                <Title level={4} onClick={() => setSelectedCategory("all")}>{t('all')}</Title>
                             </Col>
                             <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Vợt cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Vợt cầu lông")}>Vợt cầu lông</Title>
+                                <Title level={4} onClick={() => setSelectedCategory("Vợt cầu lông")}>{t('racket')}</Title>
                             </Col>
                             <Col span={5} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Giày cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Giày cầu lông")}>Giày cầu lông</Title>
+                                <Title level={4} onClick={() => setSelectedCategory("Giày cầu lông")}>{t('shoes')}</Title>
                             </Col>
                             <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", borderRight: "1px solid rgba(0, 0, 0, 0.2)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: selectedCategory === "Áo cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Áo cầu lông")}>Áo cầu lông</Title>
+                                <Title level={4} onClick={() => setSelectedCategory("Áo cầu lông")}>{t('shirt')}</Title>
                             </Col>
                             <Col span={4} style={{ cursor: "pointer", paddingTop: "1%", display: "flex", alignItems: "center", justifyContent: "center", marginLeft: "2%", backgroundColor: selectedCategory === "Quần cầu lông" ? "lightblue" : "transparent" }}>
-                                <Title level={4} onClick={() => setSelectedCategory("Quần cầu lông")}>Quần cầu lông</Title>
+                                <Title level={4} onClick={() => setSelectedCategory("Quần cầu lông")}>{t('pants')}</Title>
                             </Col>
                         </Row>
                     </div>
@@ -132,11 +136,11 @@ const Home = () => {
                                         title={product.productName}
                                         description={
                                             <>
-                                                <p>Giá gốc: {product.productPrice}₫</p>
+                                                <p>{t('home.origin_price')}: {product.productPrice}₫</p>
                                                 {product.productDiscount ? (
-                                                    <p>Giá khuyến mãi: {(product.productPrice - (product.productPrice * product.productDiscount) / 100)}₫ (-{product.productDiscount}%)</p>
+                                                    <p>{t('home.promotional_price')}: {(product.productPrice - (product.productPrice * product.productDiscount) / 100)}₫ (-{product.productDiscount}%)</p>
                                                 ) : (
-                                                    <p>Chưa có khuyến mãi</p>
+                                                    <p>{t('home.no_promotions')}</p>
                                                 )}
                                             </>
                                         }
@@ -170,7 +174,7 @@ const Home = () => {
                         <RightOutlined onClick={nextSlide} style={{ fontSize: "24px", cursor: "pointer" }} />
                     </div>
                 </div>
-                <h2 className='home-item-title'>Hot Brands</h2>
+                <h2 className='home-item-title'>{t('home.hot_brands')}</h2>
                 <div style={{ position: "relative", width: "100%", margin: "0 auto", marginTop: "3%" }}>
                     <div style={{
                         padding: "2%",
@@ -215,11 +219,11 @@ const Home = () => {
                                         title={product.productName}
                                         description={
                                             <>
-                                                <p>Giá gốc: {product.productPrice}₫</p>
+                                                <p>{t('home.origin_price')}: {product.productPrice}₫</p>
                                                 {product.productDiscount ? (
-                                                    <p>Giá khuyến mãi: {(product.productPrice - (product.productPrice * product.productDiscount) / 100)}₫ (-{product.productDiscount}%)</p>
+                                                    <p>{t('home.promotional_price')}: {(product.productPrice - (product.productPrice * product.productDiscount) / 100)}₫ (-{product.productDiscount}%)</p>
                                                 ) : (
-                                                    <p>Chưa có khuyến mãi</p>
+                                                    <p>{t('home.no_promotions')}</p>
                                                 )}
                                             </>
                                         }

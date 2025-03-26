@@ -5,8 +5,9 @@ import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/context/AuthContext";
 import { notification } from "antd";
-
+import { useTranslation } from "react-i18next";
 const LoginAdmin = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { setIsAuthenticated, setUsername, setUser } = useAuth();
 

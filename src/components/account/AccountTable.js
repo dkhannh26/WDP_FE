@@ -17,12 +17,15 @@ import {
   success,
 } from "../../utils/helper";
 import { Input } from "antd";
+import { useTranslation } from "react-i18next";
 
+ 
 const { Search } = Input;
 
 const AccountTable = () => {
   const [account, setAccounts] = useState([]);
   const [filteredAccounts, setFilteredAccounts] = useState(account);
+  const { t, i18n } = useTranslation();
 
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -65,7 +68,7 @@ const AccountTable = () => {
       width: "5%",
     },
     {
-      title: "Username",
+      title: t('profile.username'),
       dataIndex: "username",
       sorter: (a, b) => a.percent - b.percent,
       width: "15%",
@@ -76,27 +79,27 @@ const AccountTable = () => {
       width: "20%",
     },
     {
-      title: "Role",
+      title: t('table.role'),
       dataIndex: "role",
       width: "10%",
     },
     {
-      title: "Address",
+      title: t('table.address'),
       dataIndex: "address",
       width: "15%",
     },
     {
-      title: "Phone number",
+      title: t('table.phone'),
       dataIndex: "phone",
       width: "15%",
     },
     {
-      title: "Is Deleted",
+      title: t('table.locked'),
       dataIndex: "deleted",
       width: "10%",
     },
     {
-      title: "Action",
+      title: t('table.action'),
       dataIndex: "_id",
       render: (_id, record) => {
         return (
@@ -166,7 +169,7 @@ const AccountTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>Account Management</Title>
+          <Title level={2}>{t('dashboard.account_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -178,7 +181,7 @@ const AccountTable = () => {
           }}
         >
           <Button onClick={() => navigate(ACCOUNT_URL.CREATE)}>
-            Add staff account
+          {t('button.add_staff_account')}
           </Button>
         </Col>
       </Flex>
@@ -186,7 +189,7 @@ const AccountTable = () => {
       <Row style={{ marginLeft: 0 }}>
         <Col span={6}>
           <Search
-            placeholder="Enter something to search"
+            placeholder={t('search.something')}
             allowClear
             enterButton
             size="large"
@@ -201,21 +204,22 @@ const AccountTable = () => {
         </Col>
         <Col span={6}>
           <div style={{ fontWeight: 600, fontSize: 20 }}>
-            <FilterOutlined /> Filter
+            <FilterOutlined /> {t('filter')}
             <Select
-              defaultValue="Role"
+              defaultValue={t('table.role')}
               style={{
                 marginLeft: 20,
+                width: 120,
               }}
               onChange={handleFilterChange}
             >
-              <Select.OptGroup label="Role">
+              <Select.OptGroup label={t('table.role')}>
                 <Select.Option value="user">User</Select.Option>
                 <Select.Option value="staff">Staff</Select.Option>
               </Select.OptGroup>
-              <Select.OptGroup label="Status">
-                <Select.Option value="active">Active</Select.Option>
-                <Select.Option value="deleted">Locked</Select.Option>
+              <Select.OptGroup label={t('table.status')}>
+                <Select.Option value="active">{t('table.active')}</Select.Option>
+                <Select.Option value="deleted">{t('table.locked')}</Select.Option>
               </Select.OptGroup>
             </Select>
           </div>

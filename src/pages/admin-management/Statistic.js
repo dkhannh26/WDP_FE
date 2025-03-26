@@ -23,6 +23,7 @@ import {
   Rectangle,
   LabelList,
 } from "recharts";
+import { useTranslation } from "react-i18next";
 
 import { exportExcel, getStatistic } from "../../services/statistic.service";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +35,10 @@ const Statistic = () => {
   const [numberOfCategory, setNumberOfCategory] = useState([]);
   const [ratingOfCategory, setRatingOfCategory] = useState([])
   const navigate = useNavigate()
+
+  const { t } = useTranslation();
+
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     setYear(value);
@@ -85,7 +90,7 @@ const Statistic = () => {
                 exportExcel(statistic, ordersByMonth, numberOfCategory, statistic?.imports, statistic.numberOfRating);
               }}
             >
-              Download
+              {t('button.download')}
             </Button>
           </Tooltip>
         </Space>

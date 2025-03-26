@@ -2,9 +2,12 @@ import React from 'react';
 import '../../assets/css/footer.css'
 import { Col, Row } from 'antd';
 import { EnvironmentFilled, PhoneFilled, MailFilled, FacebookFilled, InstagramFilled } from '@ant-design/icons';
-
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+    const { t, i18n } = useTranslation();
+    
+      
     return (
         <div className='footer'>
             <Row className='container'>
@@ -19,30 +22,30 @@ const Footer = () => {
                     </p>
                 </Col> */}
                 <Col span={8} className='footer-content'>
-                    <div className='footer-item--title'>
-                        CHÍNH SÁCH
+                    <div className='footer-item--title uppercase'>
+                        {t('footer.policy')}
                     </div>
                     <ul className='footer-list'>
                         <li>
-                            <a href='/'>Chính sách bảo mật</a>
+                            <a href='/'>{t('footer.policy2')}</a>
                         </li>
                         <li>
-                            <a href='/'>Hướng dẫn mua hàng</a>
+                            <a href='/'>{t('footer.policy3')}</a>
                         </li>
                         <li>
-                            <a href='/'>Phương thức thanh toán</a>
+                            <a href='/'>{t('footer.policy4')}</a>
                         </li>
                         <li>
-                            <a href='/'>Chính sách giao nhận - vận chuyển</a>
+                            <a href='/'>{t('footer.policy5')}</a>
                         </li>
                         <li>
-                            <a href='/'>Chính sách đổi và bảo hành sản phẩm</a>
+                            <a href='/'>{t('footer.policy6')}</a>
                         </li>
                     </ul>
                 </Col>
                 <Col span={8} className='footer-content'>
                     <div className='footer-item--title'>
-                        HỆ THỐNG CỬA HÀNG DOTAI
+                    {t('footer.store_system')}
                     </div>
                     <ul className='footer-list store-system'>
                         <li>

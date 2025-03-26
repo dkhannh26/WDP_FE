@@ -101,7 +101,7 @@ const Dashboard = () => {
         >
           <div style={{ display: 'flex' }}>
             <Title style={{ fontSize: 17, paddingRight: 10 }}>
-              Ngôn ngữ:
+              {t('language')}:
             </Title>
             {'  '}
             <CustomSwitch
@@ -113,7 +113,6 @@ const Dashboard = () => {
                 <Image
                   position='absolute'
                   width={30}
-
                   src={VietFlag}
                 />}
               unCheckedChildren={
@@ -131,7 +130,7 @@ const Dashboard = () => {
             }}
           >
             <Title style={{ fontSize: 20, padding: 5 }}>
-              Hello {user.username}
+              {t('dashboard.hello')} {user.username}
             </Title>
             <Button
               onClick={() => {
@@ -143,7 +142,7 @@ const Dashboard = () => {
                 navigate("/admin/login");
               }}
             >
-              Logout
+              {t('button.log_out')}
             </Button>
           </div>
         </Header>

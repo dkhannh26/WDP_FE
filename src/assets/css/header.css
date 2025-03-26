@@ -46,6 +46,10 @@
   color: #677279;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
 .container {
   margin: auto;
   width: 1200px;

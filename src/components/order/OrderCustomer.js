@@ -10,6 +10,8 @@ import UploadImg from '../common/UploadImg';
 import { useAuth } from "../context/AuthContext";
 import { success } from '../../utils/helper';
 import { MESSAGE } from "../../config/message.config";
+import { useTranslation } from "react-i18next";
+
 const { Text, Title } = Typography;
 
 const OrderCustomer = () => {
@@ -35,6 +37,9 @@ const OrderCustomer = () => {
     const handleFileListChange = (newFileList) => {
         setFileList(newFileList);
     };
+
+    const { t, i18n } = useTranslation();
+
 
     const onChange = (e) => {
         const value = e.target.value.toLowerCase();
@@ -166,7 +171,7 @@ const OrderCustomer = () => {
             width: '2%',
         },
         {
-            title: 'Day',
+            title: t('table.day'),
             dataIndex: 'createdAt',
             width: '10%',
             render: (text) => new Date(text).toLocaleString('vi-VN', {
@@ -180,23 +185,23 @@ const OrderCustomer = () => {
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
-            title: 'Phone',
+            title: t('table.phone'),
             dataIndex: 'phone',
             width: '10%',
         },
         {
-            title: 'Address',
+            title: t('table.address'),
             dataIndex: 'address',
             width: '30%',
         },
         {
-            title: 'Total',
+            title: t('table.total'),
             dataIndex: 'total_price',
             sorter: (a, b) => a.total_price - b.total_price,
             width: '10%',
         },
         {
-            title: 'Status',
+            title: t('table.status'),
             dataIndex: 'status',
             width: '10%',
             sorter: (a, b) => {
@@ -249,7 +254,7 @@ const OrderCustomer = () => {
             width: '20%',
         }] : []),
         {
-            title: 'Action',
+            title: t('table.action'),
             dataIndex: '_id',
             render: (_id, record) => {
                 return (
@@ -477,10 +482,16 @@ const OrderCustomer = () => {
                         style={{ gap: '3%', fontSize: '16px', justifyContent: 'center', width: '100%' }}
                     />
                 </Row>
+                <Button onClick={() => setStatus("pending")} type={status === "pending" ? "primary" : "default"} style={{ marginRight: '1%' }}>
+                    {t('button.pending')}
+                </Button>
+                <Button onClick={() => setStatus("done")} type={status === "done" ? "primary" : "default"}>
+                    {t('button.done')}
+                </Button>
             </div>
 
             <Search
-                placeholder="Enter name of product to search"
+                placeholder={t('search.order')}
                 allowClear
                 enterButton
                 size="large"

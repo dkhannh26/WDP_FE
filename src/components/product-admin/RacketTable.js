@@ -9,6 +9,7 @@ import { showDeleteConfirm, success } from "../../utils/helper";
 import Highlighter from 'react-highlight-words';
 import { getProductList } from "../../services/product/product.service";
 import { API_PATH } from "../../config/api.config";
+import { useTranslation } from "react-i18next";
 
 const RacketTable = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +18,7 @@ const RacketTable = () => {
   const location = useLocation();
   const { state } = location;
   const role = localStorage.getItem("role");
+  const { t, i18n } = useTranslation();
 
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
@@ -124,7 +126,7 @@ const RacketTable = () => {
       width: "10%",
     },
     {
-      title: "Image",
+      title: t('table.img'),
       dataIndex: "productImg",
       render: (imgUrl) => {
         return (
@@ -134,21 +136,21 @@ const RacketTable = () => {
       width: "20%",
     },
     {
-      title: "Name",
+      title: t('table.name'),
       dataIndex: "productName",
       filterSearch: true,
       width: "20%",
       ...getColumnSearchProps('productName'),
     },
     {
-      title: "Price(VND)",
+      title: t('price') + " (VND)",
       dataIndex: "productPrice",
       render: (price) => price.toLocaleString("vi-VN"),
       width: "20%",
       sorter: (a, b) => a.productPrice - b.productPrice,
     },
     {
-      title: "Discount percent",
+      title: t('table.discount_percent'),
       dataIndex: "productDiscountPercent",
       render: (percent) => {
         if (percent) return `${percent}%`;
@@ -158,7 +160,7 @@ const RacketTable = () => {
       sorter: (a, b) => a.productDiscountPercent - b.productDiscountPercent,
     },
     {
-      title: "Action",
+      title: t('table.action'),
       dataIndex: "productId",
       render: (_id) => {
         return role === "admin" ? (
@@ -220,7 +222,7 @@ const RacketTable = () => {
       <Flex gap="middle" align="center" justify="space-between">
         {contextHolder}
         <Col>
-          <Title level={2}>Racket Management</Title>
+          <Title level={2}>{t('dashboard.racket_mng')}</Title>
         </Col>
         <Col
           className="gutter-row"
@@ -232,13 +234,13 @@ const RacketTable = () => {
           }}
         >
           {role === "admin" ? (
-            <Button onClick={() => navigate(RACKET_URL.CREATE)}>Insert</Button>
+            <Button onClick={() => navigate(RACKET_URL.CREATE)}>{t('button.insert')}</Button>
           ) : (
             ""
           )}
         </Col>
       </Flex>
-      <Table columns={columns} dataSource={products} />
+      <Table columns={columns} dataSource={products} /> 
     </>
   );
 };

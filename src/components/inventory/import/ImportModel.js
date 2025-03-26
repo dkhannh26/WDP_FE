@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { layout, tailLayout } from "../../../config/style.config";
 import { createImport, downloadTemplate } from "../../../services/import.service";
+import { useTranslation } from "react-i18next";
+
 
 const ImportModel = ({ type }) => {
   const [importList, setImportList] = useState([]);
@@ -14,6 +16,7 @@ const ImportModel = ({ type }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { t, i18n } = useTranslation();
 
   const onFinish = (values) => {
     console.log(importList);
@@ -52,7 +55,7 @@ const ImportModel = ({ type }) => {
     <>
       <Row>
         <Title level={3}>
-          {type === "create" ? "New Import" : "Edit Discount"}
+          {type === "create" ? t('dashboard.new_import') : t('dashboard.edit_import')}
         </Title>
       </Row>
       <Row>
@@ -65,7 +68,7 @@ const ImportModel = ({ type }) => {
           color="default"
           onClick={() => downloadTemplate()}
         >
-          Import template
+          {t('dashboard.import_temp')}
         </Button>
       </Row>
       <Row>
@@ -101,10 +104,10 @@ const ImportModel = ({ type }) => {
             <Form.Item {...tailLayout}>
               <Space>
                 <Button type="primary" htmlType="submit">
-                  {type === "create" ? "Insert" : "Edit"}
+                  {type === "create" ? t('button.insert') : t('button.edit')}
                 </Button>
                 <Button htmlType="button" onClick={() => navigate(-1)}>
-                  Cancel
+                  {t('button.cancel')}
                 </Button>
               </Space>
             </Form.Item>

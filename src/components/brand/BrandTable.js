@@ -9,6 +9,7 @@ import { BRAND_URL } from '../../config/url.config';
 import { getListBrand, getListFilter } from '../../services/brand.service';
 import { showDeleteConfirm, success } from '../../utils/helper';
 import Search from 'antd/es/input/Search';
+import { useTranslation } from 'react-i18next';
 
 const BrandTable = () => {
     const [brands, setBrands] = useState([])
@@ -27,6 +28,7 @@ const BrandTable = () => {
         );
         setFilteredBrands(filtered);
     };
+    const { t } = useTranslation();
 
     const columns = [
         {
@@ -35,7 +37,7 @@ const BrandTable = () => {
             width: '10%',
         },
         {
-            title: 'Created Date',
+            title: t('table.created_date'),
             dataIndex: 'createdAt',
             width: '10%',
             render: (text) => new Date(text).toLocaleString('vi-VN', {
@@ -49,13 +51,13 @@ const BrandTable = () => {
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         },
         {
-            title: 'Brand Name',
+            title: t('table.name'),
             dataIndex: 'name',
             // sorter: (a, b) => a.name - b.name,
             width: '15%',
         },
         {
-            title: 'Action',
+            title: t('table.action'),
             dataIndex: '_id',
             render: (_id) => {
                 return (
@@ -90,16 +92,16 @@ const BrandTable = () => {
             <Flex gap="middle" align="center" justify='space-between'>
                 {contextHolder}
                 <Col>
-                    <Title level={2}>Brand Management</Title>
+                    <Title level={2}>{t('dashboard.brand_mng')}</Title>
                 </Col>
                 <Col className="gutter-row" style={{ display: 'flex', justifyContent: 'flex-end  !important', alignItems: 'center !important', height: '100%' }}>
-                    <Button onClick={() => navigate(BRAND_URL.CREATE)}>Insert</Button>
+                    <Button onClick={() => navigate(BRAND_URL.CREATE)}>{t('button.insert')}</Button>
                 </Col>
             </Flex>
             <Row style={{ marginLeft: 0 }}>
                 <Col span={6}>
                     <Search
-                        placeholder="Enter text to search by name"
+                        placeholder={t('search.text')}
                         allowClear
                         enterButton
                         size="large"
