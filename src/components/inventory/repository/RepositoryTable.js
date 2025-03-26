@@ -53,6 +53,18 @@ const RepositoryTable = () => {
       title: "Total Quantity",
       dataIndex: "sizes",
       width: "10%",
+      sorter: (a, b) => {
+        const totalQuantityA = a.sizes.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        const totalQuantityB = b.sizes.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        return totalQuantityA - totalQuantityB;
+      },
+
       render: (sizes) => {
         const totalQuantity = sizes.reduce(
           (sum, item) => sum + item.quantity,
