@@ -18,7 +18,11 @@ const ProductDetail = () => {
 
     useEffect(() => {
         getProductDetail(id, setProduct, setImages, setCanvas)
+
     }, [id])
+
+    console.log('product', product);
+
 
     return (
         <>

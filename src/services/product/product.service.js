@@ -85,11 +85,13 @@ export const getProductDetailAdmin = (id, form, setSizes, handleFileListChange, 
                 XLL: res.data?.size?.find(item => item.size_name === 'XXL')?.quantity,
                 "3U": res.data?.size?.find(item => item.size_name === '3U')?.quantity,
                 "4U": res.data?.size?.find(item => item.size_name === '4U')?.quantity,
+                "37": res.data?.size?.find(item => item.size_name === '37')?.quantity,
                 "38": res.data?.size?.find(item => item.size_name === '38')?.quantity,
                 "39": res.data?.size?.find(item => item.size_name === '39')?.quantity,
                 "40": res.data?.size?.find(item => item.size_name === '40')?.quantity,
                 "41": res.data?.size?.find(item => item.size_name === '41')?.quantity,
                 "42": res.data?.size?.find(item => item.size_name === '42')?.quantity,
+                "43": res.data?.size?.find(item => item.size_name === '43')?.quantity,
                 "ONE SIZE": res.data?.size?.find(item => item.size_name === 'ONE SIZE')?.quantity,
             });
 
