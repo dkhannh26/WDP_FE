@@ -17,16 +17,12 @@ export const getListImport = (setImports) => {
     .catch((error) => console.error(error));
 };
 
-export const createImport = (importList, navigate) => {
+export const createImport = (importList) => {
   axios
     .post(API_PATH.import + `/createDetail`, importList)
     .then((res) => {
       if (res.data.status === "ok") {
-        navigate(IMPORT_URL.INDEX, {
-          state: { message: MESSAGE.CREATE_SUCCESS },
-        });
-      } else {
-        alert("Cannot find product with name: " + res.data.name);
+        alert("Add to import successfully ");
       }
     })
     .catch((error) => {

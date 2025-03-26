@@ -5,7 +5,10 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { layout, tailLayout } from "../../../config/style.config";
-import { createImport, downloadTemplate } from "../../../services/import.service";
+import {
+  createImport,
+  downloadTemplate,
+} from "../../../services/import.service";
 
 const ImportModel = ({ type }) => {
   const [importList, setImportList] = useState([]);

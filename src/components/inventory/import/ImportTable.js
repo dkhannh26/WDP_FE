@@ -63,41 +63,40 @@ const ImportTable = () => {
       render: (_id, record) => {
         return (
           <div>
-            {record.confirm === undefined ?
-              (
-                role === "staff" ? (
-                  <Button
-                    style={{
-                      marginRight: 5,
-                      display: checkPermission('confirmImport') ? '' : 'none',
-                    }}
-                    shape="round"
-                    icon={<CheckOutlined />}
-                    onClick={() => {
-                      confirmImport(_id, navigate);
-                    }}
-                  ></Button>
-                ) : (
-                  <Button
-                    danger
-                    style={{
-                      marginRight: 5
-                    }}
-                    shape="round"
-                    icon={<DeleteOutlined />}
-                    onClick={() =>
-                      showDeleteImportConfirm(
-                        _id,
-                        messageApi,
-                        getListImport,
-                        setImports
-                      )
-                    }
-                  ></Button>
-                )
+            {record.confirm === undefined ? (
+              role === "staff" ? (
+                <Button
+                  style={{
+                    marginRight: 5,
+                    display: checkPermission("confirmImport") ? "" : "none",
+                  }}
+                  shape="round"
+                  icon={<CheckOutlined />}
+                  onClick={() => {
+                    confirmImport(_id, navigate);
+                  }}
+                ></Button>
               ) : (
-                ""
-              )}
+                <Button
+                  danger
+                  style={{
+                    marginRight: 5,
+                  }}
+                  shape="round"
+                  icon={<DeleteOutlined />}
+                  onClick={() =>
+                    showDeleteImportConfirm(
+                      _id,
+                      messageApi,
+                      getListImport,
+                      setImports
+                    )
+                  }
+                ></Button>
+              )
+            ) : (
+              ""
+            )}
 
             <Button
               shape="round"
@@ -175,11 +174,11 @@ const ImportTable = () => {
             height: "100%",
           }}
         >
-          {role === "admin" ? (
+          {/* {role === "admin" ? (
             <Button onClick={() => navigate(IMPORT_URL.CREATE)}>Insert</Button>
           ) : (
             ""
-          )}
+          )} */}
         </Col>
       </Flex>
       <Table columns={columns} dataSource={imports} />
