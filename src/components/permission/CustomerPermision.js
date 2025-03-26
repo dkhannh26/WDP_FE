@@ -15,17 +15,24 @@ const feedbackOptions = [
     { name: 'Delete Feedback', value: 'deleteFeedback' },
 ];
 
+const orderOptions = [
+    { name: 'Checkout', value: 'checkout' },
+    { name: 'Add Product To Cart', value: 'addProductToCart' },
+];
 
 const CustomerPermission = () => {
     const [profileCheckedList, setProfileCheckedList] = useState([]);
     const [feedbackCheckedList, setFeedbackCheckedList] = useState([]);
+    const [orderCheckedList, setOrderCheckedList] = useState([]);
 
     const mapPermissionsToCheckedList = (permissions) => {
         const profileChecked = profileOptions.filter(option => permissions[option.value]);
         const feedbackChecked = feedbackOptions.filter(option => permissions[option.value]);
+        const orderChecked = orderOptions.filter(option => permissions[option.value]);
 
         setProfileCheckedList(profileChecked);
         setFeedbackCheckedList(feedbackChecked);
+        setOrderCheckedList(orderChecked)
     };
 
     useEffect(() => {
@@ -52,6 +59,8 @@ const CustomerPermission = () => {
             editFeedback: feedbackCheckedList.some((item) => item.value === 'editFeedback'),
             deleteFeedback: feedbackCheckedList.some((item) => item.value === 'deleteFeedback'),
             createFeedback: feedbackCheckedList.some((item) => item.value === 'createFeedback'),
+            checkout: orderCheckedList.some((item) => item.value === 'checkout'),
+            addProductToCart: orderCheckedList.some((item) => item.value === 'addProductToCart'),
         };
 
         return allPermissions;
@@ -61,7 +70,6 @@ const CustomerPermission = () => {
         const onChange = (list) => {
             setCheckedList(list);
         };
-
 
         return (
             <>
@@ -111,7 +119,13 @@ const CustomerPermission = () => {
                         checkedList={profileCheckedList}
                         setCheckedList={setProfileCheckedList}
                     />
-
+                    <Divider></Divider>
+                    <CheckboxSection
+                        title="Order"
+                        options={orderOptions}
+                        checkedList={orderCheckedList}
+                        setCheckedList={setOrderCheckedList}
+                    />
                 </Col>
                 <Col span={12} style={{ textAlign: 'left' }}>
                     <CheckboxSection

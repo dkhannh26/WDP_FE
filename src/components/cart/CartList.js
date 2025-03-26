@@ -1,7 +1,7 @@
 import {
     CloseOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Image, InputNumber, List, Row, Space, Typography, message } from 'antd';
+import { Button, Card, Col, Image, InputNumber, List, Row, Space, Tooltip, Typography, message } from 'antd';
 import Title from 'antd/es/typography/Title';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ import { editCart, getListCart } from '../../services/cart.service';
 import { getListVoucher } from '../../services/voucher.service';
 import { showDeleteConfirm } from '../../utils/helper';
 import { useAuth } from '../context/AuthContext';
+import { checkPermission } from '../../utils/permission';
 
 
 const { Text } = Typography;
@@ -195,19 +196,31 @@ const CartList = () => {
                                     {total.toLocaleString()}<Text style={{ fontSize: '15px', color: 'red', textDecorationLine: 'underline' }}>đ</Text>
                                 </Text>
                             </Row>
-                            {carts.length !== 0 ? <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => {
-                                const hasSoldOutItem = carts.filter(item => item.quantity < 0);
-                                if (hasSoldOutItem?.length > 0) {
-                                    const message = hasSoldOutItem.map(item =>
-                                        `Sản phẩm: ${item.product_name}, Size: ${item.product_size_name}`
-                                    ).join("\n");
-                                    alert(`Sản phẩm hết hàng:\n${message}`);
-                                } else {
-                                    navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } });
-                                }
-                            }}>
-                                <Text style={{ fontWeight: 'bold', color: 'white', fontSize: '14px' }}>THANH TOÁN</Text>
-                            </Button> : ''}
+                            {
+                                checkPermission('checkout') ? <>
+                                    {carts.length !== 0 ?
+                                        <Button type="primary" block style={{ marginTop: '20px', backgroundColor: 'red', borderColor: 'red' }} onClick={() => {
+                                            const hasSoldOutItem = carts.filter(item => item.quantity < 0);
+                                            if (hasSoldOutItem?.length > 0) {
+                                                const message = hasSoldOutItem.map(item =>
+                                                    `Sản phẩm: ${item.product_name}, Size: ${item.product_size_name}`
+                                                ).join("\n");
+                                                alert(`Sản phẩm hết hàng:\n${message}`);
+                                            } else {
+                                                navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } });
+                                            }
+                                        }}>
+
+                                            <Text style={{ fontWeight: 'bold', color: 'white', fontSize: '14px' }}>THANH TOÁN</Text>
+                                        </Button> : ''}
+                                </>
+                                    :
+                                    <Tooltip title="Bạn không có quyền này">
+                                        <Button type="primary" block style={{ marginTop: '20px', backgroundColor: '#ccc' }}>
+                                            <Text style={{ fontWeight: 'bold', color: 'white', fontSize: '14px' }}>THANH TOÁN</Text>
+                                        </Button>
+                                    </Tooltip>
+                            }
 
                         </Card>
 

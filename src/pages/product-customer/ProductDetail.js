@@ -1,4 +1,4 @@
-import { Button, Col, Image, InputNumber, Row, Typography } from 'antd';
+import { Button, Col, Image, InputNumber, Row, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
@@ -271,22 +271,40 @@ const ProductDetail = () => {
                         </div>
                     </Row>
                     {
-                        sizeNumber !== 0 ? <Row style={{ marginTop: 30 }}>
-                            <div class="box-1" onClick={onFinish}>
-                                <div class="btn btn-one">
-                                    <span>THÊM VÀO GIỎ HÀNG</span>
-                                </div>
-                            </div>
-                        </Row>
-                            :
-                            <Row style={{ marginTop: 30 }}>
-                                <div class="box-1 unavailable">
-                                    <div class="btn btn-one">
-                                        <span>HẾT HÀNG</span>
+                        checkPermission('addProductToCart') ? <>
+                            {
+                                sizeNumber !== 0 ? <Row style={{ marginTop: 30 }}>
+                                    <div class="box-1" onClick={onFinish}>
+                                        <div class="btn btn-one">
+                                            <span>THÊM VÀO GIỎ HÀNG</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </Row>
+                                </Row>
+                                    :
+                                    <Row style={{ marginTop: 30 }}>
+                                        <div class="box-1 unavailable">
+                                            <div class="btn btn-one">
+                                                <span>HẾT HÀNG</span>
+                                            </div>
+                                        </div>
+                                    </Row>
+                            }
+                        </>
+                            :
+                            <>
+                                <Tooltip title="Bạn không có quyền này">
+                                    <Row style={{ marginTop: 30 }}>
+                                        <div class="box-1 unavailable">
+                                            <div class="btn btn-one">
+                                                <span>THÊM VÀO GIỎ HÀNG</span>
+                                            </div>
+                                        </div>
+                                    </Row>
+                                </Tooltip>
+                            </>
+
                     }
+
 
                 </Col>
             </Row>
