@@ -47,6 +47,9 @@ export const API_PATH = {
   paidOrder: baseURL + 'order/paid',
   inventory: baseURL + "inventory",
   notification: baseURL + "notification",
+  readNotification: baseURL + 'notification/read',
+  unreadNotification: baseURL + 'notification/unread',
+
 }
 export const PATH = {
   user: baseURL + "users",

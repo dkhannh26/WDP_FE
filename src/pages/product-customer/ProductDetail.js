@@ -1,4 +1,4 @@
-import { Button, Col, Image, InputNumber, Row, Tooltip, Typography } from 'antd';
+import { Button, Col, Image, InputNumber, Row, Tooltip, Typography, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
@@ -15,7 +15,7 @@ const { Text } = Typography;
 
 
 const ProductDetail = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const [canvas, setCanvas] = useState('https://top10hoabinh.com/wp-content/uploads/2022/10/anh-dang-load-2.jpg')
     const { id } = useParams();
@@ -62,6 +62,8 @@ const ProductDetail = () => {
                 await getListCart(initialValues.userId, setCarts, (total) => {
                     setTotal(total);
                 });
+            } else {
+                alert('Vui lòng đăng nhập để mua hàng!!!')
             }
         } catch (error) {
             console.error("Error in onFinish:", error);

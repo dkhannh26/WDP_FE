@@ -8,7 +8,7 @@ import { createImport } from "../../../services/import.service";
 const AddImport = ({ data, setData }) => {
   const containerStyle = {
     maxWidth: "500px",
-    margin: "20px",
+    margin: '30px auto',
     padding: "20px",
     border: "1px solid #e8e8e8",
     borderRadius: "8px",

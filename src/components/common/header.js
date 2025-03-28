@@ -1,6 +1,6 @@
 // export default Header;
 import React, { useEffect } from "react";
-import { Switch } from 'antd';
+import { Switch, Tooltip } from 'antd';
 import styled from 'styled-components';
 import engFlag from '../../assets/images/eng.png'
 import VietFlag from '../../assets/images/VietFlag.svg.webp'
@@ -36,6 +36,7 @@ import { useRefresh } from '../../context/RefreshContext';
 import Logo2 from "../../assets/images/logo2.jpeg";
 import { getListBrand } from "../../services/brand.service";
 import { useTranslation } from "react-i18next";
+import { checkPermission } from "../../utils/permission";
 
 const { Text } = Typography;
 
@@ -127,6 +128,7 @@ const Header = () => {
     ${'' /* transform: 'translate(-50%, -50%)'; */}
   }
 `;
+  const isCartEmpty = !carts || carts.length === 0 || total === 0;
   const cartPopover = (
     <div className="cart-pop">
       <div className="card-pop-title text uppercase">
@@ -229,7 +231,7 @@ const Header = () => {
       <div className="flex-space-between">
         <p className="text uppercase">{t('header.total')}:</p>
         <p style={{ color: "red", fontWeight: "600", fontSize: 16 }}>
-          {total.toLocaleString()}0đ
+          {total.toLocaleString()}đ
         </p>
       </div>
       <div className="flex-space-between cart-pop-navigate">
@@ -239,14 +241,34 @@ const Header = () => {
         >
           <span>{t('header.view_cart')}</span>
         </button>
-        <button
-          className="login-pop-btn uppercase"
-          onClick={() =>
-            navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
-          }
-        >
-          <span>{t('header.payment')}</span>
-        </button>
+        {
+          checkPermission('checkout') ?
+            <button
+              className={`login-pop-btn ${isCartEmpty ? "disabled" : ""}`}
+              onClick={() =>
+                !isCartEmpty &&
+                navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
+              }
+              disabled={isCartEmpty}
+            >
+              <span>{t('header.payment')}</span>
+            </button>
+            :
+            <Tooltip title="Bạn không có quyền thực hiện hành động này">
+              <button
+                style={{ background: '#ccc', pointerEvents: 'none', border: 'none' }}
+                className={`login-pop-btn "disabled" `}
+                onClick={() =>
+                  !isCartEmpty &&
+                  navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
+                }
+                disabled={isCartEmpty}
+              >
+                <span>{t('header.payment')}</span>
+              </button>
+            </Tooltip>
+        }
+
       </div>
     </div>
   );
