@@ -9,19 +9,49 @@ const StaffPermission = () => {
     const [statisticCheckedList, setStatisticCheckedList] = useState([]);
     const [orderCheckedList, setOrderCheckedList] = useState([]);
     const [importCheckedList, setImportCheckedList] = useState([]);
+    const { t } = useTranslation();
+
+    const profileOptions = [
+        { label: t('dashboard.edit_account'), value: 'editProfile' },
+        { label: t('permission.delete_account'), value: 'deleteProfile' },
+        { label: t('profile.change_pass'), value: 'changePassword' },
+    ];
+
+    const statisticOptions = [
+        { label: t('permission.view_statistic'), value: 'viewStatistic' },
+    ];
+
+    const orderOptions = [
+        { label: t('permission.delete_order'), value: 'deleteOrder' },
+        { label: t('permission.confirm_order'), value: 'confirmOrder' },
+        { label: t('permission.cancel_order'), value: 'cancelOrder' },
+    ];
+
+    const importOptions = [
+        { label: t('permission.confirm_import'), value: 'confirmImport' },
+    ];
+
 
     const mapPermissionsToCheckedList = (permissions) => {
-        const profileChecked = profileOptions.filter(option => permissions[option.value]);
-        const statisticChecked = statisticOptions.filter(option => permissions[option.value]);
-        const orderChecked = orderOptions.filter(option => permissions[option.value]);
-        const importChecked = importOptions.filter(option => permissions[option.value]);
+        const profileChecked = profileOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
+        const statisticChecked = statisticOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
+        const orderChecked = orderOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
+        const importChecked = importOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
 
         setProfileCheckedList(profileChecked);
         setStatisticCheckedList(statisticChecked);
         setOrderCheckedList(orderChecked);
         setImportCheckedList(importChecked);
     };
-    const { t } = useTranslation();
+
     useEffect(() => {
         const fetchPermissions = async () => {
             try {
@@ -37,16 +67,20 @@ const StaffPermission = () => {
     }, []);
 
     const getPermissions = () => {
-        const allPermissions = {
-            editProfile: profileCheckedList.some((item) => item.value === 'editProfile'),
-            deleteProfile: profileCheckedList.some((item) => item.value === 'deleteProfile'),
-            changePassword: profileCheckedList.some((item) => item.value === 'changePassword'),
-            viewStatistic: statisticCheckedList.some((item) => item.value === 'viewStatistic'),
-            deleteOrder: orderCheckedList.some((item) => item.value === 'deleteOrder'),
-            confirmOrder: orderCheckedList.some((item) => item.value === 'confirmOrder'),
-            cancelOrder: orderCheckedList.some((item) => item.value === 'cancelOrder'),
-            confirmImport: importCheckedList.some((item) => item.value === 'confirmImport'),
-        };
+        const allPermissions = {}
+
+        profileOptions.forEach(option => {
+            allPermissions[option.value] = profileCheckedList.includes(option.value);
+        });
+        statisticOptions.forEach(option => {
+            allPermissions[option.value] = statisticCheckedList.includes(option.value);
+        });
+        orderOptions.forEach(option => {
+            allPermissions[option.value] = orderCheckedList.includes(option.value);
+        });
+        importOptions.forEach(option => {
+            allPermissions[option.value] = importCheckedList.includes(option.value);
+        });
 
         return allPermissions;
     };
@@ -60,24 +94,34 @@ const StaffPermission = () => {
         return (
             <>
                 <Typography.Title level={3}>{title}</Typography.Title>
-                <Col span={8}>
+                <Col span={24}
+                    style={{
+                        textAlign: 'left'
+                    }}
+                >
                     <Checkbox.Group
                         value={checkedList}
                         onChange={onChange}
                         style={{
                             display: 'flex',
+                            flexDirection: "column",
                             justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
                             paddingLeft: 30,
-                            fontSize: '25px',
+                            fontSize: '20px',
                         }}
-                    >
-                        <Space direction="vertical">
-                            {options.map((option) => (
-                                <Checkbox key={option.value} value={option}>
-                                    {option.name}
-                                </Checkbox>
-                            ))}
-                        </Space>
+                    > {options.map((option) => (
+                        <Checkbox
+                            key={option.value}
+                            value={option.value}
+                            style={{
+                                marginBottom: '20px',
+                                height: '32px',
+                            }}
+                        >
+                            <span style={{ fontSize: '16px' }}>{option.label}</span>
+                        </Checkbox>
+                    ))}
                     </Checkbox.Group>
                 </Col>
                 <Divider />
@@ -95,25 +139,6 @@ const StaffPermission = () => {
         }
     };
 
-    const profileOptions = [
-        { name: t('dashboard.edit_account'), value: 'editProfile' },
-        { name: t('permission.delete_account'), value: 'deleteProfile' },
-        { name: t('profile.change_pass'), value: 'changePassword' },
-    ];
-    
-    const statisticOptions = [
-        { name: t('permission.view_statistic'), value: 'viewStatistic' },
-    ];
-    
-    const orderOptions = [
-        { name: t('permission.delete_order'), value: 'deleteOrder' },
-        { name: t('permission.confirm_order'), value: 'confirmOrder' },
-        { name: t('permission.cancel_order'), value: 'cancelOrder' },
-    ];
-    
-    const importOptions = [
-        { name: t('permission.confirm_import'), value: 'confirmImport' },
-    ];
 
     return (
         <div style={{ padding: '10px 60px', height: '60vh' }}>

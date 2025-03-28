@@ -33,6 +33,9 @@ import {
   likeFeedback,
   updateFeedback,
   getFeedbackImg,
+  sendNotification,
+  createReply,
+  getReplies,
 } from "../../services/feedback.service";
 import { showDeleteConfirm } from "../../utils/helper";
 import { useAuth } from "../context/AuthContext";
@@ -63,10 +66,12 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
     1: 0,
   });
   const [fileList, setFileList] = useState([]);
-  
-  const { t, i18n } = useTranslation();
-  
 
+  const { t, i18n } = useTranslation();
+
+
+  const [replyForms, setReplyForms] = useState({}); // Theo dõi form reply nào đang hiển thị
+  const [replies, setReplies] = useState({}); // Lưu trữ replies cho từng feedback
   const totalReviews = feedback.length;
   const handleFileListChange = (newFileList) => {
     setFileList(newFileList);
@@ -105,6 +110,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         };
         setFeedback((prev) => [...prev, newFeedback]);
       }
+      // sendNotification(feedbackData);
       setFileList([]);
       form.resetFields();
       setIsModalOpen(false);
@@ -162,7 +168,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
         setFeedbackLikeArr(data);
       });
     }
-    console.log(feedback);
+    // console.log(feedback);
   }, [selectId, user?.id, refreshTrigger]);
 
   useEffect(() => {
@@ -179,6 +185,12 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
       ? setAvgRating(0)
       : setAvgRating(sum / feedback.length);
     setAvgRatingDistribution(newDistribution);
+    // Lấy replies cho tất cả feedback
+    feedback.forEach((item) => {
+      getReplies(item?._id).then((data) => {
+        setReplies((prev) => ({ ...prev, [item._id]: data }));
+      });
+    });
   }, [feedback]);
 
   const likeButton = async (feedback_id, account_id) => {
@@ -221,6 +233,37 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   const totalRatings = totalReviews;
   const getPercent = (count) =>
     totalRatings > 0 ? Math.round((count / totalRatings) * 100) : 0;
+
+  const handleReplySubmit = async (feedbackId, values) => {
+    const replyData = {
+      content: values.replyContent,
+      account_id: userId,
+      feedback_id: feedbackId,
+    };
+    try {
+      const result = await createReply(feedbackId, replyData);
+      setReplies((prev) => ({
+        ...prev,
+        [feedbackId]: [
+          ...(prev[feedbackId] || []),
+          {
+            _id: result._id,
+            ...replyData,
+            account_id: { _id: userId, username: user.username },
+            createdAt: new Date().toDateString(),
+          },
+        ],
+      }));
+      setReplyForms((prev) => ({ ...prev, [feedbackId]: false }));
+      form.resetFields([`reply-${feedbackId}`]);
+    } catch (error) {
+      console.error("Error submitting reply:", error);
+    }
+  };
+
+  const toggleReplyForm = (feedbackId) => {
+    setReplyForms((prev) => ({ ...prev, [feedbackId]: !prev[feedbackId] }));
+  };
 
   return (
     <div style={{ width: 1200, margin: "auto", marginTop: 100 }}>
@@ -276,28 +319,37 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
           </div>
         </Col>
       </Row>
-      {
-        checkPermission('createFeedback') &&
+
+      {localStorage.getItem("role") === "customer" ? (
         <>
-          <Row style={{ justifyContent: "center", fontSize: 16, marginBottom: 10 }}>
-            <p>{t('feedback.question')}?</p>
-          </Row>
-          <Row style={{ justifyContent: "center" }}>
-            <Button
-              style={{
-                backgroundColor: "black",
-                borderRadius: 0,
-                width: "30%",
-                borderRadius: "16px",
-              }}
-              type="primary"
-              onClick={() => showModal("add-new")}
-            >
-              {t('feedback.write')}
-            </Button>
-          </Row>
+          {
+            checkPermission('createFeedback') &&
+            <>
+              <Row
+                style={{ justifyContent: "center", fontSize: 16, marginBottom: 10 }}
+              >
+                <p>{t('feedback.question')}?</p>
+              </Row>
+              <Row style={{ justifyContent: "center" }}>
+                <Button
+                  style={{
+                    backgroundColor: "black",
+                    borderRadius: 0,
+                    width: "30%",
+                    borderRadius: "16px",
+                  }}
+                  type="primary"
+                  onClick={() => showModal("add-new")}
+                >
+                  {t('feedback.write')}
+                </Button>
+              </Row>
+            </>
+          }
         </>
-      }
+      ) : (
+        <></>
+      )}
 
       <Modal
         title="Đánh giá & nhận xét sản phẩm"
@@ -386,7 +438,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
               <Select.Option value="date_increase">{t('increase')}</Select.Option>
               <Select.Option value="date_decrease">{t('decrease')}</Select.Option>
             </Select.OptGroup>
-          </Select> 
+          </Select>
         </div>
       </Col>
       <List
@@ -430,7 +482,6 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
 
                         checkPermission('editFeedback')
                         ||
-
                         checkPermission('deleteFeedback')
                       ) &&
                       <>
@@ -492,22 +543,112 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
                   ))
                   : ""}
               </Row>
+              {localStorage.getItem("role") === "user" ? (
+                <Row>
+                  <Button
+                    size="large"
+                    style={{
+                      borderColor: "white",
+                    }}
+                    icon={
+                      feedbackLikeArr.includes(item._id) ? (
+                        <LikeFilled />
+                      ) : (
+                        <LikeOutlined />
+                      )
+                    }
+                    onClick={() => likeButton(item._id, user.id)}
+                  />
+                  {item.likeCount}
+                </Row>
+              ) : (
+                <Row style={{ marginTop: 10 }}>
+                  <Col span={24}>
+                    <Button
+                      type="link"
+                      onClick={() => toggleReplyForm(item._id)}
+                      style={{ padding: 0 }}
+                    >
+                      Reply
+                    </Button>
+
+                    {/* Reply Form */}
+                    {replyForms[item._id] && (
+                      <Form
+                        name={`reply-${item._id}`}
+                        onFinish={(values) =>
+                          handleReplySubmit(item._id, values)
+                        }
+                        style={{ marginTop: 10 }}
+                      >
+                        <Form.Item
+                          name="replyContent"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please enter your reply!",
+                            },
+                            {
+                              min: 3,
+                              max: 200,
+                              message:
+                                "Reply must be between 3 and 200 characters",
+                            },
+                          ]}
+                        >
+                          <TextArea
+                            placeholder="Write your reply..."
+                            autoSize={{ minRows: 2, maxRows: 4 }}
+                          />
+                        </Form.Item>
+                        <Form.Item>
+                          <Button type="primary" htmlType="submit">
+                            Submit Reply
+                          </Button>
+                          <Button
+                            style={{ marginLeft: 8 }}
+                            onClick={() => toggleReplyForm(item._id)}
+                          >
+                            Cancel
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    )}
+                  </Col>
+                </Row>
+              )}
+
+              {/* Display Replies */}
               <Row>
-                <Button
-                  size="large"
-                  style={{
-                    borderColor: "white",
-                  }}
-                  icon={
-                    feedbackLikeArr?.includes(item._id) ? (
-                      <LikeFilled />
-                    ) : (
-                      <LikeOutlined />
-                    )
-                  }
-                  onClick={() => likeButton(item._id, user.id)}
-                />
-                {item.likeCount}
+                {replies[item._id] && replies[item._id].length > 0 && (
+                  <List
+                    dataSource={replies[item._id]}
+                    renderItem={(reply) => (
+                      <List.Item style={{ padding: "5px 0 5px 20px" }}>
+                        <div>
+                          <b>{reply.account_id.username} </b>
+                          <span
+                            style={{
+                              marginLeft: 8,
+                              color: "#fff",
+                              backgroundColor: "#1890ff",
+                              padding: "2px 6px",
+                              borderRadius: 4,
+                              fontSize: 12,
+                            }}
+                          >
+                            Quản trị viên
+                          </span>
+                          -{" "}
+                          <span style={{ color: "#666" }}>
+                            {new Date(reply.createdAt).toLocaleDateString()}
+                          </span>
+                          <p>{reply.content}</p>
+                        </div>
+                      </List.Item>
+                    )}
+                  />
+                )}
               </Row>
             </List.Item>
           );

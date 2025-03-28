@@ -1,17 +1,21 @@
-import React from "react";
-import { Button, Image, Layout, Menu, theme } from "antd";
-import { Outlet, useNavigate } from "react-router-dom";
-import { menu } from "../../config/menu.config";
-import { useAuth } from "../../components/context/AuthContext";
+import { Row, Col, Dropdown, Badge, Button, Image, Layout, Menu, Switch, theme, notification } from "antd";
+import { BellOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
-import { Switch } from 'antd';
-import styled from 'styled-components';
-import engFlag from '../../assets/images/eng.png'
-import VietFlag from '../../assets/images/VietFlag.svg.webp'
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
+import { Outlet, useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+import engFlag from '../../assets/images/eng.png';
+import VietFlag from '../../assets/images/VietFlag.svg.webp';
+import { useAuth } from "../../components/context/AuthContext";
+import { menu } from "../../config/menu.config";
+import { io } from "socket.io-client";
+import { baseURL } from "../../config/api.config";
+import {
+  getListNotifications,
+  readNotification,
+} from "../../services/notification.service";
 const { Header, Content, Footer, Sider } = Layout;
-
 const siderStyle = {
   overflow: "auto",
   height: "100vh",
@@ -22,9 +26,88 @@ const siderStyle = {
   scrollbarWidth: "thin",
   scrollbarColor: "unset",
 };
+
 const Dashboard = () => {
   const { setIsAuthenticated, setUsername, user, setUser } =
     useAuth();
+
+
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+
+  const navigate = useNavigate();
+  const onMenuClick = (menuItem) => {
+    navigate(menuItem.key);
+  };
+
+  const [count, setCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+
+  const socket = io(baseURL, {
+    query: { token: localStorage.getItem("token") },
+  });
+
+  useEffect(() => {
+    // Nhận tin nhắn từ server
+    socket.on("newNotification", (data) => {
+      const newNotification = {
+        key: notifications.length + 1,
+        label: data.message,
+        url: data.url,
+        created_at: data.created_at,
+      };
+      notification.info({
+        message: "Thông báo mới",
+        description: newNotification.label,
+        placement: "topRight",
+      });
+      setNotifications((prev) => [newNotification, ...prev]);
+      setCount((prev) => prev + 1);
+    });
+
+    socket.on("notificationCount", (data) => {
+      setCount(data);
+    });
+    return () => {
+      socket.off("newNotification");
+      socket.off("notificationCount");
+    };
+  }, []);
+  useEffect(() => {
+    if (user.id) {
+      getListNotifications(setNotifications, setCount, user.id);
+    }
+  }, [user.id]);
+
+  const handleItemClick = (item) => {
+    console.log(item.url);
+
+    window.open(`/${item.url}`, "_blank");
+  };
+
+  const handleNotificationClick = (open) => {
+    readNotification(user.id);
+  };
+  const menuNotification = (
+    <Menu style={{ maxWidth: 500 }}>
+      {notifications.map((item, index) => (
+        <Menu.Item
+          key={item.key}
+          style={{
+            backgroundColor: index % 2 === 0 ? "#f5f5f5" : "white",
+            padding: "10px",
+          }}
+          onClick={() => handleItemClick(item)}
+        >
+          <Row style={{ display: "inline-block" }}>
+            <Col>{item.label}</Col>
+            <Col>{item.created_at}</Col>
+          </Row>
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
 
   const { t, i18n } = useTranslation();
 
@@ -34,15 +117,7 @@ const Dashboard = () => {
   };
   console.log(user.username);
 
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
-  const navigate = useNavigate();
-
-  const onMenuClick = (menuItem) => {
-    navigate(menuItem.key);
-  };
 
   const CustomSwitch = styled(Switch)`
   &.ant-switch {
@@ -124,12 +199,24 @@ const Dashboard = () => {
             />
           </div>
 
+
           <div
             style={{
-              display: 'flex'
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            <Title style={{ fontSize: 20, padding: 5 }}>
+
+            <Dropdown
+              overlay={menuNotification}
+              trigger={["click"]}
+              onOpenChange={handleNotificationClick}
+            >
+              <Badge count={count}>
+                <BellOutlined style={{ fontSize: 24, cursor: "pointer" }} />
+              </Badge>
+            </Dropdown>
+            <Title style={{ fontSize: 20, paddingTop: 10 }}>
               {t('dashboard.hello')} {user.username}
             </Title>
             <Button
@@ -152,25 +239,13 @@ const Dashboard = () => {
             overflow: "initial",
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              textAlign: "center",
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-              backgroundColor: "#e6e6e6",
-            }}
-          >
-            <Outlet></Outlet>
-          </div>
+          <Outlet></Outlet>
         </Content>
         <Footer
           style={{
             textAlign: "center",
           }}
-        >
-          {/* Ant Design ©{new Date().getFullYear()} Created by Ant UED */}
-        </Footer>
+        ></Footer>
       </Layout>
     </Layout>
   );

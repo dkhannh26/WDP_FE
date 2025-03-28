@@ -4,10 +4,13 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Title from 'antd/es/typography/Title';
 import { getProductDetail } from '../../services/product/product.service';
 import { EditOutlined } from '@ant-design/icons';
-import { TSHIRT_URL } from '../../config/url.config';
 import { useTranslation } from "react-i18next";
-
+import CustomerFeedback from '../feedback/CustomerFeedback';
+import { useAuth } from "../../components/context/AuthContext";
+import { PATH } from "../../config/api.config";
+import axios from 'axios';
 const { Text } = Typography;
+
 const ProductDetail = () => {
     const [canvas, setCanvas] = useState('https://top10hoabinh.com/wp-content/uploads/2022/10/anh-dang-load-2.jpg')
     const [product, setProduct] = useState()
@@ -17,7 +20,31 @@ const ProductDetail = () => {
     const location = useLocation();
     const editPath = location.pathname.replace('/detail/', '/edit/');
     const { t, i18n } = useTranslation();
+    const { isAuthenticated, user } = useAuth();
+    const [initialValues, setInitialValues] = useState({
+        userId: "",
+        username: "",
+        email: "",
+        phone: "",
+        address: "",
+    });
+    useEffect(() => {
+        const fetchData = async () => {
+            if (isAuthenticated) {
+                await axios.get(`${PATH.profile}/${user.username}`).then((res) => {
+                    setInitialValues({
+                        userId: res?.data?.user?._id,
+                        username: res?.data?.user?.username,
+                        email: res?.data?.user?.email,
+                        phone: res?.data?.user?.phone,
+                        address: res?.data?.user?.address,
+                    });
+                });
+            }
+        };
 
+        fetchData();
+    }, [isAuthenticated]);
     useEffect(() => {
         getProductDetail(id, setProduct, setImages, setCanvas)
 
@@ -142,7 +169,7 @@ const ProductDetail = () => {
                                         <Space>
                                             <Text style={{ fontSize: 18 }}>{t('header.size')}: {item.size_name}</Text>
                                             <Text style={{ fontSize: 18 }}>
-                                            {t('table.quantity')}: {item.quantity}
+                                                {t('table.quantity')}: {item.quantity}
                                             </Text>
                                         </Space>
                                     </div>
@@ -160,14 +187,17 @@ const ProductDetail = () => {
                     >
                         <Space>
                             <Button icon={<EditOutlined />} size={30} onClick={() => navigate(editPath)}>
-                            {t('button.edit')}
+                                {t('button.edit')}
                             </Button>
                             <Button danger>
-                            {t('button.delete')}
+                                {t('button.delete')}
                             </Button>
                         </Space>
                     </Row>
                 </Col>
+            </Row>
+            <Row>
+                <CustomerFeedback product_id={id} userId={initialValues.userId} />
             </Row>
 
         </>

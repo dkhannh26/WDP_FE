@@ -7,24 +7,48 @@ const CustomerPermission = () => {
     const [profileCheckedList, setProfileCheckedList] = useState([]);
     const [feedbackCheckedList, setFeedbackCheckedList] = useState([]);
     const [orderCheckedList, setOrderCheckedList] = useState([]);
+    const { t } = useTranslation();
+
+    const profileOptions = [
+        { label: t('dashboard.edit_account'), value: 'editProfile' },
+        { label: t('profile.change_pass'), value: 'changePassword' },
+        { label: t('header.forget_password'), value: 'forgotPassword' },
+    ];
+
+    const feedbackOptions = [
+        { label: t('feedback.view'), value: 'viewFeedbacks' },
+        { label: t('feedback.write'), value: 'createFeedback' },
+        { label: t('feedback.edit'), value: 'editFeedback' },
+        { label: t('feedback.delete'), value: 'deleteFeedback' },
+    ];
+
+    const orderOptions = [
+        { label: t('header.payment'), value: 'checkout' },
+        { label: t('product.add_to_cart'), value: 'addProductToCart' },
+    ];
 
     const mapPermissionsToCheckedList = (permissions) => {
-        const profileChecked = profileOptions.filter(option => permissions[option.value]);
-        const feedbackChecked = feedbackOptions.filter(option => permissions[option.value]);
-        const orderChecked = orderOptions.filter(option => permissions[option.value]);
+        const profileChecked = profileOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
+        const feedbackChecked = feedbackOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
+        const orderChecked = orderOptions
+            .filter(option => permissions[option.value])
+            .map(option => option.value);
 
         setProfileCheckedList(profileChecked);
         setFeedbackCheckedList(feedbackChecked);
-        setOrderCheckedList(orderChecked)
+        setOrderCheckedList(orderChecked);
     };
-    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchPermissions = async () => {
             try {
                 const permissions = await getPermissionsByRole('customer');
                 console.log('Permissions from DB:', permissions);
-                mapPermissionsToCheckedList(permissions); // Cập nhật state từ dữ liệu DB
+                mapPermissionsToCheckedList(permissions);
             } catch (error) {
                 console.error('Error fetching permissions:', error);
             }
@@ -34,48 +58,57 @@ const CustomerPermission = () => {
     }, []);
 
     const getPermissions = () => {
-        const allPermissions = {
-            editProfile: profileCheckedList.some((item) => item.value === 'editProfile'),
-            deleteProfile: profileCheckedList.some((item) => item.value === 'deleteProfile'),
-            changePassword: profileCheckedList.some((item) => item.value === 'changePassword'),
-            forgotPassword: profileCheckedList.some((item) => item.value === 'forgotPassword'),
-            viewFeedbacks: feedbackCheckedList.some((item) => item.value === 'viewFeedbacks'),
-            editFeedback: feedbackCheckedList.some((item) => item.value === 'editFeedback'),
-            deleteFeedback: feedbackCheckedList.some((item) => item.value === 'deleteFeedback'),
-            createFeedback: feedbackCheckedList.some((item) => item.value === 'createFeedback'),
-            checkout: orderCheckedList.some((item) => item.value === 'checkout'),
-            addProductToCart: orderCheckedList.some((item) => item.value === 'addProductToCart'),
-        };
+        const allPermissions = {};
+
+        profileOptions.forEach(option => {
+            allPermissions[option.value] = profileCheckedList.includes(option.value);
+        });
+        feedbackOptions.forEach(option => {
+            allPermissions[option.value] = feedbackCheckedList.includes(option.value);
+        });
+        orderOptions.forEach(option => {
+            allPermissions[option.value] = orderCheckedList.includes(option.value);
+        });
 
         return allPermissions;
     };
 
     const CheckboxSection = ({ title, options, checkedList, setCheckedList }) => {
-        const onChange = (list) => {
-            setCheckedList(list);
+        const onChange = (checkedValues) => {
+            setCheckedList(checkedValues);
         };
 
         return (
             <>
                 <Typography.Title level={3}>{title}</Typography.Title>
-                <Col span={8}>
+                <Col span={24}
+                    style={{
+                        textAlign: 'left'
+                    }}
+                >
                     <Checkbox.Group
                         value={checkedList}
                         onChange={onChange}
                         style={{
                             display: 'flex',
+                            flexDirection: "column",
                             justifyContent: 'flex-start',
+                            alignItems: 'flex-start',
                             paddingLeft: 30,
-                            fontSize: '25px',
+                            fontSize: '20px',
                         }}
-                    >
-                        <Space direction="vertical">
-                            {options.map((option) => (
-                                <Checkbox key={option.value} value={option}>
-                                    {option.name}
-                                </Checkbox>
-                            ))}
-                        </Space>
+                    > {options.map((option) => (
+                        <Checkbox
+                            key={option.value}
+                            value={option.value}
+                            style={{
+                                marginBottom: '20px',
+                                height: '32px',
+                            }}
+                        >
+                            <span style={{ fontSize: '16px' }}>{option.label}</span>
+                        </Checkbox>
+                    ))}
                     </Checkbox.Group>
                 </Col>
             </>
@@ -92,28 +125,10 @@ const CustomerPermission = () => {
         }
     };
 
-    const profileOptions = [
-        { name: t('dashboard.edit_account'), value: 'editProfile' },
-        { name: t('profile.change_pass'), value: 'changePassword' },
-        { name: t('header.forget_password'), value: 'forgotPassword' },
-    ];
-
-    const feedbackOptions = [
-        { name: t('feedback.view'), value: 'viewFeedbacks' },
-        { name: t('feedback.write'), value: 'createFeedback' },
-        { name: t('feedback.edit'), value: 'editFeedback' },
-        { name: t('feedback.delete'), value: 'deleteFeedback' },
-    ];
-
-    const orderOptions = [
-        { name: t('header.payment'), value: 'checkout' },
-        { name: t('product.add_to_cart'), value: 'addProductToCart' },
-    ];
-
     return (
-        <div style={{ padding: '10px 60px', height: '60vh' }}>
+        <div style={{ padding: '10px 60px' }}>
             <Typography.Title>{t('permission.customer')}</Typography.Title>
-            <Row>
+            <Row gutter={[16, 16]} align="top">
                 <Col span={12} style={{ textAlign: 'left' }}>
                     <CheckboxSection
                         title={t('table.account')}
@@ -121,7 +136,7 @@ const CustomerPermission = () => {
                         checkedList={profileCheckedList}
                         setCheckedList={setProfileCheckedList}
                     />
-                    <Divider></Divider>
+                    <Divider />
                     <CheckboxSection
                         title="Order"
                         options={orderOptions}
@@ -136,12 +151,13 @@ const CustomerPermission = () => {
                         checkedList={feedbackCheckedList}
                         setCheckedList={setFeedbackCheckedList}
                     />
-
                 </Col>
             </Row>
             <Divider />
-            <Row justify={'center'}>
-                <Button type="primary" onClick={handleUpdate}>{t('button.update')}</Button>
+            <Row justify="center">
+                <Button type="primary" onClick={handleUpdate}>
+                    {t('button.update')}
+                </Button>
             </Row>
         </div>
     );
