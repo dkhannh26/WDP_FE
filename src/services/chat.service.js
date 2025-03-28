@@ -16,10 +16,16 @@ export const getListNotification = async (id, setChatNotifications, setNotificat
 
 export const readNotification = async (userId, senderId, setNotifications) => {
     try {
-        await axios.put(API_PATH.readNotification + `/${userId}` + `/${senderId}`);
-        const response = await axios.get(API_PATH.unreadNotification + `/${userId}`);
+        // Construct the URL based on whether senderId is provided
+        const url = senderId
+            ? `${API_PATH.readNotification}/${userId}/${senderId}`
+            : `${API_PATH.readNotification}/${userId}`;
+        await axios.put(url);
+        // Fetch the updated list of unread notifications
+        const response = await axios.get(`${API_PATH.unreadNotification}/${userId}`);
         setNotifications(response.data);
     } catch (error) {
         console.error("Error marking notifications as read:", error);
+        throw error; // Ensure the error is propagated
     }
 };

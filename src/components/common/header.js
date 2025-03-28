@@ -125,6 +125,7 @@ const Header = () => {
     ${'' /* transform: 'translate(-50%, -50%)'; */}
   }
 `;
+  const isCartEmpty = !carts || carts.length === 0 || total === 0;
   const cartPopover = (
     <div className="cart-pop">
       <div className="card-pop-title text">
@@ -227,7 +228,7 @@ const Header = () => {
       <div className="flex-space-between">
         <p className="text">TỔNG TIỀN:</p>
         <p style={{ color: "red", fontWeight: "600", fontSize: 16 }}>
-          {total.toLocaleString()}0đ
+          {total.toLocaleString()}đ
         </p>
       </div>
       <div className="flex-space-between cart-pop-navigate">
@@ -238,10 +239,12 @@ const Header = () => {
           <span>XEM GIỎ HÀNG</span>
         </button>
         <button
-          className="login-pop-btn"
+          className={`login-pop-btn ${isCartEmpty ? "disabled" : ""}`}
           onClick={() =>
+            !isCartEmpty &&
             navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
           }
+          disabled={isCartEmpty}
         >
           <span>THANH TOÁN</span>
         </button>

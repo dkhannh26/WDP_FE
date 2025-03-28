@@ -98,6 +98,7 @@ const CustomerChat = ({ userId }) => {
             bottom: "20px",
             right: "20px",
             marginRight: '80px',
+            zIndex: 1001,
         }}>
             <div style={{
                 backgroundColor: "#007bff",

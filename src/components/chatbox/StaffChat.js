@@ -26,16 +26,7 @@ const StaffChat = ({ userId, onResetNotifications, notifications, setNotificatio
         });
 
         socketRef.current.on("receiveMessage", (data) => {
-            console.log("vodayne", messages);
-            console.log("Received message in StaffChat:", data);
-            console.log("Current selectedUser:", selectedUser);
-            console.log("Current userId:", userId);
-            if (
-                data.sender_id._id === userId ||
-                data.recipient_id._id === userId
-            ) {
-                setMessages((prevMessages) => [...prevMessages, data]);
-            }
+            setMessages((prevMessages) => [...prevMessages, data]);
         });
 
         socketRef.current.on("newMessageNotification", ({ senderId, message }) => {

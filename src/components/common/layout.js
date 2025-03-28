@@ -31,11 +31,16 @@ const Layout = () => {
             socket.disconnect();
         };
     }, [user?.id, showChat]);
-
+    useEffect(() => {
+        if (!user || !user.id) {
+            setShowChat(false);
+            setNotificationCount(0);
+        }
+    }, [user]);
     const handleToggleChat = () => {
         setShowChat(!showChat);
         if (!showChat) {
-            setNotificationCount(0); // Reset notifications when opening chat
+            setNotificationCount(0);
         }
     };
     return (
@@ -43,64 +48,66 @@ const Layout = () => {
             <Header />
             <div style={{ minHeight: '42vh' }}>
                 <Outlet></Outlet>
-                <button
-                    onClick={handleToggleChat}
-                    style={{
-                        position: "fixed",
-                        bottom: "20px",
-                        marginBottom: "60px",
-                        right: "20px",
-                        width: "60px",
-                        height: "60px",
-                        border: "none",
-                        borderRadius: "50%",
-                        cursor: "pointer",
-                        zIndex: 1000,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        padding: "0",
-                        backgroundColor: 'white'
-                    }}
-                >
-                    {showChat ? (
-                        <img
-                            src={Logo2}
-                            alt="Close Chat"
-                            style={{
-                                width: "40px",
-                                height: "40px",
-                            }}
-                        />
-                    ) : (
-                        <img
-                            src={Logo1}
-                            alt="Chat with Staff"
-                            style={{
-                                width: "40px",
-                                height: "40px",
-                            }}
-                        />
-                    )}
-                    {!showChat && notificationCount > 0 && (
-                        <span style={{
-                            position: "absolute",
-                            top: "-5px",
-                            right: "-5px",
-                            width: "20px",
-                            height: "20px",
-                            backgroundColor: "red",
+                {Object.keys(user).length !== 0 && (
+                    <button
+                        onClick={handleToggleChat}
+                        style={{
+                            position: "fixed",
+                            bottom: "20px",
+                            marginBottom: "60px",
+                            right: "20px",
+                            width: "60px",
+                            height: "60px",
+                            border: "none",
                             borderRadius: "50%",
-                            color: "white",
+                            cursor: "pointer",
+                            zIndex: 1000,
                             display: "flex",
-                            alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "12px",
-                        }}>
-                            {notificationCount}
-                        </span>
-                    )}
-                </button>
+                            alignItems: "center",
+                            padding: "0",
+                            backgroundColor: 'white'
+                        }}
+                    >
+                        {showChat ? (
+                            <img
+                                src={Logo2}
+                                alt="Close Chat"
+                                style={{
+                                    width: "40px",
+                                    height: "40px",
+                                }}
+                            />
+                        ) : (
+                            <img
+                                src={Logo1}
+                                alt="Chat with Staff"
+                                style={{
+                                    width: "40px",
+                                    height: "40px",
+                                }}
+                            />
+                        )}
+                        {!showChat && notificationCount > 0 && (
+                            <span style={{
+                                position: "absolute",
+                                top: "-5px",
+                                right: "-5px",
+                                width: "20px",
+                                height: "20px",
+                                backgroundColor: "red",
+                                borderRadius: "50%",
+                                color: "white",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "12px",
+                            }}>
+                                {notificationCount}
+                            </span>
+                        )}
+                    </button>
+                )}
 
                 {showChat && <CustomerChat userId={user.id} />}
             </div>
