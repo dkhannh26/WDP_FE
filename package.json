@@ -29,6 +29,7 @@
     "react-slick": "^0.30.3",
     "recharts": "^2.13.0",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.16",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
@@ -58,6 +59,6 @@
     ]
   },
   "devDependencies": {
-    "ajv": "^7.2.4"
+    "ajv": "^8.17.1"
   }
 }
