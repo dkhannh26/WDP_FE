@@ -19,7 +19,7 @@ const ProductDetail = () => {
 
     const [canvas, setCanvas] = useState('https://top10hoabinh.com/wp-content/uploads/2022/10/anh-dang-load-2.jpg')
     const { id } = useParams();
-
+    const role = localStorage?.getItem('role')
     const [cart, setCarts] = useState([])
     const [total, setTotal] = useState(0);
     // const [productDetail, setProductDetail] = useState([])
@@ -36,7 +36,7 @@ const ProductDetail = () => {
         setCount(1);
     };
 
-    console.log(product);
+    console.log(role === null);
 
     const [count, setCount] = useState(1);
 
@@ -308,15 +308,14 @@ const ProductDetail = () => {
                                     </Row>
                                 </Tooltip>
                             </>
-
                     }
                 </Col>
             </Row>
             <Row>
                 {
-
-                    checkPermission('viewFeedbacks') ? <CustomerFeedback product_id={id} userId={initialValues.userId} />
-                        : ''
+                    checkPermission('viewFeedbacks')
+                    &&
+                    <CustomerFeedback product_id={id} userId={initialValues.userId} />
                 }
             </Row>
         </>

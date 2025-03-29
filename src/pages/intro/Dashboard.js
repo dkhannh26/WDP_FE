@@ -248,9 +248,10 @@ const Dashboard = () => {
               overlay={menuNotification}
               trigger={["click"]}
               onOpenChange={handleNotificationClick}
+
             >
-              <Badge count={count}>
-                <BellOutlined style={{ fontSize: 24, cursor: "pointer" }} />
+              <Badge count={count} >
+                <BellOutlined style={{ marginRight: 20, fontSize: 24, cursor: "pointer" }} />
               </Badge>
             </Dropdown>
             <Title style={{ fontSize: 20, paddingTop: 10 }}>

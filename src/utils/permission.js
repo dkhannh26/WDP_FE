@@ -15,10 +15,12 @@
 export const checkPermission = (permission) => {
     const storedPermissions = localStorage.getItem('permissions');
 
+    if (permission === 'viewFeedbacks') {
+        return true
+    }
     if (storedPermissions === null) {
         return false;
     }
-
     let permissions;
     try {
         permissions = JSON.parse(storedPermissions);

@@ -3,11 +3,9 @@ import {
   LikeFilled,
   LikeOutlined,
   MoreOutlined,
-  PlusOutlined,
 } from "@ant-design/icons";
 import {
   Button,
-  Card,
   Col,
   Dropdown,
   Form,
@@ -69,7 +67,7 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
 
   const { t, i18n } = useTranslation();
 
-
+  const role = localStorage.getItem('role')
   const [replyForms, setReplyForms] = useState({}); // Theo dõi form reply nào đang hiển thị
   const [replies, setReplies] = useState({}); // Lưu trữ replies cho từng feedback
   const totalReviews = feedback.length;
@@ -564,13 +562,18 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
               ) : (
                 <Row style={{ marginTop: 10 }}>
                   <Col span={24}>
-                    <Button
-                      type="link"
-                      onClick={() => toggleReplyForm(item._id)}
-                      style={{ padding: 0 }}
-                    >
-                      Reply
-                    </Button>
+                    {
+                      (role && role !== 'customer')
+                      &&
+                      <Button
+                        type="link"
+                        onClick={() => toggleReplyForm(item._id)}
+                        style={{ padding: 0 }}
+                      >
+                        Reply
+                      </Button>
+                    }
+
 
                     {/* Reply Form */}
                     {replyForms[item._id] && (
