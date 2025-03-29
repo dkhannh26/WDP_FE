@@ -29,3 +29,12 @@ export const readNotification = async (userId, senderId, setNotifications) => {
         throw error; // Ensure the error is propagated
     }
 };
+
+export const customerReadNotification = async (userId, setNotifications) => {
+    await axios
+        .put(API_PATH.customerReadNotification + `/${userId}`)
+        .then((res) => {
+            setNotifications(res.data);
+        })
+        .catch((error) => console.error(error));
+};

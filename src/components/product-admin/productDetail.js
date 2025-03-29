@@ -169,7 +169,7 @@ const ProductDetail = () => {
                                         <Space>
                                             <Text style={{ fontSize: 18 }}>{t('header.size')}: {item.size_name}</Text>
                                             <Text style={{ fontSize: 18 }}>
-                                                {t('table.quantity')}: {item.quantity}
+                                                {'-'} {t('table.quantity')}: {item.quantity}
                                             </Text>
                                         </Space>
                                     </div>
@@ -189,9 +189,9 @@ const ProductDetail = () => {
                             <Button icon={<EditOutlined />} size={30} onClick={() => navigate(editPath)}>
                                 {t('button.edit')}
                             </Button>
-                            <Button danger>
+                            {/* <Button danger>
                                 {t('button.delete')}
-                            </Button>
+                            </Button> */}
                         </Space>
                     </Row>
                 </Col>

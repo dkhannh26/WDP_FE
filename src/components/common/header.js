@@ -37,6 +37,8 @@ import Logo2 from "../../assets/images/logo2.jpeg";
 import { getListBrand } from "../../services/brand.service";
 import { useTranslation } from "react-i18next";
 import { checkPermission } from "../../utils/permission";
+import { notification } from 'antd';
+
 
 const { Text } = Typography;
 
@@ -68,6 +70,22 @@ const Header = () => {
     phone: "",
     address: "",
   });
+  const Context = React.createContext({ name: 'Default' });
+  const [api, contextHolder] = notification.useNotification();
+  const warningLogin = placement => {
+    api.info({
+      message: `Warning!!!`,
+      description: <Context.Consumer>{({ name }) => `Vui lòng đăng nhập để thực hiện chức năng này!`}</Context.Consumer>,
+      placement,
+    });
+  };
+  const warningCartEmpty = placement => {
+    api.info({
+      message: `Warning!!!`,
+      description: <Context.Consumer>{({ name }) => `Vui lòng thêm giỏ hàng vào để thực hiện chức năng này!`}</Context.Consumer>,
+      placement,
+    });
+  };
   useEffect(() => {
     const fetchData = async () => {
       if (isAuthenticated) {
@@ -130,7 +148,9 @@ const Header = () => {
 `;
   const isCartEmpty = !carts || carts.length === 0 || total === 0;
   const cartPopover = (
+
     <div className="cart-pop">
+      {contextHolder}
       <div className="card-pop-title text uppercase">
         <p>{t('header.cart')}</p>
       </div>
@@ -235,26 +255,61 @@ const Header = () => {
         </p>
       </div>
       <div className="flex-space-between cart-pop-navigate">
-        <button
-          className="login-pop-btn uppercase"
-          onClick={() => navigate(CART_URL.INDEX)}
-        >
-          <span>{t('header.view_cart')}</span>
-        </button>
-        {
-          checkPermission('checkout') ?
-            <button
-              className={`login-pop-btn ${isCartEmpty ? "disabled" : ""}`}
-              onClick={() =>
-                !isCartEmpty &&
+        {Object.keys(user).length !== 0 ?
+          <button
+            className="login-pop-btn uppercase"
+            onClick={() =>
+              !isCartEmpty ?
+                navigate(CART_URL.INDEX, { state: { voucherTotal: total } })
+                :
+                warningCartEmpty('topRight')
+            }
+          >
+            <span>{t('header.view_cart')}</span>
+          </button>
+          :
+          <button
+            className="login-pop-btn uppercase"
+            onClick={() =>
+              !isCartEmpty ?
+                navigate(CART_URL.INDEX, { state: { voucherTotal: total } })
+                :
+                warningLogin('topRight')
+            }
+          >
+            <span>{t('header.view_cart')}</span>
+          </button>
+        }
+        {/* { */}
+        {Object.keys(user).length !== 0 ?
+          <button
+            className={`login-pop-btn ${isCartEmpty ? "disabled" : ""}`}
+            onClick={() =>
+              !isCartEmpty ?
                 navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
-              }
-              disabled={isCartEmpty}
-            >
-              <span>{t('header.payment')}</span>
-            </button>
-            :
-            <Tooltip title="Bạn không có quyền thực hiện hành động này">
+                :
+                warningCartEmpty('topRight')
+            }
+          >
+            <span>{t('header.payment')}</span>
+          </button>
+          :
+          <button
+            className={`login-pop-btn ${isCartEmpty ? "disabled" : ""}`}
+            onClick={() =>
+              // {
+              //   console.log(!isCartEmpty)
+              // }
+              !isCartEmpty ?
+                navigate(PAYMENT_URL.INDEX, { state: { voucherTotal: total } })
+                :
+                warningLogin('topRight')
+            }
+          >
+            <span>{t('header.payment')}</span>
+          </button>}
+
+        {/* <Tooltip title="Bạn không có quyền thực hiện hành động này">
               <button
                 style={{ background: '#ccc', pointerEvents: 'none', border: 'none' }}
                 className={`login-pop-btn "disabled" `}
@@ -266,10 +321,11 @@ const Header = () => {
               >
                 <span>{t('header.payment')}</span>
               </button>
-            </Tooltip>
-        }
+            </Tooltip> */}
+        {/* } */}
 
       </div>
+
     </div>
   );
 
