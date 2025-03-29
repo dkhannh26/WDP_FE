@@ -7,13 +7,16 @@ import CustomerChat from "../chatbox/CustomerChat";
 import Logo1 from "../../assets/chatstaff.jpg";
 import Logo2 from "../../assets/close.jpg";
 import { io } from 'socket.io-client';
+import { customerReadNotification, getListNotification, readNotification } from '../../services/chat.service';
 
 const Layout = () => {
     const { user } = useAuth() || { user: null };
     const [showChat, setShowChat] = useState(false);
     const [notificationCount, setNotificationCount] = useState(0);
+    const [chatNotifications, setChatNotifications] = useState([])
     useEffect(() => {
         if (!user?.id) return;
+        getListNotification(user.id, setChatNotifications, setNotificationCount);
 
         const socket = io("http://localhost:3000");
 
@@ -37,8 +40,10 @@ const Layout = () => {
             setNotificationCount(0);
         }
     }, [user]);
-    const handleToggleChat = () => {
+    const handleToggleChat = (userId) => {
+        console.log("taonemayditmemay", userId);
         setShowChat(!showChat);
+        customerReadNotification(userId, setChatNotifications);
         if (!showChat) {
             setNotificationCount(0);
         }
@@ -50,7 +55,7 @@ const Layout = () => {
                 <Outlet></Outlet>
                 {Object.keys(user).length !== 0 && (
                     <button
-                        onClick={handleToggleChat}
+                        onClick={() => handleToggleChat(user.id)}
                         style={{
                             position: "fixed",
                             bottom: "20px",

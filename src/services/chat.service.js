@@ -1,7 +1,5 @@
 import axios from "axios";
 import { API_PATH } from "../config/api.config";
-import { DISCOUNT_URL } from "../config/url.config";
-import { MESSAGE } from "../config/message.config";
 
 export const getListNotification = async (id, setChatNotifications, setNotificationCount) => {
     await axios
@@ -28,4 +26,12 @@ export const readNotification = async (userId, senderId, setNotifications) => {
         console.error("Error marking notifications as read:", error);
         throw error; // Ensure the error is propagated
     }
+};
+export const customerReadNotification = async (userId, setNotifications) => {
+    await axios
+        .put(API_PATH.customerReadNotification + `/${userId}`)
+        .then((res) => {
+            setNotifications(res.data);
+        })
+        .catch((error) => console.error(error));
 };
