@@ -1,5 +1,5 @@
-import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined, TruckOutlined, RedoOutlined } from "@ant-design/icons";
-import { Button, Image, Input, List, Menu, Modal, Radio, Row, Space, Table, Typography, message } from "antd";
+import { CheckOutlined, CloseOutlined, EyeInvisibleOutlined, EyeOutlined, TruckOutlined, RedoOutlined, SearchOutlined, } from "@ant-design/icons";
+import { Button, Col, Image, Input, List, Menu, Modal, Radio, Row, Space, Table, Typography, message, Tag } from "antd";
 import Search from "antd/es/input/Search";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { useAuth } from "../context/AuthContext";
 import { success } from '../../utils/helper';
 import { MESSAGE } from "../../config/message.config";
 import { useTranslation } from "react-i18next";
+import "../../assets/css/header.css";
 
 const { Text, Title } = Typography;
 
@@ -37,6 +38,7 @@ const OrderCustomer = () => {
     const handleFileListChange = (newFileList) => {
         setFileList(newFileList);
     };
+    const [selectedKey, setSelectedKey] = useState("ALL");
 
     const { t, i18n } = useTranslation();
 
@@ -203,45 +205,38 @@ const OrderCustomer = () => {
         {
             title: t('table.status'),
             dataIndex: 'status',
+            key: 'status',
             width: '10%',
             sorter: (a, b) => {
                 if (a.status === 'pending' && b.status !== 'pending') return -1;
             },
-            render: (status) => {
+            render: (_, { status }) => {
                 let color;
-                switch (status) {
-                    case 'Pending':
-                        color = '#faad14';
-                        break;
-                    case 'Pending Approval':
-                        color = 'orange';
-                        break;
-                    case 'Paid':
-                        color = '#52c41a';
-                        break;
-                    case 'In Transit':
-                        color = '#1890ff';
-                        break;
-                    case 'Completed':
-                        color = '#52c41a';
-                        break;
-                    case 'Return Approved':
-                        color = '#52c41a';
-                        break;
-                    case 'Cancelled':
-                        color = '#f5222d';
-                        break;
-                    case 'Return Refund':
-                        color = '#faad14';
-                        break;
-                    case 'Reject':
-                        color = '#f5222d';
-                        break;
-                    default:
-                        color = '#000000';
+                if (status === 'Pending') {
+                    color = '#faad14';
+                } else if (status === 'Pending Approval') {
+                    color = '#fd7904';
+                } else if (status === 'Paid') {
+                    color = '#52c41a';
+                } else if (status === 'In Transit') {
+                    color = '#52c41a';
+                } else if (status === 'Completed') {
+                    color = '#1890ff';
+                } else if (status === 'Return Approved') {
+                    color = '#52c41a';
+                } else if (status === 'Cancelled') {
+                    color = '#f5222d';
+                } else if (status === 'Return Refund') {
+                    color = '#faad14';
+                } else if (status === 'Reject') {
+                    color = '#f5222d';
                 }
-                return <span style={{ color }}>{status}</span>;
-            },
+                return (
+                    <Tag color={color} key={status}>
+                        {status.toUpperCase()}
+                    </Tag>
+                );
+            }
         },
         ...(status === 'Return Refund' ? [{
             title: 'Reject Reason',
@@ -281,7 +276,7 @@ const OrderCustomer = () => {
                                         }),
                                         setOrders, setFilteredOrders)}></Button>
                                 )}
-                            </Space >
+                            </Space>
                         )}
                     </>
                 )
@@ -436,76 +431,112 @@ const OrderCustomer = () => {
         }
 
     }, [state, navigate, messageApi, location.pathname])
-    const items = [
-        {
-            label: "All",
-            key: "ALL",
-            onClick: () => setStatus("All"),
-        },
-        {
-            label: "To Pay",
-            key: "TO_PAY",
-            onClick: () => setStatus("Pending"),
-        },
-        {
-            label: "To Ship",
-            key: "TO_SHIP",
-            onClick: () => setStatus("In Transit"),
-        },
-        {
-            label: "Completed",
-            key: "COMPLETED",
-            onClick: () => setStatus("Completed"),
-        },
-        {
-            label: "Cancelled",
-            key: "CANCELLED",
-            onClick: () => setStatus("Cancelled"),
-        },
-        {
-            label: "Return Refund",
-            key: "RETURN_REFUND",
-            onClick: () => setStatus("Return Refund"),
-        },
-    ];
 
     if (isLoading) return <div>Loading...</div>;
 
     return (
-        <>
+        <Row className="container" gutter={[0, 16]} style={{ marginTop: 50 }}>
             {contextHolder}
-            <div style={{ justifyContent: 'center', display: 'flex', margin: '1%' }}>
-                <Row className="container header-menu">
-                    <Menu
-                        mode="horizontal"
-                        items={items}
-                        style={{ gap: '3%', fontSize: '16px', justifyContent: 'center', width: '100%' }}
-                    />
+            <Col span={24}>
+                <Row>
+                    <Col span={20}>
+                        <Menu
+                            className="menu-order"
+                            mode="horizontal"
+                            selectedKeys={[selectedKey]}
+                            onClick={(e) => setSelectedKey(e.key)}
+                        >
+                            <Menu.Item key="ALL" onClick={() => setStatus("All")}
+                                style={{
+                                    background: selectedKey === "ALL" ? "#F04D4D" : "",
+                                    color: selectedKey === "ALL" ? "white" : "black",
+                                    minWidth: "130px",
+                                    textAlign: "center",
+                                    fontWeight: selectedKey === "ALL" ? "bold" : "normal",
+                                }}
+                            >All</Menu.Item>
+                            <Menu.Item key="TO_PAY" onClick={() => setStatus("To Pay")}
+                                style={{
+                                    background: selectedKey === "TO_PAY" ? "#F04D4D" : "",
+                                    color: selectedKey === "TO_PAY" ? "white" : "black",
+                                    minWidth: "130px",
+                                    textAlign: "center",
+                                    fontWeight: selectedKey === "TO_PAY" ? "bold" : "normal",
+                                }}>To Pay</Menu.Item>
+                            <Menu.Item key="TO_SHIP" onClick={() => setStatus("To Ship")}
+                                style={{
+                                    background: selectedKey === "TO_SHIP" ? "#F04D4D" : "",
+                                    color: selectedKey === "TO_SHIP" ? "white" : "black",
+                                    minWidth: "130px",
+                                    textAlign: "center",
+                                    fontWeight: selectedKey === "TO_SHIP" ? "bold" : "normal",
+                                }}>To Ship</Menu.Item>
+                            <Menu.Item key="COMPLETED" onClick={() => setStatus("Completed")}
+                                style={{
+                                    background: selectedKey === "COMPLETED" ? "#F04D4D" : "",
+                                    color: selectedKey === "COMPLETED" ? "white" : "black",
+                                    minWidth: "130px",
+                                    textAlign: "center",
+                                    fontWeight: selectedKey === "COMPLETED" ? "bold" : "normal",
+                                }}>Completed</Menu.Item>
+                            <Menu.Item key="CANCELLED" onClick={() => setStatus("Cancelled")}
+                                style={{
+                                    background: selectedKey === "CANCELLED" ? "#F04D4D" : "",
+                                    color: selectedKey === "CANCELLED" ? "white" : "black",
+                                    minWidth: "130px",
+                                    textAlign: "center",
+                                    fontWeight: selectedKey === "CANCELLED" ? "bold" : "normal",
+                                }}>Cancelled</Menu.Item>
+                            <Menu.Item key="RETURN_REFUND" onClick={() => setStatus("Return Refund")}
+                                style={{
+                                    background: selectedKey === "RETURN_REFUND" ? "#F04D4D" : "",
+                                    color: selectedKey === "RETURN_REFUND" ? "white" : "black",
+                                    // padding: "10px 15px",
+                                    minWidth: "130px",
+                                    textAlign: "center",
+                                    fontWeight: selectedKey === "RETURN_REFUND" ? "bold" : "normal",
+                                }}>Return Refund</Menu.Item>
+                        </Menu>
+                    </Col>
+                    <Col span={4}>
+                        <Row gutter={[0, 5]}>
+                            <Col span={12}>
+                                <Button onClick={() => setStatus("pending")} type={status === "pending" ? "primary" : "default"} style={{ marginRight: '1%' }}>
+                                    {t('button.pending')}
+                                </Button>
+                            </Col>
+                            <Col span={12}>
+                                <Button onClick={() => setStatus("done")} type={status === "done" ? "primary" : "default"}>
+                                    {t('button.done')}
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Col>
                 </Row>
-                <Button onClick={() => setStatus("pending")} type={status === "pending" ? "primary" : "default"} style={{ marginRight: '1%' }}>
-                    {t('button.pending')}
-                </Button>
-                <Button onClick={() => setStatus("done")} type={status === "done" ? "primary" : "default"}>
-                    {t('button.done')}
-                </Button>
-            </div>
+            </Col>
 
-            <Search
-                placeholder={t('search.order')}
-                allowClear
-                enterButton
-                size="large"
-                onChange={onChange}
-                style={{
-                    width: 350,
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    marginBottom: "10px",
-                    marginLeft: "19%"
-                }}
-            />
+            <Col span={24}>
+                <div className="flex-center search-container">
+                    <input
+                        placeholder={t('search.order')}
+                        allowClear
+                        enterButton
+                        size="large"
+                        className="search-input"
+                        onChange={onChange}
+                        style={{
+                            width: 235,
+                            fontSize: 12,
+                            height: 30
+                        }}
+                    />
+                    <div className="search-btn">
+                        <SearchOutlined />
+                    </div>
+                </div>
+            </Col>
 
-            <div style={{ justifyContent: 'center', display: 'flex', margin: '1%' }}>
+            <Col span={24} style={{ justifyContent: 'center', display: 'flex', margin: '1%' }}>
                 <Row className="container">
                     <Table
                         columns={columns}
@@ -631,8 +662,8 @@ const OrderCustomer = () => {
                         )}
                     </Modal>
                 )}
-            </div>
-        </>
+            </Col>
+        </Row >
     )
 }
 

@@ -302,7 +302,7 @@ const Header = () => {
     { title: t('accessories'), path: '/customer/accessory', typeLink: 'accessory', query: 'Accessories' },
   ];
   const content = (
-    <div style={{ width: '100vw' }}>
+    <div className="container">
       <div className="product-menu">
         {categories.map(category => (
           <div className="product-menu-item" key={category.title}>
@@ -364,11 +364,25 @@ const Header = () => {
         </p>
       </Row> */}
       <Row className="container header-middle flex-center">
-        <Col span={4}>
-          <img src={Logo2} alt="logo" className="logo" />
+        <Col span={2}>
+          <Link to="/customer">
+            <img src={Logo2} alt="logo" className="logo" />
+          </Link>
         </Col>
-        <Col span={9} style={{ position: "relative" }}>
-          <div className="flex-center">
+        <Col span={11}>
+          <Menu mode="horizontal" className="header-menu">
+            <Menu.Item key="PRODUCT">
+              <Popover content={content}>
+                {t('header.product')}
+              </Popover>
+            </Menu.Item>
+            <Menu.Item key="ABOUT"><Link to="/customer/about">{t('header.about')}</Link></Menu.Item>
+            <Menu.Item key="EXCHANGE POLICY"><Link to="/customer/exchange-policy">{t('header.exchange_policy')}</Link></Menu.Item>
+            <Menu.Item key="CONTACT"><Link to="/customer/contact">{t('header.contact')}</Link></Menu.Item>
+          </Menu>
+        </Col>
+        <Col span={7} style={{ position: "relative" }}>
+          <div className="flex-center search-container">
             <input
               onFocus={() => {
                 setSearchForcus(true);
@@ -450,92 +464,78 @@ const Header = () => {
           )}
         </Col>
 
-        <Col span={8} className="login-cart flex-center">
-          {isAuthenticated ? (
-            <Popover
-              content={LoginPopover}
-              trigger="click"
-              className="login-box flex-center "
-            >
-              <div className="user-icon">
-                <UserOutlined className="icon" />
-              </div>
-              <div className="login">
-                <p style={{ color: "#333333" }}> {t('header.account_of')}</p>
-                <p style={{ fontWeight: 500 }}>
-                  {username} <DownOutlined />
-                </p>
-              </div>
-            </Popover>
-          ) : (
-            <Popover
-              content={LoginPopover}
-              trigger="click"
-              className="login-box flex-center "
-            >
-              <div className="user-icon">
-                <UserOutlined className="icon" />
-              </div>
-              <div className="login">
-                <p style={{ color: "#333333" }}> {t('header.sign_in')} /  {t('header.sign_up')}</p>
-                <p style={{ fontWeight: 500 }}>
-                  {t('header.my_account')}<DownOutlined />
-                </p>
-              </div>
-            </Popover>
-          )}
-          <Popover
-            placement="bottomRight"
-            content={cartPopover}
-            trigger="click"
-            className="cart flex-center"
-          >
-            <Badge
-              count={carts.length}
-              showZero
-              style={{ backgroundColor: "#333333" }}
-            >
-              <ShoppingOutlined className="icon" />
-            </Badge>
-            <p style={{ marginLeft: 10 }}> {t('header.cart')}</p>
-          </Popover>
-          {Object.keys(user).length !== 0 && (<span
-            style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
-            onClick={() => navigate(WISHLIST_URL.INDEX)}
-          >
-            <HeartOutlined style={{ fontSize: "24px" }} />
-            <span>{t('header.wishlist')}</span>
-          </span>)}
-        </Col>
-        <Col span={2} style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}>
-          <CustomSwitch
-            defaultChecked={i18n.language === 'vi'}
-            onChange={handleLanguageChange}
-            style={{ height: 26 }}
-            padding='10px 0'
-            checkedChildren={
-              <Image
-                position='absolute'
-                width={30}
+        <Col span={4} className="login-cart flex-center">
+          <Row gutter={[8, 0]}>
+            <Col span={6}>
+              {isAuthenticated ? (
+                <Popover
+                  content={LoginPopover}
+                  trigger="click"
+                  className="login-box flex-center "
+                >
+                  <div className="user-icon">
+                    <UserOutlined className="icon" />
+                  </div>
+                </Popover>
+              ) : (
+                <Popover
+                  content={LoginPopover}
+                  trigger="click"
+                  className="login-box flex-center "
+                >
+                  <div className="user-icon">
+                    <UserOutlined className="icon" />
+                  </div>
+                </Popover>
+              )}
+            </Col>
+            <Col span={6}>
+              <Popover
+                placement="bottomRight"
+                content={cartPopover}
+                trigger="click"
+                className="cart flex-center"
+              >
+                <Badge
+                  count={carts.length}
+                  showZero
+                  style={{ backgroundColor: "#333333" }}
+                >
+                  <ShoppingOutlined className="icon" />
+                </Badge>
+              </Popover>
+            </Col>
+            <Col span={6}>
+              {Object.keys(user).length !== 0 && (<span
+                style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
+                onClick={() => navigate(WISHLIST_URL.INDEX)}
+              >
+                <HeartOutlined style={{ fontSize: "24px" }} />
+              </span>)}
+            </Col>
+            <Col span={6} >
+              <CustomSwitch
+                defaultChecked={i18n.language === 'vi'}
+                onChange={handleLanguageChange}
+                style={{ height: 26 }}
+                padding='10px 0'
+                checkedChildren={
+                  <Image
+                    position='absolute'
+                    width={30}
 
-                src={VietFlag}
-              />}
-            unCheckedChildren={
-              <Image
-                position='absolute'
-                width={30}
-                src={engFlag}
-              />}
-          />
+                    src={VietFlag}
+                  />}
+                unCheckedChildren={
+                  <Image
+                    position='absolute'
+                    width={30}
+                    src={engFlag}
+                  />}
+              />
+            </Col>
+          </Row>
         </Col>
-      </Row>
-      <Row className="container header-menu">
-        <Menu mode="horizontal" items={items} />
       </Row>
     </div>
   );

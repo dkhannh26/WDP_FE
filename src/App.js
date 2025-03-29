@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { AuthProvider } from "./components/context/AuthContext";
 import { RefreshProvider } from "./context/RefreshContext";
 import { useEffect } from "react";
+import ScrollToTop from "./components/common/ScrollToTop";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
   }, []);
   return (
     <AuthProvider>
+      <ScrollToTop />
       <RefreshProvider>
         <Outlet />
       </RefreshProvider>

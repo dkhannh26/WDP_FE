@@ -24,7 +24,7 @@ const User = () => {
 
 
   const { t, i18n } = useTranslation();
-  
+
   const navigate = useNavigate();
   const [view, setView] = useState("profile");
   const { isAuthenticated, setIsAuthenticated, setUsername, user, setUser } =
@@ -283,7 +283,7 @@ const User = () => {
                   rules={[
                     {
                       required: true,
-                      message: t('validate.address'), 
+                      message: t('validate.address'),
                     },
                   ]}
                 >
@@ -299,6 +299,7 @@ const User = () => {
                         marginRight: "1%",
                         height: "auto",
                         fontSize: "16px",
+                        padding: "5px 10px"
                       }}
                     >
                       {t('button.save')}
@@ -310,7 +311,7 @@ const User = () => {
                       onClick={() => {
                         form.setFieldsValue(initialValues);
                       }}
-                      style={{ height: "auto", fontSize: "16px" }}
+                      style={{ height: "auto", fontSize: "16px", padding: "5px 10px" }}
                     >
                       {t('button.cancel')}
                     </Button>
@@ -401,6 +402,7 @@ const User = () => {
                       marginRight: "1%",
                       height: "auto",
                       fontSize: "16px",
+                      padding: "5px 10px"
                     }}
                   >
                     {t('button.save')}
@@ -412,7 +414,7 @@ const User = () => {
                     onClick={() => {
                       setView("profile");
                     }}
-                    style={{ height: "auto", fontSize: "16px" }}
+                    style={{ height: "auto", fontSize: "16px", padding: "5px 10px" }}
                   >
                     {t('button.cancel')}
                   </Button>

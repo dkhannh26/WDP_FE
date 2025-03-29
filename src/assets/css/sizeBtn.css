@@ -18,17 +18,18 @@
     transform: scale(1.05);
 }
 
-
+/* 
 div[class*=box] {
     height: 33.33%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
 .box-1 {
     background-color: #9e2323;
+    width: 100%;
 }
 
 .box-1:hover {
@@ -45,7 +46,7 @@ div[class*=box] {
     line-height: 50px;
     height: 50px;
     text-align: center;
-    width: 1000px;
+    width: 100%;
     cursor: pointer;
 }
 

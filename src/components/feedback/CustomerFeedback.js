@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Col,
+  Divider,
   Dropdown,
   Form,
   Image,
@@ -144,6 +145,8 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
   };
 
   const handleCancel = () => {
+    setCurrentFeedback(false);
+
     setIsModalOpen(false);
   };
 
@@ -463,192 +466,215 @@ const CustomerFeedback = ({ product_id, userId, feedbackId }) => {
             </Menu>
           );
           return (
-            <List.Item style={{ marginBottom: 15, display: "block" }}>
-              <Row style={{ display: "flex", alignItems: "center" }}>
-                <Col span={6}>
-                  <b style={{ fontSize: "16px" }}>{item.account_id.username}</b>
-                </Col>
-                <Col span={5} offset={13}>
-                  <div
-                    style={{
+            <List.Item style={{ display: "block" }}>
+              <Row>
+                <Col span={24}>
+                  <Row>
+                    <Col span={6}>
+                      <b style={{ fontSize: "16px" }}>{item.account_id.username}</b>
+                    </Col>
+                    <Col span={5} offset={13} style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "flex-end",
-                    }}
-                  >
-                    <p>{new Date(item.createdAt).toDateString()}</p>
-                    {
-                      (
+                    }}>
+                      <p>{new Date(item.createdAt).toDateString()}</p>
+                      {
+                        (
 
-                        checkPermission('editFeedback')
-                        ||
-                        checkPermission('deleteFeedback')
-                      ) &&
-                      <>
-                        {userId === item.account_id._id && (
-                          <Dropdown overlay={menu} trigger={["click"]}>
-                            <Button
-                              style={{ borderColor: "white" }}
-                              icon={<MoreOutlined />}
-                            />
-                          </Dropdown>
-                        )}
-                      </>
-                    }
-                  </div>
+                          checkPermission('editFeedback')
+                          ||
+                          checkPermission('deleteFeedback')
+                        ) &&
+                        <>
+                          {userId === item.account_id._id && (
+                            <Dropdown overlay={menu} trigger={["click"]}>
+                              <Button
+                                style={{ borderColor: "white" }}
+                                icon={<MoreOutlined />}
+                              />
+                            </Dropdown>
+                          )}
+                        </>
+                      }
+                    </Col>
+                  </Row>
                 </Col>
-              </Row>
-              <div
-                style={{
-                  marginLeft: 20,
-                  backgroundColor: "#F3F4F6",
-                  height: 70,
-                  marginTop: 10,
-                  padding: 15,
-                  paddingRight: 0,
-                }}
-              >
-                <Row>
-                  <Col span={2}>
-                    <p>
-                      <b>Đánh giá: </b>
-                    </p>
-                  </Col>
-                  <Col>
-                    <Rate allowHalf disabled defaultValue={item.star} />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={2}>
-                    <p>
-                      <b>Nhận xét: </b>
-                    </p>
-                  </Col>
-                  <Col>
-                    <p>{item.content}</p>
-                  </Col>
-                </Row>
-              </div>
-              <Row className="feedback-image-container">
-                {item?.imageUrls && item.imageUrls.length > 0
-                  ? item.imageUrls.map((url, index) => (
-                    <Image
-                      key={index}
-                      preview={true}
-                      className="feedback-image"
-                      width={100}
-                      height={100}
-                      src={`http://localhost:3000${url}`}
-                    />
-                  ))
-                  : ""}
-              </Row>
-              {localStorage.getItem("role") === "user" ? (
-                <Row>
-                  <Button
-                    size="large"
-                    style={{
-                      borderColor: "white",
-                    }}
-                    icon={
-                      feedbackLikeArr.includes(item._id) ? (
-                        <LikeFilled />
-                      ) : (
-                        <LikeOutlined />
-                      )
-                    }
-                    onClick={() => likeButton(item._id, user.id)}
-                  />
-                  {item.likeCount}
-                </Row>
-              ) : (
-                <Row style={{ marginTop: 10 }}>
-                  <Col span={24}>
-                    <Button
-                      type="link"
-                      onClick={() => toggleReplyForm(item._id)}
-                      style={{ padding: 0 }}
-                    >
-                      Reply
-                    </Button>
+                <Col span={24}
+                  style={{
+                    backgroundColor: "rgb(235 235 235)",
+                    marginTop: 10,
+                    padding: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
+                    boxShadow: " rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px",
+                  }}
+                >
+                  <Row gutter={[0, 8]}>
+                    <Col span={24}>
+                      <Row>
+                        <Col span={2}>
+                          <b>Đánh giá: </b>
+                        </Col>
+                        <Col>
+                          <Rate allowHalf disabled defaultValue={item.star} />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span={24}>
+                      <Row>
+                        <Col span={2}>
+                          <b>Nhận xét: </b>
+                        </Col>
+                        <Col>
+                          <p>{item.content}</p>
+                        </Col>
+                      </Row>
+                    </Col>
+                    <Col span={24}>
+                      <Row className="feedback-image-container">
+                        {item?.imageUrls && item.imageUrls.length > 0
+                          ? item.imageUrls.map((url, index) => (
+                            <Image
+                              key={index}
+                              preview={true}
+                              className="feedback-image"
+                              width={100}
+                              height={100}
+                              src={`http://localhost:3000${url}`}
+                            />
+                          ))
+                          : ""}
+                      </Row>
+                    </Col>
+                    <Col span={24}>
+                      {replies[item._id] && replies[item._id].length > 0 && (
+                        <Col span={24}
+                          style={{
+                            backgroundColor: "#fff",
+                            marginTop: 10,
+                            padding: 20,
+                            paddingRight: 0,
+                            borderRadius: 5,
+                          }}>
+                          <h3>Phản hồi của cửa hàng</h3>
+                          <List
+                            dataSource={replies[item._id]}
+                            renderItem={(reply) => (
+                              <List.Item style={{ padding: "5px 0 5px 25px" }}>
+                                <div>
 
-                    {/* Reply Form */}
-                    {replyForms[item._id] && (
-                      <Form
-                        name={`reply-${item._id}`}
-                        onFinish={(values) =>
-                          handleReplySubmit(item._id, values)
-                        }
-                        style={{ marginTop: 10 }}
-                      >
-                        <Form.Item
-                          name="replyContent"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please enter your reply!",
-                            },
-                            {
-                              min: 3,
-                              max: 200,
-                              message:
-                                "Reply must be between 3 and 200 characters",
-                            },
-                          ]}
-                        >
-                          <TextArea
-                            placeholder="Write your reply..."
-                            autoSize={{ minRows: 2, maxRows: 4 }}
+                                  <span
+                                    style={{
+                                      color: "#fff",
+                                      backgroundColor: "#1890ff",
+                                      padding: "2px 6px",
+                                      borderRadius: 4,
+                                      fontSize: 12,
+                                    }}
+                                  >
+                                    Quản trị viên
+                                  </span>
+                                  {" "}
+                                  <span style={{ color: "#666" }}>
+                                    {new Date(reply.createdAt).toLocaleDateString()}
+                                  </span>
+                                  <p>{reply.content}</p>
+                                </div>
+                              </List.Item>
+                            )}
                           />
-                        </Form.Item>
-                        <Form.Item>
-                          <Button type="primary" htmlType="submit">
-                            Submit Reply
-                          </Button>
-                          <Button
-                            style={{ marginLeft: 8 }}
-                            onClick={() => toggleReplyForm(item._id)}
-                          >
-                            Cancel
-                          </Button>
-                        </Form.Item>
-                      </Form>
-                    )}
-                  </Col>
-                </Row>
-              )}
+                        </Col>
 
-              {/* Display Replies */}
-              <Row>
-                {replies[item._id] && replies[item._id].length > 0 && (
-                  <List
-                    dataSource={replies[item._id]}
-                    renderItem={(reply) => (
-                      <List.Item style={{ padding: "5px 0 5px 20px" }}>
-                        <div>
-                          <b>{reply.account_id.username} </b>
-                          <span
-                            style={{
-                              marginLeft: 8,
-                              color: "#fff",
-                              backgroundColor: "#1890ff",
-                              padding: "2px 6px",
-                              borderRadius: 4,
-                              fontSize: 12,
-                            }}
-                          >
-                            Quản trị viên
-                          </span>
-                          -{" "}
-                          <span style={{ color: "#666" }}>
-                            {new Date(reply.createdAt).toLocaleDateString()}
-                          </span>
-                          <p>{reply.content}</p>
-                        </div>
-                      </List.Item>
-                    )}
-                  />
-                )}
+                      )}
+                    </Col>
+                    <Col span={24}>
+                      {localStorage.getItem("role") === "customer" ? (
+                        <Row style={{ alignItems: "center" }}>
+                          <Col span={1}>
+                            <Button
+                              size="large"
+                              style={{
+                                border: "none",
+                                background: "transparent",
+                                outline: "none", // Loại bỏ outline
+                                boxShadow: "none",
+                              }}
+                              icon={
+                                feedbackLikeArr.includes(item._id) ? (
+                                  <LikeFilled />
+                                ) : (
+                                  <LikeOutlined />
+                                )
+                              }
+                              onClick={() => likeButton(item._id, user.id)}
+                            />
+                          </Col>
+                          <Col>
+                            {item.likeCount}
+                          </Col>
+                        </Row>
+                      ) : (
+                        <Row>
+                          <Col span={24}>
+                            <Button
+                              color="primary" variant="solid"
+                              type="link"
+                              onClick={() => toggleReplyForm(item._id)}
+                              style={{ padding: 10 }}
+                            >
+                              Reply
+                            </Button>
+
+                            {/* Reply Form */}
+                            {replyForms[item._id] && (
+                              <Form
+                                name={`reply-${item._id}`}
+                                onFinish={(values) =>
+                                  handleReplySubmit(item._id, values)
+                                }
+                                style={{ marginTop: 10 }}
+                              >
+                                <Form.Item
+                                  name="replyContent"
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Please enter your reply!",
+                                    },
+                                    {
+                                      min: 3,
+                                      max: 200,
+                                      message:
+                                        "Reply must be between 3 and 200 characters",
+                                    },
+                                  ]}
+                                >
+                                  <TextArea
+                                    placeholder="Write your reply..."
+                                    autoSize={{ minRows: 2, maxRows: 4 }}
+                                  />
+                                </Form.Item>
+                                <Form.Item>
+                                  <Button type="primary" htmlType="submit">
+                                    Submit Reply
+                                  </Button>
+                                  <Button
+                                    style={{ marginLeft: 8 }}
+                                    onClick={() => toggleReplyForm(item._id)}
+                                  >
+                                    Cancel
+                                  </Button>
+                                </Form.Item>
+                              </Form>
+                            )}
+                          </Col>
+                        </Row>
+                      )}
+                    </Col>
+                  </Row>
+                </Col>
+                <Divider />
               </Row>
             </List.Item>
           );

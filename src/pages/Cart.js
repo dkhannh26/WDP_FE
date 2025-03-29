@@ -1,9 +1,11 @@
 import { Breadcrumb, Divider, Layout, theme } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Outlet, Link } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
 const App = () => {
+    const { t } = useTranslation();
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -38,7 +40,7 @@ const App = () => {
                         margin: '16px 0',
                     }}
                 >
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to="/customer">Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>Cart</Breadcrumb.Item>
                 </Breadcrumb>
                 <div

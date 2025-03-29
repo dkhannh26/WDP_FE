@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+.highlight-text {
+    font-weight: 600;
+    color: #e95221;
+}
+
 .container {
     margin: auto;
     width: 1200px;
@@ -16,12 +21,13 @@
 
 .footer {
     margin-top: 100px; 
+    padding-top: 50px;
     position: relative;
     width: 100%;
     background-color: #f8f8f8;
 }
 
-.footer-content {
+.footer-item {
     padding: 0 15px;
 }
 
@@ -37,23 +43,30 @@
     margin: 0 0 10px 0;
     line-height: 21px;
     font-size: 14.5px;
-    color: #666666;
+    color: black;
+}
+
+.footer-item--content > p {
+    margin-bottom: 10px;
+    line-height: 1.5;
 }
 
 .footer-list {
-    list-style: none;
+    list-style-position: inside;
 }
 
 .footer-list li {
     margin-bottom: 5px;
     line-height: 28px;
-    display: flex;
+    text-indent: -20px;
+    padding-left: 20px;
+    /* display: flex; */
 }
 
-.store-system li a {
+/* .store-system li a {
     pointer-events: none;
     margin-left: 10px;
-}
+} */
 
 .fb-icon {
     font-size: 30px;

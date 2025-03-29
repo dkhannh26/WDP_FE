@@ -46,10 +46,6 @@
   color: #677279;
 }
 
-.uppercase {
-  text-transform: uppercase;
-}
-
 .container {
   margin: auto;
   width: 1200px;
@@ -91,27 +87,55 @@ input:focus {
 
 .header-middle {
   justify-content: space-between;
+  padding: 12px;
+}
+
+.header-menu {
+  border-bottom: none;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
 }
 
 .logo {
   width: 100%;
 }
 
+
+.search-container {
+  display: flex;
+  align-items: center; 
+  position: relative;
+}
+
 .search-input {
-  padding: 10px 20px;
-  height: 42px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 4px 0 0 4px;
+  width: 100%;
+  padding: 10px 10px 10px 40px; /* Space for the icon on the left */
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Rounded corners to match the image */
+  font-size: 16px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.search-input:focus {
+  border-color: #666;
 }
 
 .search-btn {
-  background-color: var(--black-color);
-  color: #ffffff;
-  padding: 12px;
-  border-radius: 0 4px 4px 0;
-  width: 10%;
-  cursor: pointer;
+  position: absolute;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
 }
 
 .login-cart {
@@ -257,10 +281,6 @@ input:focus {
   background-color: #af041e;
 }
 
-.header-menu {
-  display: block;
-}
-
 .pop-list-item {
   transition: 0.3s;
 }
@@ -355,3 +375,32 @@ input:focus {
   margin: 0; /* Khoảng cách trên/dưới */
   width: 100%; /* Đảm bảo container rộng toàn màn hình */
 }
+
+/* Xóa gạch chân khi hover */
+.ant-menu-horizontal > .ant-menu-item:hover,
+.ant-menu-horizontal > .ant-menu-item-active,
+.ant-menu-horizontal > .ant-menu-item-open,
+.ant-menu-horizontal > .ant-menu-item-selected {
+  border-bottom: none !important;
+}
+
+/* Xóa pseudo-element ::after (nếu có) */
+.ant-menu-horizontal > .ant-menu-item::after,
+.ant-menu-horizontal > .ant-menu-item-active::after,
+.ant-menu-horizontal > .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+.ant-switch-handle {
+  display: none !important;
+}
+
+.ant-switch.ant-switch-checked .ant-switch-inner, .ant-switch .ant-switch-inner {
+  padding-inline-end: 0;
+  padding-inline-start: 0;
+}
+
+
+/* .ant-switch-inner {
+  padding: 0;
+} */

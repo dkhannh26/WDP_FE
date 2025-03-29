@@ -141,7 +141,7 @@ const ProductDetail = () => {
     }, [cart],)
     return (
         <>
-            <Row style={{ margin: 40 }}>
+            <Row className='container'>
                 <Col span={14}>
                     <Row>
                         <Col span={4}>

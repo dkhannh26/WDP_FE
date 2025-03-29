@@ -30,6 +30,8 @@ const LoginPopover = () => {
           if (res && res.data.EC === 0) {
             localStorage.setItem("role", res.data.role);
             localStorage.setItem("token", res.data.token);
+            console.log('res', res.data);
+
             localStorage.setItem("permissions", JSON.stringify(res.data.permissions));
 
 
@@ -70,7 +72,7 @@ const LoginPopover = () => {
       if (data && data.EC === 0) {
         localStorage.setItem("role", data.role);
         localStorage.setItem("token", data.token);
-
+        localStorage.setItem("permissions", JSON.stringify(data.permissions));
         setIsAuthenticated(true);
         // setUsername(res);
         notification.success({
@@ -164,11 +166,11 @@ const LoginPopover = () => {
             </div>
             <div className="login-pop-navigate text">
               <p>
-              {t('header.new_customer')}?
+                {t('header.new_customer')}?
                 <a href="/customer/register"> {t('header.sign_up')}</a>
               </p>
               <p>
-              {t('header.forget_password')}?
+                {t('header.forget_password')}?
                 <a
                   href="#"
                   onClick={(e) => {
