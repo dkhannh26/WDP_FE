@@ -238,7 +238,7 @@ const Header = () => {
     { title: 'Accessories', path: '/customer/accessory', typeLink: 'accessory', query: 'Accessories' },
   ];
   const content = (
-    <div style={{ width: '100vw' }}>
+    <div className="container">
       <div className="product-menu">
         {categories.map(category => (
           <div className="product-menu-item" key={category.title}>
@@ -291,18 +291,26 @@ const Header = () => {
 
   return (
     <div className="header">
-      {/* <Row className="top-bar">
-        <p className="container">
-          Miễn phí vận chuyển với đơn hàng trên 500K. Hàng pre-order còn được
-          giảm thêm 5%.
-        </p>
-      </Row> */}
-      <Row className="container header-middle flex-center">
+      <Row className="container header-middle flex-center" >
         <Col span={4}>
-          <img src={Logo2} alt="logo" className="logo" />
+          <Link to="/customer">
+            <img src={Logo2} alt="logo" className="logo" to="/customer" />
+          </Link>
         </Col>
-        <Col span={9} style={{ position: "relative" }}>
-          <div className="flex-center">
+        <Col span={10}>
+          <Menu mode="horizontal" className="header-menu">
+            <Menu.Item key="PRODUCT">
+              <Popover content={content}>
+                PRODUCT
+              </Popover>
+            </Menu.Item>
+            <Menu.Item key="ABOUT"><Link to="/customer/about">ABOUT</Link></Menu.Item>
+            <Menu.Item key="EXCHANGE POLICY"><Link to="/customer/exchange-policy">EXCHANGE POLICY</Link></Menu.Item>
+            <Menu.Item key="CONTACT"><Link to="/customer/contact">CONTACT</Link></Menu.Item>
+          </Menu>
+        </Col>
+        <Col span={7} style={{ position: "relative" }}>
+          <div className="flex-center search-container">
             <input
               onFocus={() => {
                 setSearchForcus(true);
@@ -323,9 +331,9 @@ const Header = () => {
               }}
               pattern="^[^\s].*"
               name="search"
-              placeholder="Tìm kiếm sản phẩm..."
+              placeholder="Search..."
               className="search-input"
-              autocomplete="off"
+              autoComplete="off"
             />
             <div className="search-btn">
               <SearchOutlined />
@@ -383,69 +391,65 @@ const Header = () => {
             ""
           )}
         </Col>
-        <Col span={8} className="login-cart flex-center">
-          {isAuthenticated ? (
-            <Popover
-              content={LoginPopover}
-              trigger="click"
-              className="login-box flex-center "
-            >
-              <div className="user-icon">
-                <UserOutlined className="icon" />
-              </div>
-              <div className="login">
-                <p style={{ color: "#333333" }}>Tài khoản của</p>
-                <p style={{ fontWeight: 500 }}>
-                  {username} <DownOutlined />
-                </p>
-              </div>
-            </Popover>
-          ) : (
-            <Popover
-              content={LoginPopover}
-              trigger="click"
-              className="login-box flex-center "
-            >
-              <div className="user-icon">
-                <UserOutlined className="icon" />
-              </div>
-              <div className="login">
-                <p style={{ color: "#333333" }}>Đăng nhập / Đăng ký</p>
-                <p style={{ fontWeight: 500 }}>
-                  Tài khoản của tôi <DownOutlined />
-                </p>
-              </div>
-            </Popover>
-          )}
-          <Popover
-            placement="bottomRight"
-            content={cartPopover}
-            trigger="click"
-            className="cart flex-center"
-          >
-            <Badge
-              count={carts.length}
-              showZero
-              style={{ backgroundColor: "#333333" }}
-            >
-              <ShoppingOutlined className="icon" />
-            </Badge>
-            <p style={{ marginLeft: 10 }}>Giỏ hàng</p>
-          </Popover>
-          <span
-            style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
-            onClick={() => navigate(WISHLIST_URL.INDEX)}
-          >
-            <HeartOutlined style={{ fontSize: "24px" }} />
-            <span>Wish List</span>
-          </span>
+        <Col span={3} className="login-cart flex-center">
+          <Row gutter={[16, 0]}>
+            <Col span={8}>
+              {isAuthenticated ? (
+                <Popover
+                  content={LoginPopover}
+                  trigger="click"
+                  className="login-box flex-center "
+                >
+                  <div className="user-icon">
+                    <UserOutlined className="icon" />
+                  </div>
+                </Popover>
+              ) : (
+                <Popover
+                  content={LoginPopover}
+                  trigger="click"
+                  className="login-box flex-center "
+                >
+                  <div className="user-icon">
+                    <UserOutlined className="icon" />
+                  </div>
+                </Popover>
+              )}
+            </Col>
+            <Col span={8}>
+              <Popover
+                placement="bottomRight"
+                content={cartPopover}
+                trigger="click"
+                className="cart flex-center"
+              >
+                <Badge
+                  count={carts.length}
+                  showZero
+                  style={{ backgroundColor: "#333333" }}
+                >
+                  <ShoppingOutlined className="icon" />
+                </Badge>
+                {/* <p style={{ marginLeft: 10 }}>Giỏ hàng</p> */}
+              </Popover>
+            </Col>
+            <Col span={8}>
+              <span
+                style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}
+                onClick={() => navigate(WISHLIST_URL.INDEX)}
+              >
+                <HeartOutlined style={{ fontSize: "24px" }} />
+                {/* <span>Wish List</span> */}
+              </span>
+            </Col>
+          </Row>
         </Col>
       </Row>
-      <Row className="header-menu bg-red">
-        <Menu mode="horizontal" items={items} className="container" style={{ background: 'transparent'}}	 />
-      </Row>
+      {/* <Row className="header-menu bg-red">
+        <Menu mode="horizontal" items={items} className="container" style={{ background: 'transparent' }} />
+      </Row> */}
     </div>
-  );  
+  );
 };
 
 export default Header;

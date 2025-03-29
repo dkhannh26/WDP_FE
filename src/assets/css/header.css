@@ -87,27 +87,53 @@ input:focus {
 
 .header-middle {
   justify-content: space-between;
+  padding: 12px;
+}
+
+.header-menu {
+  border-bottom: none;
+  font-weight: 600;
+  font-size: 16px;
 }
 
 .logo {
   width: 100%;
 }
 
+
+.search-container {
+  display: flex;
+  align-items: center; 
+  position: relative;
+}
+
 .search-input {
-  padding: 10px 20px;
-  height: 42px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 4px 0 0 4px;
+  width: 100%;
+  padding: 10px 10px 10px 40px; /* Space for the icon on the left */
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Rounded corners to match the image */
+  font-size: 16px;
+  outline: none;
+  box-shadow: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.search-input:focus {
+  border-color: #666;
 }
 
 .search-btn {
-  background-color: var(--black-color);
-  color: #ffffff;
-  padding: 12px;
-  border-radius: 0 4px 4px 0;
-  width: 10%;
-  cursor: pointer;
+  position: absolute;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
 }
 
 .login-cart {
@@ -352,42 +378,19 @@ input:focus {
   width: 100%; /* Đảm bảo container rộng toàn màn hình */
 }
 
-.ant-menu-item {
-  color: #fff !important;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-/* Hover */
-.ant-menu-item:hover {
-  background: rgba(255, 87, 34, 0.2) !important;
-  transition: all 0.3s ease;
-}
-
-/* Selected */
-.ant-menu-item-selected {
-  background: rgba(255, 87, 34, 0.3) !important;
-}
-
-/* Loại bỏ viền dưới cho selected */
-.ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after,
-.ant-menu-light.ant-menu-horizontal > .ant-menu-submenu-selected::after {
+/* Xóa gạch chân khi hover */
+.ant-menu-horizontal > .ant-menu-item:hover,
+.ant-menu-horizontal > .ant-menu-item-active,
+.ant-menu-horizontal > .ant-menu-item-open,
+.ant-menu-horizontal > .ant-menu-item-selected {
   border-bottom: none !important;
 }
 
-/* Loại bỏ viền dưới cho hover */
-.ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover::after {
-  border-bottom: none !important;
-}
-
-/* Loại bỏ viền dưới cho active */
-.ant-menu-light.ant-menu-horizontal > .ant-menu-item-active::after {
-  border-bottom: none !important;
-}
-
-/* Loại bỏ viền dưới cho tất cả trạng thái (nếu cần) */
-.ant-menu-light.ant-menu-horizontal > .ant-menu-item::after {
-  border-bottom: none !important;
+/* Xóa pseudo-element ::after (nếu có) */
+.ant-menu-horizontal > .ant-menu-item::after,
+.ant-menu-horizontal > .ant-menu-item-active::after,
+.ant-menu-horizontal > .ant-menu-item-selected::after {
+  display: none !important;
 }
 
 

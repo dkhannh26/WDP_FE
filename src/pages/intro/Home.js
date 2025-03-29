@@ -10,6 +10,7 @@ import Carousel2 from '../../assets/images/carousel2.webp';
 import Carousel3 from '../../assets/images/carousel3.webp';
 import Carousel4 from '../../assets/images/carousel4.webp';
 import Carousel5 from '../../assets/images/carousel5.webp';
+import Carousel6 from '../../assets/images/carousel6.webp';
 import NoImage from '../../assets/images/no-image.jpg';
 import { getHotBrand, getTop10 } from '../../services/order.service';
 const Home = () => {
@@ -51,6 +52,7 @@ const Home = () => {
     return (
         <div>
             <Carousel arrows autoplay autoplaySpeed={5000}>
+                <img src={Carousel6} alt='' />
                 <img src={Carousel1} alt='' />
                 <img src={Carousel2} alt='' />
                 <img src={Carousel3} alt='' />

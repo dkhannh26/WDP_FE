@@ -18,14 +18,14 @@
     transform: scale(1.05);
 }
 
-
+/* 
 div[class*=box] {
     height: 33.33%;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
 .box-1 {
     background-color: #9e2323;
